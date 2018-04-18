@@ -1,0 +1,17 @@
+Package: beachball
+Type: Package
+Title: Clustering Large Single-Cell Datasets
+Version: 0.1.0
+Author@R:
+    c(person("Davide", "Risso", role = c("aut", "cre", "cph"),
+             email = "risso.davide@gmail.com"),
+      person("Stephanie", "Hicks", role = c("aut", "cre", "cph"),
+             email = "shicks19@jhu.edu"),
+      person("Elizabeth", "Purdom", role = c("aut", "cre", "cph"),
+             email = "epurdom@stat.berkeley.edu"))
+Description:
+    Implements k-means and k-nearest-neighbor algorithms for large
+    datasets, including support for on-disk data representation.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true

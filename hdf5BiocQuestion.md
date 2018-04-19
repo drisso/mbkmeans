@@ -84,6 +84,7 @@ attr(,“package”)
 attr(,“package”)
 [1] “HDF5Array”
 ```
+[Note: based on my memory, this is a change, since I thought previously `assay(h5_se0)` was a `HDF5Matrix`].
 
 
 However, testing the class with `is` always works for a `DelayedMatrix` (i.e. always shows up as a `DelayedMatrix`)
@@ -99,7 +100,6 @@ However, testing the class with `is` always works for a `DelayedMatrix` (i.e. al
 [1] TRUE
 ```
 
-[Note: based on my memory, this is a change, since I thought previously `assay(h5_se0)` was a `HDF5Matrix`].
 
 The question is whether in creating methods for these types of objects, is the best practice to use `DelayedArray` (since they both inherit from this class, while `HDF5Matrix` doesn't inherit from `DelayedMatrix`)? The downside is that there might be objects that would be arrays but not matrices that might break some function -- is this a realistic concern?
 

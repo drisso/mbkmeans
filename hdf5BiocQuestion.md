@@ -101,7 +101,8 @@ However, testing the class with `is` always works for a `DelayedMatrix` (i.e. al
 ```
 
 
-The question is whether in creating methods for these types of objects, is the best practice to use `DelayedArray` (since they both inherit from this class, while `HDF5Matrix` doesn't inherit from `DelayedMatrix`)? The downside is that there might be objects that would be arrays but not matrices that might break some function -- is this a realistic concern?
+The question is whether in creating methods for these types of objects, is the best practice to use `DelayedArray` (since they both inherit from this class, while `HDF5Matrix` doesn't inherit from `DelayedMatrix`)? The conceptual downside is that there might be objects that would be `DelayedArray` but not either of these classes that might break some function -- is this a realistic concern or is the role of `DelayedArray` to be the a virtual class for both?
 
-The other option is to always use `DelayedMatrix` since this class always seems to be recognized, but I don't know if the `setMethod` would recognize this. Also, it makes the function less general if calling directly on `HDF5Matrix`, and not on the `assay` of a `SummarizedExperiment`.
+Another option is to always use `DelayedMatrix` since this class always seems to be recognized, but I don't know if the methods dispatch  would recognize this [I guess I should test it?]. Also, it makes the function less general since it wouldn't work if calling directly on a `HDF5Matrix` object, and not on the `assay` of a `SummarizedExperiment`.
 
+And the last option is to make a class union of `DelayedMatrix` and `HDF5Matrix` (and again, is there already a virtual class for these?).

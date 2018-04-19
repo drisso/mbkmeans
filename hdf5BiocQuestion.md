@@ -14,7 +14,7 @@ h5_se0 <- saveHDF5SummarizedExperiment(se0, dir)
 
 # Question 1: 
 
-*After writing this, I think this question falls apart into two items 1) Asking Pete why he was opposed to class unions and 2) is there a virtual class for matrices and these objects*
+*After writing this, I think this question falls apart into two simpler things to do 1) Asking Pete why he was opposed to class unions and 2) the simpler question of whether there already exists a virtual class for matrices and these objects*
 
 From an interactive point of view, there are many functions that work for users the same for both HDF5Matrix and standard matrices, e.g. rowMeans. From a package developer point of view, however, we do not know the best practices for how to handle this. 
 

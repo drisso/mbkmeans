@@ -1,5 +1,7 @@
 We are working at implementing hdf5 compatible methods in our package, and have some questions about the best practice. 
 
+Here's some start up code that I will use in the following.
+
 ```
 library(HDF5Array)
 library(SummarizedExperiment)
@@ -10,7 +12,9 @@ dir <- sub("file", "h5_se0_", tempfile())
 h5_se0 <- saveHDF5SummarizedExperiment(se0, dir)
 ```
 
-Question 1: 
+# Question 1: 
+
+*After writing this, I think this question falls apart into two items 1) Asking Pete why he was opposed to class unions and 2) is there a virtual class for matrices and these objects*
 
 From an interactive point of view, there are many functions that work for users the same for both HDF5Matrix and standard matrices, e.g. rowMeans. From a package developer point of view, however, we do not know the best practices for how to handle this. 
 
@@ -64,7 +68,9 @@ However, in a casual conversation with Pete, he seemed negative on this idea (no
 
 The alternative is to make two different methods, one for `DelayedArray` and another for `matrix`. This requires either copying of shared code (!) or make the shared code an internal function that both call, which is rather annoying if its not very long code. This seems clunky and defeats the point of S4 structure, it seems. 
 
-Question 2:
+# Question 2:
+
+*I think this is a real question to be asked*
 
 When the assay slot of a SummarizedExperiment has a HDF5Matrix, it doesn't appear with the class `HDF5Matrix` unless you specify to not have the dimnames. Namely the class of `assay(h5_se0)` varies:
 

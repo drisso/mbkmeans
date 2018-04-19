@@ -1,5 +1,8 @@
 # beachball
 
-## Clustering and nearest neighbors for large single-cell datasets
+## Summary 
+Clustering and nearest neighbors for large single-cell datasets
 
-This is currently only a package skeleton.
+## Roadmap
+For details on tasks and timelines, take a look at the [Roadmap](ROADMAP.md).
+

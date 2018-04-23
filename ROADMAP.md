@@ -5,7 +5,7 @@ The purpose of this project is to implement clustering algorithms for large sing
 ## Milestone 1: Implement k-means
 *Tracking in issue(s) [#1](https://github.com/drisso/beachball/issues/1).* 
 
-- [ ] create method for virtual class and matrix class [(**#1**)](https://github.com/drisso/beachball/issues/1) 
+- [ ] create skeleton k-means method to cluster using on data stored in dimensionality reduction slots (virtual class and matrix class) in SingleCellExperiment object [(**#1**)](https://github.com/drisso/beachball/issues/1)
 
 ## Milestone 2: Implement k-NN
 *Tracking in issue(s) (not yet assigned).*

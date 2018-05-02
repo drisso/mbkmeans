@@ -22,10 +22,10 @@ setMethod(
 setMethod(
   f = "kmeans",
   signature = signature(x = "SingleCellExperiment"),
-  definition = function(x, reduceMethod = "PCA",...)
+  definition = function(x, reduceMethod = "PCA", which_assay=1,...)
   {
     if(is.null(reducedDimNames(x))){
-      kmeans(assay(x))
+      kmeans(assays(x)[[1]])
     }
     else{
       if(is.null(reducedDimNames(x))){

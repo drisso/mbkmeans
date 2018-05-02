@@ -14,59 +14,36 @@ h5_se0 <- saveHDF5SummarizedExperiment(se0, dir)
 
 # Question 1: 
 
-*After writing this, I think this question falls apart into two simpler things to do 1) Asking Pete why he was opposed to class unions and 2) the simpler question of whether there already exists a virtual class for matrices and these objects*
+Subject: Virtual class for  `matrix` and `DelayedArray`? (or better strategy for dealing with them both)
 
-From an interactive point of view, there are many functions that work for users the same for both HDF5Matrix and standard matrices, e.g. rowMeans. From a package developer point of view, however, we do not know the best practices for how to handle this. 
+I am trying to extend my package to handle `HDF5Matrix` class ( or more generally `DelayedArray`). I currently have S4 functions for `matrix` class. Usually I have a method for `SummarizedExperiment`, which will call call the method on `assay(x)` and I want the method to be able to deal with if `assay(x)` is a `DelayedArray`.
 
-Consider the following simple S3 function. 
+Most of my functions, however, do not require separate code depending on whether `x` is a `matrix` or `DelayedArray`. They are making use of existing functions that will make that choice for me, e.g. rowMeans or subsetting. My goal right now is compatibility, not cleverness, and I'm not creating HDF5 methods to handle other cases. (If something doesn't currently exist, then I just enclose `x` with `data.matrix` or `as.matrix` and call the matrix into memory, though for cleanliness and ease in updating with appropriate methods, I could make separate S4 functions for these specific tasks to dispatch, but that's outside of the scope of my question.) So for simplicity assume I don't really need to dispatch *my code* -- that the methods I'm going to use do that. 
 
-```
-myNewRowMeans<-function(x,...){
-	#a lot of code independent of class of x
-	print("This is a lot of code shared regardless of class of x\n")
-	out<-rowMeans(x)
-	#a lot of code on output of out
-	out<-out+1
-	return(out)	
-}
-```
+The natural solution for me seem to use `setClassUnion` and I was wondering if such a virtual class already exists? Or is there a better way to handle this?
 
-```
-testMat<-myNewRowMeans(counts)
-testDA<-myNewRowMeans(assay(h5_se0))
-```
-
-From an interactive point of view, this function is fine because it doesn't care what class x is. If I want to put it into my package I am not sure if I need to do anything to address the fact that rowMeans for the two classes comes from different packages. I think I should just be able to add
-
-```
-#' @importFrom DelayedArray rowMeans
-```
-
-Is that sufficient, or is there better practice? (often I use '::' to specificy the package clearly, but that's clearly not possible here).
-
-Furthermore to make this an S4 function, I have options in how I set this up. My preferred choice would be to create a class union -- **Does such a virtual class exist already?**
-
-For example,
+Here's a simple example, using `rowMeans` as my example:
 
 ```
 setGeneric("myNewRowMeans", function(x,...) { standardGeneric("myNewRowMeans")})
 setClassUnion("matrixOrDelayed",members=c("matrix", "DelayedArray"))
 
+#' @importFrom DelayedArray rowMeans
 setMethod("myNewRowMeans", 
           signature = "matrixOrDelayed",
           definition = function(x,...){
-		  	print("This is a lot of code shared regardless of class of x\n")
+		  	# code independent of x
+			print("This is a lot of code shared regardless of class of x\n")
+			# code that depends on x, but is dispatched by other functions
 		  	out<-rowMeans(x)
-		  	#a lot of code on output of out
+		  	#a lot of code based on output of out
 		  	out<-out+1
 		  	return(out)	
 		}
-		)
+)
 ```
 
-However, in a casual conversation with Pete, he seemed negative on this idea (not sure why -- felt not very robust?)
 
-The alternative is to make two different methods, one for `DelayedArray` and another for `matrix`. This requires either copying of shared code (!) or make the shared code an internal function that both call, which is rather annoying if its not very long code. This seems clunky and defeats the point of S4 structure, it seems. 
 
 # Question 2:
 

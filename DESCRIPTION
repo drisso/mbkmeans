@@ -12,6 +12,8 @@ Author@R:
 Description:
     Implements k-means and k-nearest-neighbor algorithms for large
     datasets, including support for on-disk data representation.
+Imports:
+	stats
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

@@ -12,6 +12,10 @@ Author@R:
 Description:
     Implements k-means and k-nearest-neighbor algorithms for large
     datasets, including support for on-disk data representation.
+Depends:
+  R (>= 3.5),
+  SingleCellExperiment,
+  SummarizedExperiment
 Imports:
 	stats
 License: MIT + file LICENSE

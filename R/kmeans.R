@@ -47,6 +47,8 @@ setMethod(
   })
 
 
+#' @rdname kmeans
+#' @export
 setMethod(
   f = "kmeans",
   signature = signature(x = "DelayedMatrix"),
@@ -55,7 +57,11 @@ setMethod(
     stop("kmeans is not yet implemented for a DelayedMatrix/HDF5Matrix object")
   })
 
+#' @rdname kmeans
+#' @export
 #' @importFrom stats kmeans
+# Do we need this function, or will it be called automatically?
+# See https://stat.ethz.ch/pipermail/r-devel/2009-March/052680.html and ?Methods_for_S3
 setMethod(
   f = "kmeans",
   signature = signature(x = "matrix"),

@@ -3,12 +3,21 @@
 #' @description This is a wrapper for stats::kmeans() for
 #' large single cell sequencing data with the dimensionality
 #' reduction results as input in in the reducedDim() slot.
-#' @param reduceMethod Name of dimensionality reduction results
-#' to use as input to k-means
+#' @param x The object on which to run k-means.
+#' @param reduceMethod Name of dimensionality reduction results to use as input
+#'   to k-means.
+#' @param whichAssay The assay to use as input to k-means. Used only if
+#'   \code{reduceMethod = "none"}.
+#' @param ... Arguments to pass to \code{\link[stats]{kmeans}}.
 #' @return k-means output
 #' @name kmeans
 #' @rdname kmeans
 #' @export
+#' @importClassesFrom SummarizedExperiment SummarizedExperiment
+#' @importFrom methods as
+#' @examples
+#' se <- SummarizedExperiment(matrix(rnorm(100), ncol=10))
+#' kmeans(se, centers = 2, reduceMethod = "none")
 setMethod(
   f = "kmeans",
   signature = signature(x = "SummarizedExperiment"),
@@ -19,14 +28,19 @@ setMethod(
 
 #' @rdname kmeans
 #' @export
+#' @importClassesFrom SingleCellExperiment SingleCellExperiment
+#' @importFrom SummarizedExperiment assays
+#' @importFrom SingleCellExperiment reducedDim reducedDimNames
 setMethod(
   f = "kmeans",
   signature = signature(x = "SingleCellExperiment"),
-  definition = function(x, reduceMethod = "PCA", whichAssay=1,...)
+  definition = function(x, reduceMethod = "PCA", whichAssay = 1, ...)
   {
+
     if(reduceMethod=="none"){
-      if(NCOL(x)>10000) message("Note that you are running kmeans with more than 10,000 cells using all of the dimensions. You might consider running a dimensionality reduction step first.")
-      kmeans(assays(x)[[whichAssay]])
+      if(NCOL(x)>10000)
+        message("Note that you are running kmeans with more than 10,000 cells using all of the dimensions. You might consider running a dimensionality reduction step first.")
+      fit <- kmeans(assays(x)[[whichAssay]], ...)
     }
     else{
       if(is.null(reducedDimNames(x))){
@@ -40,16 +54,28 @@ setMethod(
 	           reducedDimNames() to see what names are in this object.")
 
       }
-      fit = kmeans(reducedDim(x, reduceMethod), ...)
+      fit <- kmeans(reducedDim(x, reduceMethod), ...)
 
     }
 
     return(fit)
   })
 
+#' @rdname kmeans
+#' @export
+#' @importClassesFrom SingleCellExperiment LinearEmbeddingMatrix
+#' @importFrom SingleCellExperiment sampleFactors
+setMethod(
+  f = "kmeans",
+  signature = signature(x = "LinearEmbeddingMatrix"),
+  definition = function(x, ...)
+  {
+    kmeans(sampleFactors(x), ...)
+  })
 
 #' @rdname kmeans
 #' @export
+#' @importClassesFrom DelayedArray DelayedMatrix
 setMethod(
   f = "kmeans",
   signature = signature(x = "DelayedMatrix"),

@@ -24,7 +24,8 @@ setMethod(
   signature = signature(x = "SingleCellExperiment"),
   definition = function(x, reduceMethod = "PCA", which_assay=1,...)
   {
-    if(is.null(reducedDimNames(x))){
+    if(reduceMethod=="none"){
+      if(NCOL(x)>10000) message("Note that you are running kmeans with more than 10,000 cells using all of the dimensions. You might consider running a dimensionality reduction step first.")
       kmeans(assays(x)[[1]])
     }
     else{

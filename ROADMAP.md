@@ -11,3 +11,9 @@ The purpose of this project is to implement clustering algorithms for large sing
 *Tracking in issue(s) (not yet assigned).*
 
 - [ ] create method for virtual class and matrix class
+
+## Milestone 3: Unit tests
+
+- [ ] Set up TravisCI
+- [ ] Create object for unit tests
+

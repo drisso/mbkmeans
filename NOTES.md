@@ -6,16 +6,15 @@
 1. **vanilla _k_-means**: pick _k_, random sample of _k_ "centers", and minimize the average squared distance between points to the assigned cluster centers. At the minimum, all cluster centers are at the mean of their Voronoi sets (the set of data points which are nearest to the cluster center). 
 	- **Good:** simple, fast
 	- *Bad:** No accuracy guarantees
-2. **_k_-means++** [reference](http://ilpubs.stanford.edu:8090/778/1/2006-13.pdf): _k_-means with randomized seeding for initially picking centers
+2. **_k_-means++** ][reference](http://ilpubs.stanford.edu:8090/778/1/2006-13.pdf)]: _k_-means with randomized seeding for initially picking centers
 	- **Good:** faster, more accurate than _k_-means
 	- **Bad:** 
 	
 ## Algorithms
 
-1. **Hartigan-Wong Algorithm** [reference](https://www.jstor.org/stable/2346830): Default used in the `kmeans()` R function
-2. **Lloyd's Algorithm** [reference](http://www-evasion.imag.fr/people/Franck.Hetroy/Teaching/ProjetsImage/2007/Bib/lloyd-1982.pdf), [Wikipedia](https://en.wikipedia.org/wiki/Lloyd%27s_algorithm):  
-	- R: `kmeans()` in base R
-3. **MacQueen Algorithm** [reference](https://projecteuclid.org/euclid.bsmsp/1200512992): a serial _k_-means algorithm
+1. **Hartigan-Wong Algorithm** [[reference](https://www.jstor.org/stable/2346830)]: Default used in the `kmeans()` base R function
+2. **Lloyd's Algorithm** [[reference](http://www-evasion.imag.fr/people/Franck.Hetroy/Teaching/ProjetsImage/2007/Bib/lloyd-1982.pdf), [Wikipedia](https://en.wikipedia.org/wiki/Lloyd%27s_algorithm)]:  Implemented in the `kmeans()` base R function
+3. **MacQueen Algorithm** [[reference](https://projecteuclid.org/euclid.bsmsp/1200512992)]: a serial _k_-means algorithm; Implemented in the `kmeans()` base R function
 
  
 # What to do if data is too big to be read into memory? 
@@ -24,7 +23,7 @@
 
 - [`bigkmeans`](https://github.com/argriffing/bigkmeans) -- Python code on GitHub implementing Lloyd's algorithm for _k_-means that allows for HDF5 files
 
-### Relevant notes on HDF5 files
+#### Relevant notes on HDF5 files
 
 - [Mike Smith's blog post on parallel processing and HDF5](http://www.msmith.de/2018/05/01/parallel-r-hdf5/)
 - [Pete's blog post on working with DelayedArrays (more to come)](https://www.peterhickey.org/2018/05/01/bioc3.7-and-delayedarray/)
@@ -46,7 +45,7 @@
 			- Does a good job of talking about the high I/O overhead as number of data points increases
 			- In contrast to other algorithms above which all need _M_ MapReduce jobs sequentially for _M_ _k_-means iterations, this algorithm only needs 1 MapReduce job (lower I/O overhead compared to PKMeans)
 			- Considered different approaches to merge intermediate centroids: hierarchical merging or minimum average sum of square error (ASSE) ? 
-			- **Bad:**: As one reducer only executes _k_-means on a small portion, can lead to a loss of accuracy
+			- **Bad:** As one reducer only executes _k_-means on a small portion, can lead to a loss of accuracy
 2. Subsampling
 	- MiniBatchKMeans seems popular. Works on random subsamples. Exists implementation in R (ClusterR). Here's some links:
 		* https://algorithmicthoughts.wordpress.com/2013/07/26/machine-learning-mini-batch-k-means/

@@ -5,7 +5,7 @@
 
 1. **vanilla _k_-means**: pick _k_, random sample of _k_ "centers", and minimize the average squared distance between points to the assigned cluster centers. At the minimum, all cluster centers are at the mean of their Voronoi sets (the set of data points which are nearest to the cluster center). 
 	- **Good:** simple, fast
-	- *Bad:** No accuracy guarantees
+	- *Bad:** No accuracy guarantees; falls into local minima so several restarts are useful. 
 2. **_k_-means++** ][reference](http://ilpubs.stanford.edu:8090/778/1/2006-13.pdf)]: _k_-means with randomized seeding for initially picking centers
 	- **Good:** faster, more accurate than _k_-means
 	- **Bad:** 
@@ -22,6 +22,9 @@
 ## Try running _k_-means on all data using HDF5 files
 
 - [`bigkmeans`](https://github.com/argriffing/bigkmeans) -- Python code on GitHub implementing Lloyd's algorithm for _k_-means that allows for HDF5 files
+- [scikit-learn](http://scikit-learn.org/stable/datasets/index.html) -- Says "if you manage your own numerical data it is recommended to use an optimized file format such as HDF5 to reduce data load times. Various libraries such as [H5Py](https://www.h5py.org) (access multi-terabyte datasets stored on disk as if they were real NumPy arrays), PyTables and pandas provides a Python interface for reading and writing data in that format."
+	- [sklearn.cluster.KMeans()](http://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html): default initialization is _k_-means++; solved using Lloyd's algorithm on entire dataset. 
+	- [sklearn.cluster.MiniBatchKMeans()](http://scikit-learn.org/stable/modules/generated/sklearn.cluster.MiniBatchKMeans.html#sklearn.cluster.MiniBatchKMeans): default initialization is _k_-means++; online implementation that does incremental updates of the centers using mini-batches [see notes below on subsampling and [Sculley 2010](http://www.eecs.tufts.edu/~dsculley/papers/fastkmeans.pdf)]
 
 #### Relevant notes on HDF5 files
 

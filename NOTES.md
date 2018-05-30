@@ -32,6 +32,16 @@
 - [k-NN in python and HDF5](https://labrosa.ee.columbia.edu/millionsong/pages/fast-k-nn-using-hdf5)
 
 
+# kmeans in parallel
+- kmeans in [spark](http://spark.apache.org/docs/latest/mllib-clustering.html#k-means) draws on [kmeans||](http://theory.stanford.edu/~sergei/papers/vldb12-kmpar.pdf) -- a parallel implementation of kmeans++.
+- http://www.ece.northwestern.edu/~wkliao/Kmeans/index.html : gives C code for parallel kmeans
 
+# fast kmeans
+- MiniBatchKMeans seems popular. Works on random subsamples. Exists implementation in R (ClusterR). Here's some links:
+	* https://algorithmicthoughts.wordpress.com/2013/07/26/machine-learning-mini-batch-k-means/
+	* http://scikit-learn.org/stable/modules/clustering.html#mini-batch-kmeans
+	* https://www.eecs.tufts.edu/~dsculley/papers/fastkmeans.pdf
+	* http://theory.stanford.edu/~sergei/papers/vldb12-kmpar.pdf
+	* https://cran.r-project.org/web/packages/ClusterR/index.html
 
 

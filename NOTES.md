@@ -3,10 +3,11 @@
 
 ## Methods 
 
-1. **vanilla _k_-means**: pick _k_, random sample of _k_ "centers", and minimize the average squared distance between points to the assigned cluster centers. At the minimum, all cluster centers are at the mean of their Voronoi sets (the set of data points which are nearest to the cluster center). 
+1. **vanilla _k_-means**: pick _k_, random sample of _k_ "centers", and minimize the average squared distance between points to the assigned cluster centers. 
+	- **Idea:** Iterate between a classification step (classify all points to a cluster), and then recompute cluster centers using new points in that cluster. 
 	- **Good:** simple, fast
 	- *Bad:** No accuracy guarantees; falls into local minima so several restarts are useful. 
-2. **_k_-means++** ][reference](http://ilpubs.stanford.edu:8090/778/1/2006-13.pdf)]: _k_-means with randomized seeding for initially picking centers
+2. **_k_-means++** [[reference](http://ilpubs.stanford.edu:8090/778/1/2006-13.pdf)]: _k_-means with randomized seeding for initially picking centers
 	- **Good:** faster, more accurate than _k_-means
 	- **Bad:** 
 	
@@ -38,7 +39,7 @@
 1. Parallelization
 	- kmeans in [spark](http://spark.apache.org/docs/latest/mllib-clustering.html#k-means) draws on [kmeans||](http://theory.stanford.edu/~sergei/papers/vldb12-kmpar.pdf) -- a parallel implementation of kmeans++.
 	- http://www.ece.northwestern.edu/~wkliao/Kmeans/index.html : gives C code for parallel kmeans
-	- Algorithms implementing _k_-means with MapReduce (e.g. Hadoop) -- useful for handling a large volume of data over a distributed computing environment.
+	- Algorithms implementing _k_-means with MapReduce (e.g. Hadoop) -- useful for handling a large volume of data over a distributed computing environment. [Nice Coursera video explaining how MapReduce is implemented for _k_-means](https://www.coursera.org/learn/ml-clustering-and-retrieval/lecture/EhCYk/mapreduce-for-k-means). The idea is for the classification step, you provide all the centers and one data point to each mapper (parallel over data points). Then for the recomputing the means step, you provide all the data in that cluster to each Reducer (parallel over cluster centers). 
 		- [Zhao et al. (2009)](https://link.springer.com/chapter/10.1007/978-3-642-10665-1_71): Reference for PKMeans (Parallel K Means)
 			- **Bad:** algorithm has an unlimited number of mappers, but at most 1 reducer for each centroid, making it less efficient
 		- [Kerdprasop and Kerdprasop 2010](https://pdfs.semanticscholar.org/a76a/f136805e8f535777ad5582b128ae441af75a.pdf): _k_-means clustering on multi-core processors

@@ -1,11 +1,12 @@
-Goal: Add a function to your package that divides the data into 4 chunks of observations and calculates the mean and standard deviation of each variable for each chunk.
-
-Two functions should be created:
-1) A pure R function (i.e. only R code) (`chunkSummaryR` )
-2) A R function that calls a C++ function via Rcpp. (`chunkSummaryC` )
-
-Successful completion entails the following:
-1) The package must pass R CMD CHECK 
-2) The package must include a unit test that checks that the two functions give the same results on a small dataset
-3) Appropriate commenting of the code as well creation of meaningful man pages for the function via Roxygen
-
+1. Download and install the `rhdf5` package from Bioconductor
+2. Read the vignette
+3. Simulate a 1000 * 100 random matrix (`rnorm`) 
+4. Use `rhdf5` package to write the matrix into hdf5 files
+5. Use the `rhdf5` package to read the file
+6. Make sure 5 and 3 are same
+7. Download the `HDF5Array` Package from Bioconductor
+8. Create a `HDF5matrix` with the data from 3
+9. Compute column means of 8 and 3, and compare the speed (which is faster)
+(`System.time` how much time to compute and get the results) 
+10. Create a `analysis` folder in `beachball` repo
+11. Add a script for 3-9 in the folder

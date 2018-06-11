@@ -48,6 +48,9 @@ colMeans(data)
 h5_matrix<-loadHDF5SummarizedExperiment(dir)
 colMeans(assay(h5_matrix))
 
+#compare the results
+identical(colMeans(data),colMeans(assay(h5_matrix)))
+
 
 #compare the speed
 system.time(colMeans(data))

@@ -1,11 +1,10 @@
 #Download the package
-## try http:// if https:// URLs are not supported
-source("https://bioconductor.org/biocLite.R")
-biocLite("rhdf5")
+##try http:// if https:// URLs are not supported
+#source("https://bioconductor.org/biocLite.R")
+#biocLite("rhdf5")
 
 #check the vignette
-browseVignettes(package = "rhdf5")
-setwd("/Users/summer/Desktop/Research Assistant")
+#browseVignettes(package = "rhdf5")
 
 
 #simulate the matrix
@@ -26,7 +25,7 @@ identical(data,h5)
 
 #download the HDF5array Package
 ## try http:// if https:// URLs are not supported
-source("https://bioconductor.org/biocLite.R")
+#source("https://bioconductor.org/biocLite.R")
 library(HDF5Array)
 library(tidyverse)
 
@@ -41,12 +40,15 @@ hdf5matrix<-saveHDF5SummarizedExperiment(matrix2,dir)
 
 #calculate the mean of each columns
 
+
 #natural method
 colMeans(data)
+
 
 #hdf5 method
 h5_matrix<-loadHDF5SummarizedExperiment(dir)
 colMeans(assay(h5_matrix))
+
 
 #compare the results
 identical(colMeans(data),colMeans(assay(h5_matrix)))

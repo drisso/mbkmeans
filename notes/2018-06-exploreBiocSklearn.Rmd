@@ -11,13 +11,13 @@ output:
 
 The purpose of this R Markdown is to 
 
-1. Install the [`BioCSklearn`](https://bioconductor.org/packages/release/bioc/html/BiocSklearn.html) R/Bioconductor package which uses the [`reticulate`](https://github.com/rstudio/reticulate) R package
+1. Install the [`BiocSklearn`](https://bioconductor.org/packages/release/bioc/html/BiocSklearn.html) R/Bioconductor package which uses the [`reticulate`](https://github.com/rstudio/reticulate) R package
 2. Determine how easy it is to wrap around `sci-kit learn` (`sklearn`) functions within R
 3. Explore how the `sklearn.cluster.KMeans()` function interacts with `HDF5` using the `h5py` python module
 
-## Install `BioCSklearn`
+## Install `BiocSklearn`
 
-The `BioCSklearn` R/Bioconductor 
+The `BiocSklearn` R/Bioconductor 
 [depends](https://bioconductor.org/packages/release/bioc/html/BiocSklearn.html) 
 on `python (>= 2.7)`, `sklearn`, `numpy`, `pandas`, and `h5py`. 
 First, check to see what python is installed and install 

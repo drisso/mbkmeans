@@ -1,0 +1,72 @@
+---
+title: "How to wrap python code in R using the reticulate and BioCSklearn packages"
+author: "Stephanie Hicks"
+output: 
+    html_document:
+        toc: true
+        toc_float: true
+        highlight: tango
+        number_sections: true
+---
+
+The purpose of this R Markdown is to 
+
+1. Install the [`BioCSklearn`](https://bioconductor.org/packages/release/bioc/html/BiocSklearn.html) R/Bioconductor package which uses the [`reticulate`](https://github.com/rstudio/reticulate) R package
+2. Determine how easy it is to wrap around `sci-kit learn` (`sklearn`) functions within R
+3. Explore how the `sklearn.cluster.KMeans()` function interacts with `HDF5` using the `h5py` python module
+
+## Install `BioCSklearn`
+
+The `BioCSklearn` R/Bioconductor 
+[depends](https://bioconductor.org/packages/release/bioc/html/BiocSklearn.html) 
+on `python (>= 2.7)`, `sklearn`, `numpy`, `pandas`, and `h5py`. 
+First, check to see what python is installed and install 
+python modules as appropriate. 
+
+```{bash, eval=FALSE}
+module load python/2.7.9
+python --version            # check python version 
+pip install --user numpy    # install numpy python module
+pip install --user scikit-learn # install scikit-learn python module 
+pip install --user h5py     # install h5py python module
+
+which python                # path to python will need this later
+python                      # open python and test to make sure the modules load
+```
+
+My python 2.7 path is `/jhpce/shared/community/compiler/gcc/4.4.7/python/2.7.9/bin/python`. 
+Next, open python and make sure the modules can load. 
+
+```{python, eval=FALSE}
+import numpy
+import sklearn
+import h5py
+import pandas
+
+# To see where the python modules are loaded: 
+import sys
+print '\n'.join(sys.path)
+```
+
+I found that the python modules I installed locally are in 
+`/users/shicks1/.local/lib/python2.7/site-packages`. Next, 
+I need to make sure the reticulate R package
+will be using the right python path:
+
+```{r}
+library(reticulate)
+py_discover_config() # gives configuration details
+```
+
+Next, I realized I need to change the `libpython` path to 
+look also in my local path 
+(`/users/shicks1/.local/lib/python2.7/site-packages`).
+
+
+
+## Wrapping around `sklearn` functions in R
+
+
+## Using the `sklearn.cluster.KMeans()` with `HDF5` files in R 
+
+

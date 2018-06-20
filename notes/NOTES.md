@@ -26,6 +26,7 @@
 - [scikit-learn](http://scikit-learn.org/stable/datasets/index.html) -- Says "if you manage your own numerical data it is recommended to use an optimized file format such as HDF5 to reduce data load times. Various libraries such as [H5Py](https://www.h5py.org) (access multi-terabyte datasets stored on disk as if they were real NumPy arrays), PyTables and pandas provides a Python interface for reading and writing data in that format."
 	- [sklearn.cluster.KMeans()](http://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html): default initialization is _k_-means++; solved using Lloyd's algorithm on entire dataset. 
 	- [sklearn.cluster.MiniBatchKMeans()](http://scikit-learn.org/stable/modules/generated/sklearn.cluster.MiniBatchKMeans.html#sklearn.cluster.MiniBatchKMeans): default initialization is _k_-means++; online implementation that does incremental updates of the centers using mini-batches [see notes below on subsampling and [Sculley 2010](http://www.eecs.tufts.edu/~dsculley/papers/fastkmeans.pdf)]
+	- [BiocSklearn](https://github.com/vjcitn/BiocSklearn): Depends on the [reticulate](https://github.com/rstudio/reticulate) R package to interface between R and Python. Started an a [set of notes](2018-06-exploreBiocSklearn.Rmd) on how to install `BiocSklearn`, how to use the `sklearn` functions in R, and how to use `sklearn.cluster.KMeans()` function interacts with HDF5 files
 
 #### Relevant notes on HDF5 files
 

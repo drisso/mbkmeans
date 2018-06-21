@@ -1,0 +1,112 @@
+---
+title: "Mini-batch k-means"
+author: "Davide Risso"
+output:
+    html_document:
+        toc: true
+        toc_float: true
+        highlight: tango
+        number_sections: true
+editor_options: 
+  chunk_output_type: console
+---
+
+The mini-batch k-means algorithm is described in [this paper](http://www.eecs.tufts.edu/%7Edsculley/papers/fastkmeans.pdf).
+
+It's implemented in python's scikit learn and in the `clusterR` R package.
+
+Here, I will describe the algorithm and explore both implementations. But first, a bit on the terminology, which I found initially very confusing.
+
+# Terminology
+
+The author uses the term "batch k-means" to describe the regular k-means, and "mini-batch k-means" to describe their novel method.
+
+This terminology seems popular in machine learning, especially with respect to gradient descent methods. Indeed, according to [this tutorial](https://machinelearningmastery.com/gentle-introduction-mini-batch-gradient-descent-configure-batch-size/), there are three types of gradient descent algorithms:
+
+- batch: update the model after training on all observations in the training set.
+- stochastic (aka online): compute error and update the model for each observation in the training set.
+- mini-batch: split the training set in small batches that are used to compute the error and update the model
+
+Since the k-means algorithm can be seen as a gradient descent algorithm, the author uses this terminology.
+
+# The algorithm
+
+The motivation for mini-batch k-means is to minimize the stochastic noise typical of stochastic gradient descent, without suffering from the computational costs of a full k-means.
+
+Notably, one of the advantages of this algorithm, is that one does not need to keep all the data in memory, but only one batch at the time, which makes it a good candidate for our purpose.
+
+## Pseudocode
+
+Input: number of clusters $k$, mini-batch size $b$, data $X$, number of iterations $t$
+
+Initialization: initialize each center $c \in C$ with an $x$ picked at random from $X$.
+
+```
+v <- 0
+for i=1 to t do
+  M <- randomly pick b data points from X
+  
+  for x in M do
+    d[x] <- f(C,x) // identify the center nearest to x
+  end
+  
+  for x in M do
+    c <- d[x] // get the closest center
+    v[c] <- v[c] + 1  // update the counts of each center
+    mu <- 1/v[c]  // get the per-center learning rate
+    c <- (1 - mu) * c + mu * x // take gradient step
+  end
+end
+```
+
+## Comments
+
+The external for loop takes $t$ subsets of size $M$ from the data. I initially assumed that it would split the data in chunks of size $b$ but instead is more like a subsampling approach.
+
+The first internal loop simply assigns each data point in the subset to its nearest center.
+
+The second internal loop updates the center by "shifting" the center a bit closer to the new points that are assigned to it.
+
+Hence, for each mini-batch, the algorithm assign each point in the batch to a center and then re-computes the centers, updating the previously computed centers.
+
+In the paper, they mention a set of convergence properties, citing another paper, which I still have to read. I assume that it is guaranteed to converge to a local minimum, but it's unclear how the solution relates to the classic k-means algorithm.
+
+The authors says that it set $b=1000$ in a dataset of 700k observations. They claim it converges faster than classic k-means and to a better solution than online k-means.
+
+The same paper also introduces a modification of the algorithm to allow for sparse cluster centers. This may be useful in principle if we cluster directly on gene expression, but I'm not sure it's worth implementing if most people would transform the data (centering, scaling, dim reduction?) and the sparsity is not maintained. 
+
+# Implementations
+
+## ClusterR
+
+The method is implemented in the `MiniBatchKmeans` function, which is implemented in C++. It seems a very flexible implementation, which allows for different initializations (including k-means++).
+
+```{r}
+library(ClusterR)
+
+data("iris")
+km1 <- kmeans(iris[,1:4], centers=3, nstart = 10)
+table(km1$cluster, iris[,5])
+
+km2 <- KMeans_rcpp(iris[,1:4], clusters=3, num_init = 10)
+table(km2$cluster, iris[,5])
+
+km3 <- MiniBatchKmeans(iris[,1:4], clusters=3, initializer = "random", num_init = 10)
+km3cl <- predict_MBatchKMeans(iris[,1:4], km3$centroids)
+table(km3cl, iris[,5])
+
+km4 <- MiniBatchKmeans(iris[,1:4], clusters=3, initializer = "kmeans++", num_init = 10)
+km4cl <- predict_MBatchKMeans(iris[,1:4], km4$centroids)
+table(km4cl, iris[,5])
+```
+
+`MiniBatchKmeans` only returns the centroids. One needs to call `predict_MBatchKMeans` to assign each observation to the nearest centroid.
+
+The default initialization is `optimal_init`, which is experimental according to the manual page. The original algorithm uses random initializations, but one can specify kmeans++ as well.
+
+The accuracy is unclear, it does OK on the iris data.
+
+## sklearn
+
+# Conclusion
+

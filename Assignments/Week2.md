@@ -7,3 +7,6 @@
 - work through the [DropletUtils](https://www.bioconductor.org/packages/3.7/bioc/html/DropletUtils.html) vignette to learn how to compute barcode ranks, detect empty droplets and reduct the effect of barcode swapping.
 - work through the [scater](https://bioconductor.org/packages/release/bioc/html/scater.html) vignette to learn about how about how to apply quality control metrics
 - calculate the total number of counts for each cell to be used a scaling factor for normalization -- also can read about the normalize function in scater
+- Download the `ClusterR` package and explore its functions
+	- In particular, understand difference between KMeans_arma and KMeans_Rcpp
+	- Try KMeans with different initializations: random, kmeans++

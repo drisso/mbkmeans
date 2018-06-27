@@ -8,7 +8,7 @@ $C$ is a set of points (usually centroids), and $\phi_Y(C)=\sum_{y\in Y} d^2(y,C
 *Algorithm Initialization of Kmeans++*
 1. Pick $c_1$ uniformly from $X$ and set $C=\{c_1\}$
 2. while $|C| < k$ do
-3.      Sample a single $c_2\in X$, where each $x$ has probability $d^2(x,C)/ \phi_X(C)$ of being selected
+3.      Sample a single $c\in X$, where each $x$ has probability $d^2(x,C)/ \phi_X(C)$ of being selected
 4.      Add $c_2$ to $C$.
 5. end while.
 

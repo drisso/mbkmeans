@@ -1,3 +1,13 @@
+**Goal:** The goal is to become familiar with the compute cluster at WCM.
+
+1. scp Week3.R to aphrodite
+2. create / scp Week3.sh to aphrodite
+3. Install all needed packages in the server (using qlogin) -- only the first time!
+4. qsub Week3.sh
+5. scp results back to your laptop
+6. open results with Rstudio to make sure it worked.
+
+
 **Goal:** The goal is to update the C++ code for mini-batch clustering in the clusterR package to pull random subsets from hdf5 files instead of a matrix in memory.
 
 Basic outline of steps:

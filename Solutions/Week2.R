@@ -49,8 +49,6 @@ assayNames(nor)
 #Cluster
 library(ClusterR)
 
-
-
 #Appendix
 
 #Example of filtering the rows

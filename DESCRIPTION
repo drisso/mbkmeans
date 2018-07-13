@@ -13,14 +13,22 @@ Description:
     Implements k-means and k-nearest-neighbor algorithms for large
     datasets, including support for on-disk data representation.
 Depends:
-  R (>= 3.5),
-  SingleCellExperiment,
-  SummarizedExperiment
+  R (>= 3.5)
 Imports:
 	stats,
 	methods,
-	DelayedArray
+	DelayedArray,
+	Rcpp,
+  SingleCellExperiment,
+  SummarizedExperiment
+Suggests:
+  beachmat, 
+  HDF5Array,
+  Matrix,
+  Rhdf5lib
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
+SystemRequirements: C++11
+LinkingTo: Rcpp, Rhdf5lib, beachmat

@@ -6,6 +6,17 @@
 
 using namespace Rcpp;
 
+// beachmat_colSums
+Rcpp::NumericVector beachmat_colSums(SEXP dmat);
+RcppExport SEXP _beachball_beachmat_colSums(SEXP dmatSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type dmat(dmatSEXP);
+    rcpp_result_gen = Rcpp::wrap(beachmat_colSums(dmat));
+    return rcpp_result_gen;
+END_RCPP
+}
 // set_seed
 void set_seed(int seed);
 RcppExport SEXP _beachball_set_seed(SEXP seedSEXP) {
@@ -234,6 +245,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_beachball_beachmat_colSums", (DL_FUNC) &_beachball_beachmat_colSums, 1},
     {"_beachball_set_seed", (DL_FUNC) &_beachball_set_seed, 1},
     {"_beachball_cluster_indices", (DL_FUNC) &_beachball_cluster_indices, 1},
     {"_beachball_check_NaN_Inf", (DL_FUNC) &_beachball_check_NaN_Inf, 1},

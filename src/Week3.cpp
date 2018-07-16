@@ -24,6 +24,7 @@ using namespace arma;
 //using namespace Rcpp;
 //using namespace H5;
 
+//' @export
 // [[Rcpp::export]]
 
 Rcpp::List mini_batch_kmeans(arma::mat& data, int clusters, int batch_size, int max_iters, int num_init = 1, double init_fraction = 1.0, std::string initializer = "kmeans++",

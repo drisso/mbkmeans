@@ -1,3 +1,9 @@
+#' @importFrom Rcpp sourceCpp
+#' @useDynLib beachball, .registration = TRUE
+#'
+NULL
+
+
 #' @title k-means for large single cell sequencing data
 #'
 #' @description This is a wrapper for stats::kmeans() for

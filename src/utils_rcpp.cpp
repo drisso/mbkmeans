@@ -554,3 +554,5 @@ arma::mat SCALE(arma::mat data, bool mean_center = true, bool sd_scale = true) {
     return mat_out;
   }
 }
+
+

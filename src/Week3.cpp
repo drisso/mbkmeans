@@ -254,7 +254,3 @@ Rcpp::List mini_batch_kmeans(arma::mat& data, int clusters, int batch_size, int 
 }
 
 
-/*** R
-data<-matrix(1:40,nrow=10)
-mini_batch_kmeans(data)
-*/

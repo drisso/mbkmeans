@@ -74,3 +74,8 @@ mini_batch_kmeans <- function(data, clusters, batch_size, max_iters, num_init = 
     .Call(`_beachball_mini_batch_kmeans`, data, clusters, batch_size, max_iters, num_init, init_fraction, initializer, early_stop_iter, verbose, CENTROIDS, tol, tol_optimal_init, seed)
 }
 
+#' @export
+matrix_mean <- function(data) {
+    .Call(`_beachball_matrix_mean`, data)
+}
+

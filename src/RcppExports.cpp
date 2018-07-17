@@ -232,6 +232,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// matrix_mean
+Rcpp::RObject matrix_mean(SEXP data);
+RcppExport SEXP _beachball_matrix_mean(SEXP dataSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type data(dataSEXP);
+    rcpp_result_gen = Rcpp::wrap(matrix_mean(data));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_beachball_set_seed", (DL_FUNC) &_beachball_set_seed, 1},
@@ -252,6 +263,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_beachball_check_medoids", (DL_FUNC) &_beachball_check_medoids, 3},
     {"_beachball_SCALE", (DL_FUNC) &_beachball_SCALE, 3},
     {"_beachball_mini_batch_kmeans", (DL_FUNC) &_beachball_mini_batch_kmeans, 13},
+    {"_beachball_matrix_mean", (DL_FUNC) &_beachball_matrix_mean, 1},
     {NULL, NULL, 0}
 };
 

@@ -1,16 +1,18 @@
 #include "beachmat/numeric_matrix.h"
+#include "beachmat/integer_matrix.h"
+#include <typeinfo>
+#include "Rinternals.h"
 #include "Rcpp.h"
 
 using namespace Rcpp;
 
 //' @export
 // [[Rcpp::export]]
-Rcpp::RObject matrix_mean(SEXP data){
-
-  auto dat = beachmat::create_numeric_matrix(data);
+String matrix_mean(SEXP data){
 
 
-  return dat->yield();
+  return TYPEOF(data);
+
 }
 
 

@@ -244,7 +244,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // matrix_mean
-Rcpp::RObject matrix_mean(SEXP data);
+String matrix_mean(SEXP data);
 RcppExport SEXP _beachball_matrix_mean(SEXP dataSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

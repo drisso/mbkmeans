@@ -10,8 +10,16 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 String matrix_mean(SEXP data){
 
+  int a;
 
-  return TYPEOF(data);
+  const std::type_info& type_a = typeid(a);
+  const std::type_info& type_data = typeid(data);
+
+  if( type_a.hash_code() == type_data.hash_code()){
+    return "same";
+  }else{
+    return "wrong";
+  }
 
 }
 

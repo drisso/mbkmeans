@@ -8,17 +8,18 @@ using namespace Rcpp;
 
 //' @export
 // [[Rcpp::export]]
-String matrix_mean(SEXP data){
+int matrix_mean(SEXP data){
 
-  int a;
+  int matrix_type = TYPEOF(data);
 
-  const std::type_info& type_a = typeid(a);
-  const std::type_info& type_data = typeid(data);
-
-  if( type_a.hash_code() == type_data.hash_code()){
-    return "same";
+  //type of integer matrix is 13
+  //type of numeric matrix is 14
+  if(matrix_type==13){
+    return 1;
+  }else if(matrix_type==14){
+    return 2;
   }else{
-    return "wrong";
+    return 3;
   }
 
 }

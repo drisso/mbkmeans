@@ -107,6 +107,11 @@ get_safe_slot <- function(incoming, slotname) {
 }
 
 #' @export
+Week4_mini_batch_kmeans <- function(data) {
+    .Call(`_beachball_Week4_mini_batch_kmeans`, data)
+}
+
+#' @export
 matrix_mean <- function(data) {
     .Call(`_beachball_matrix_mean`, data)
 }

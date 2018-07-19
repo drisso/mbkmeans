@@ -243,8 +243,64 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// type_integer_index
+int type_integer_index(SEXP data);
+RcppExport SEXP _beachball_type_integer_index(SEXP dataSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type data(dataSEXP);
+    rcpp_result_gen = Rcpp::wrap(type_integer_index(data));
+    return rcpp_result_gen;
+END_RCPP
+}
+// type_numeric_index
+int type_numeric_index(SEXP data);
+RcppExport SEXP _beachball_type_numeric_index(SEXP dataSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type data(dataSEXP);
+    rcpp_result_gen = Rcpp::wrap(type_numeric_index(data));
+    return rcpp_result_gen;
+END_RCPP
+}
+// make_to_string
+std::string make_to_string(const Rcpp::RObject& str);
+RcppExport SEXP _beachball_make_to_string(SEXP strSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::RObject& >::type str(strSEXP);
+    rcpp_result_gen = Rcpp::wrap(make_to_string(str));
+    return rcpp_result_gen;
+END_RCPP
+}
+// get_class
+std::string get_class(const Rcpp::RObject& incoming);
+RcppExport SEXP _beachball_get_class(SEXP incomingSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::RObject& >::type incoming(incomingSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_class(incoming));
+    return rcpp_result_gen;
+END_RCPP
+}
+// get_safe_slot
+Rcpp::RObject get_safe_slot(const Rcpp::RObject& incoming, const std::string& slotname);
+RcppExport SEXP _beachball_get_safe_slot(SEXP incomingSEXP, SEXP slotnameSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::RObject& >::type incoming(incomingSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type slotname(slotnameSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_safe_slot(incoming, slotname));
+    return rcpp_result_gen;
+END_RCPP
+}
 // matrix_mean
-NumericVector matrix_mean(SEXP data);
+int matrix_mean(SEXP data);
 RcppExport SEXP _beachball_matrix_mean(SEXP dataSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -275,6 +331,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_beachball_check_medoids", (DL_FUNC) &_beachball_check_medoids, 3},
     {"_beachball_SCALE", (DL_FUNC) &_beachball_SCALE, 3},
     {"_beachball_mini_batch_kmeans", (DL_FUNC) &_beachball_mini_batch_kmeans, 13},
+    {"_beachball_type_integer_index", (DL_FUNC) &_beachball_type_integer_index, 1},
+    {"_beachball_type_numeric_index", (DL_FUNC) &_beachball_type_numeric_index, 1},
+    {"_beachball_make_to_string", (DL_FUNC) &_beachball_make_to_string, 1},
+    {"_beachball_get_class", (DL_FUNC) &_beachball_get_class, 1},
+    {"_beachball_get_safe_slot", (DL_FUNC) &_beachball_get_safe_slot, 2},
     {"_beachball_matrix_mean", (DL_FUNC) &_beachball_matrix_mean, 1},
     {NULL, NULL, 0}
 };

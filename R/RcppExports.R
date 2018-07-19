@@ -86,6 +86,26 @@ mini_batch_kmeans <- function(data, clusters, batch_size, max_iters, num_init = 
     .Call(`_beachball_mini_batch_kmeans`, data, clusters, batch_size, max_iters, num_init, init_fraction, initializer, early_stop_iter, verbose, CENTROIDS, tol, tol_optimal_init, seed)
 }
 
+type_integer_index <- function(data) {
+    .Call(`_beachball_type_integer_index`, data)
+}
+
+type_numeric_index <- function(data) {
+    .Call(`_beachball_type_numeric_index`, data)
+}
+
+make_to_string <- function(str) {
+    .Call(`_beachball_make_to_string`, str)
+}
+
+get_class <- function(incoming) {
+    .Call(`_beachball_get_class`, incoming)
+}
+
+get_safe_slot <- function(incoming, slotname) {
+    .Call(`_beachball_get_safe_slot`, incoming, slotname)
+}
+
 #' @export
 matrix_mean <- function(data) {
     .Call(`_beachball_matrix_mean`, data)

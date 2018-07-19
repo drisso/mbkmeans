@@ -2,13 +2,20 @@
 #include "beachmat/integer_matrix.h"
 #include <typeinfo>
 #include "Rinternals.h"
+
 #include "Rcpp.h"
+
+
+#include "Week4_functions.h"
+
+#include "H5Cpp.h"
+using namespace H5;
 
 using namespace Rcpp;
 
 //' @export
 // [[Rcpp::export]]
-NumericVector matrix_mean(SEXP data){
+int matrix_mean(SEXP data){
 
   int matrix_type = TYPEOF(data);
 
@@ -31,7 +38,7 @@ NumericVector matrix_mean(SEXP data){
       sums[i] = sum(tmp);
     }
 
-    return sums;
+    return 1;
 
 
   }else if(matrix_type==14){
@@ -53,14 +60,26 @@ NumericVector matrix_mean(SEXP data){
       sums[i] = sum(tmp);
     }
 
-    return sums;
+    return 2;
+
+
+  }else if(matrix_type==25){
+
+    Rcpp::RObject h5seed=get_safe_slot(data, "seed");
+    Rcpp::RObject first_val=get_safe_slot(h5seed, "first_val");
+    char m= first_val.sexp_type();
+
+    return 0;
+
 
 
   }else{
     //type os input is other
-    Rcpp::NumericVector other_matrix;
+    int type;
 
-    return other_matrix;
+    type=TYPEOF(data);
+
+    return type;
   }
 
 }

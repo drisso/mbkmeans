@@ -299,8 +299,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// identify_hdf5matrix
+int identify_hdf5matrix(SEXP data);
+RcppExport SEXP _beachball_identify_hdf5matrix(SEXP dataSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type data(dataSEXP);
+    rcpp_result_gen = Rcpp::wrap(identify_hdf5matrix(data));
+    return rcpp_result_gen;
+END_RCPP
+}
 // matrix_mean
-int matrix_mean(SEXP data);
+Rcpp::NumericVector matrix_mean(SEXP data);
 RcppExport SEXP _beachball_matrix_mean(SEXP dataSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -336,6 +347,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_beachball_make_to_string", (DL_FUNC) &_beachball_make_to_string, 1},
     {"_beachball_get_class", (DL_FUNC) &_beachball_get_class, 1},
     {"_beachball_get_safe_slot", (DL_FUNC) &_beachball_get_safe_slot, 2},
+    {"_beachball_identify_hdf5matrix", (DL_FUNC) &_beachball_identify_hdf5matrix, 1},
     {"_beachball_matrix_mean", (DL_FUNC) &_beachball_matrix_mean, 1},
     {NULL, NULL, 0}
 };

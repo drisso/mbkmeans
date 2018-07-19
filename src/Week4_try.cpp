@@ -15,7 +15,7 @@ using namespace Rcpp;
 
 //' @export
 // [[Rcpp::export]]
-int matrix_mean(SEXP data){
+Rcpp::NumericVector matrix_mean(SEXP data){
 
   int matrix_type = TYPEOF(data);
 
@@ -38,7 +38,7 @@ int matrix_mean(SEXP data){
       sums[i] = sum(tmp);
     }
 
-    return 1;
+    return sums;
 
 
   }else if(matrix_type==14){
@@ -60,22 +60,61 @@ int matrix_mean(SEXP data){
       sums[i] = sum(tmp);
     }
 
-    return 2;
+    return sums;
 
 
   }else if(matrix_type==25){
 
     Rcpp::RObject h5seed=get_safe_slot(data, "seed");
     Rcpp::RObject first_val=get_safe_slot(h5seed, "first_val");
-    char m= first_val.sexp_type();
+    int identify_hdf5matrix= first_val.sexp_type();
 
-    return 0;
+    if(identify_hdf5matrix== 13){
+
+    auto dat1=beachmat::create_integer_matrix(data);
+
+      const size_t& nc=dat1->get_ncol();
+      const size_t& nr=dat1->get_nrow();
+
+      Rcpp::NumericVector sums(nc);
+
+      for(int i=0; i<nc; i++) {
+        Rcpp::NumericVector tmp(nr);
+
+        dat1->get_col(i, tmp.begin());
+
+        sums[i] = sum(tmp);
+      }
+
+      return sums;
+
+    }else if(identify_hdf5matrix ==14){
+      auto dat1 = beachmat::create_numeric_matrix(data);
+      const size_t& nc=dat1->get_ncol();
+      const size_t& nr=dat1->get_nrow();
+
+      Rcpp::NumericVector sums(nc);
+
+      for(int i=0; i<nc; i++) {
+        Rcpp::NumericVector tmp(nr);
+
+        dat1->get_col(i, tmp.begin());
+
+        sums[i] = sum(tmp);
+      }
+
+      return sums;
+
+    }else {
+
+      return 0;
+    }
 
 
 
   }else{
     //type os input is other
-    int type;
+    NumericVector type;
 
     type=TYPEOF(data);
 

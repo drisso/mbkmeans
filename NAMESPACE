@@ -3,6 +3,7 @@
 export(beachmat_colSums)
 export(matrix_mean)
 export(mini_batch_kmeans)
+export(mini_batch_kmeans_Week4)
 exportMethods(kmeans)
 importClassesFrom(DelayedArray,DelayedMatrix)
 importClassesFrom(SingleCellExperiment,LinearEmbeddingMatrix)

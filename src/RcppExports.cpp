@@ -299,6 +299,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// transfer_data
+SEXP transfer_data(SEXP data);
+RcppExport SEXP _beachball_transfer_data(SEXP dataSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type data(dataSEXP);
+    rcpp_result_gen = Rcpp::wrap(transfer_data(data));
+    return rcpp_result_gen;
+END_RCPP
+}
 // Week4_mini_batch_kmeans
 arma::mat Week4_mini_batch_kmeans(SEXP data);
 RcppExport SEXP _beachball_Week4_mini_batch_kmeans(SEXP dataSEXP) {
@@ -321,6 +332,8 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+
+RcppExport SEXP _beachball_debug(SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
     {"_beachball_beachmat_colSums", (DL_FUNC) &_beachball_beachmat_colSums, 1},
@@ -347,8 +360,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_beachball_make_to_string", (DL_FUNC) &_beachball_make_to_string, 1},
     {"_beachball_get_class", (DL_FUNC) &_beachball_get_class, 1},
     {"_beachball_get_safe_slot", (DL_FUNC) &_beachball_get_safe_slot, 2},
+    {"_beachball_transfer_data", (DL_FUNC) &_beachball_transfer_data, 1},
     {"_beachball_Week4_mini_batch_kmeans", (DL_FUNC) &_beachball_Week4_mini_batch_kmeans, 1},
     {"_beachball_matrix_mean", (DL_FUNC) &_beachball_matrix_mean, 1},
+    {"_beachball_debug",                   (DL_FUNC) &_beachball_debug,                    1},
     {NULL, NULL, 0}
 };
 

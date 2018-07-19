@@ -58,3 +58,68 @@ Rcpp::RObject get_safe_slot(const Rcpp::RObject& incoming, const std::string& sl
   }
   return incoming.slot(slotname);
 }
+
+
+// [[Rcpp::export]]
+SEXP transfer_data(SEXP data){
+  int matrix_type = TYPEOF(data);
+
+  if(matrix_type ==13){
+
+    auto dat=beachmat::create_integer_matrix(data);
+
+    Rcpp::RObject dat1 = dat->yield();
+
+    SEXP final_matrix = as<IntegerMatrix>(dat1);
+
+    return final_matrix;
+
+  }else if(matrix_type==14){
+
+    // returns a std::unique_ptr<beachmat::numeric_matrix> object
+    auto dat = beachmat::create_numeric_matrix(data);
+
+    Rcpp::RObject dat1 = dat->yield();
+
+    SEXP final_matrix = as<NumericMatrix>(dat1);
+
+    return final_matrix;
+
+  }else if(matrix_type==25){
+
+    Rcpp::RObject h5seed=get_safe_slot(data, "seed");
+    Rcpp::RObject first_val=get_safe_slot(h5seed, "first_val");
+    int identify_hdf5matrix= first_val.sexp_type();
+
+    if(identify_hdf5matrix==13){
+
+      auto dat=beachmat::create_integer_matrix(data);
+
+      Rcpp::RObject dat1 = dat->yield();
+
+      SEXP final_matrix = as<Rcpp::IntegerMatrix>(dat1);
+
+      return final_matrix;
+
+    }else if(identify_hdf5matrix==14){
+
+      // returns a std::unique_ptr<beachmat::numeric_matrix> object
+      auto dat = beachmat::create_numeric_matrix(data);
+
+      Rcpp::RObject dat1 = dat->yield();
+
+      SEXP final_matrix = as<NumericMatrix>(dat1);
+
+
+      return final_matrix;
+    }else{
+      return 0;
+    }
+
+
+return 0;
+  }
+
+
+return 0;
+}

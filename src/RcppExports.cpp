@@ -322,9 +322,6 @@ BEGIN_RCPP
 END_RCPP
 }
 
-RcppExport SEXP _beachball_mini_batch_kmeans_Week4(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
-RcppExport SEXP _beachball_transfer_data(SEXP);
-
 static const R_CallMethodDef CallEntries[] = {
     {"_beachball_beachmat_colSums", (DL_FUNC) &_beachball_beachmat_colSums, 1},
     {"_beachball_set_seed", (DL_FUNC) &_beachball_set_seed, 1},
@@ -352,8 +349,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_beachball_get_safe_slot", (DL_FUNC) &_beachball_get_safe_slot, 2},
     {"_beachball_Week4_mini_batch_kmeans", (DL_FUNC) &_beachball_Week4_mini_batch_kmeans, 1},
     {"_beachball_matrix_mean", (DL_FUNC) &_beachball_matrix_mean, 1},
-    {"_beachball_mini_batch_kmeans_Week4", (DL_FUNC) &_beachball_mini_batch_kmeans_Week4, 13},
-    {"_beachball_transfer_data",           (DL_FUNC) &_beachball_transfer_data,            1},
     {NULL, NULL, 0}
 };
 

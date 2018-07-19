@@ -6,5 +6,6 @@ int type_numeric_index(SEXP data);
 std::string make_to_string(const Rcpp::RObject& str);
 std::string get_class(const Rcpp::RObject& incoming);
 Rcpp::RObject get_safe_slot(const Rcpp::RObject& incoming, const std::string& slotname);
+SEXP transfer_data(SEXP data);
 
 #endif

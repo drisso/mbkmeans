@@ -13,6 +13,11 @@ beachmat_colSums <- function(dmat) {
     .Call(`_beachball_beachmat_colSums`, dmat)
 }
 
+#' @export
+debug <- function(data) {
+    .Call(`_beachball_debug`, data)
+}
+
 set_seed <- function(seed) {
     invisible(.Call(`_beachball_set_seed`, seed))
 }
@@ -111,8 +116,8 @@ transfer_data <- function(data) {
 }
 
 #' @export
-Week4_mini_batch_kmeans <- function(data) {
-    .Call(`_beachball_Week4_mini_batch_kmeans`, data)
+Week4_mini_batch_kmeans <- function(dat, clusters, batch_size, max_iters, num_init = 1L, init_fraction = 1.0, initializer = "kmeans++", early_stop_iter = 10L, verbose = FALSE, CENTROIDS = NULL, tol = 1e-4, tol_optimal_init = 0.5, seed = 1L) {
+    .Call(`_beachball_Week4_mini_batch_kmeans`, dat, clusters, batch_size, max_iters, num_init, init_fraction, initializer, early_stop_iter, verbose, CENTROIDS, tol, tol_optimal_init, seed)
 }
 
 #' @export

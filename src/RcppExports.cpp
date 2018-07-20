@@ -17,6 +17,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// debug
+SEXP debug(SEXP data);
+RcppExport SEXP _beachball_debug(SEXP dataSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type data(dataSEXP);
+    rcpp_result_gen = Rcpp::wrap(debug(data));
+    return rcpp_result_gen;
+END_RCPP
+}
 // set_seed
 void set_seed(int seed);
 RcppExport SEXP _beachball_set_seed(SEXP seedSEXP) {
@@ -311,13 +322,25 @@ BEGIN_RCPP
 END_RCPP
 }
 // Week4_mini_batch_kmeans
-arma::mat Week4_mini_batch_kmeans(SEXP data);
-RcppExport SEXP _beachball_Week4_mini_batch_kmeans(SEXP dataSEXP) {
+Rcpp::List Week4_mini_batch_kmeans(SEXP dat, int clusters, int batch_size, int max_iters, int num_init, double init_fraction, std::string initializer, int early_stop_iter, bool verbose, Rcpp::Nullable<Rcpp::NumericMatrix> CENTROIDS, double tol, double tol_optimal_init, int seed);
+RcppExport SEXP _beachball_Week4_mini_batch_kmeans(SEXP datSEXP, SEXP clustersSEXP, SEXP batch_sizeSEXP, SEXP max_itersSEXP, SEXP num_initSEXP, SEXP init_fractionSEXP, SEXP initializerSEXP, SEXP early_stop_iterSEXP, SEXP verboseSEXP, SEXP CENTROIDSSEXP, SEXP tolSEXP, SEXP tol_optimal_initSEXP, SEXP seedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type data(dataSEXP);
-    rcpp_result_gen = Rcpp::wrap(Week4_mini_batch_kmeans(data));
+    Rcpp::traits::input_parameter< SEXP >::type dat(datSEXP);
+    Rcpp::traits::input_parameter< int >::type clusters(clustersSEXP);
+    Rcpp::traits::input_parameter< int >::type batch_size(batch_sizeSEXP);
+    Rcpp::traits::input_parameter< int >::type max_iters(max_itersSEXP);
+    Rcpp::traits::input_parameter< int >::type num_init(num_initSEXP);
+    Rcpp::traits::input_parameter< double >::type init_fraction(init_fractionSEXP);
+    Rcpp::traits::input_parameter< std::string >::type initializer(initializerSEXP);
+    Rcpp::traits::input_parameter< int >::type early_stop_iter(early_stop_iterSEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::NumericMatrix> >::type CENTROIDS(CENTROIDSSEXP);
+    Rcpp::traits::input_parameter< double >::type tol(tolSEXP);
+    Rcpp::traits::input_parameter< double >::type tol_optimal_init(tol_optimal_initSEXP);
+    Rcpp::traits::input_parameter< int >::type seed(seedSEXP);
+    rcpp_result_gen = Rcpp::wrap(Week4_mini_batch_kmeans(dat, clusters, batch_size, max_iters, num_init, init_fraction, initializer, early_stop_iter, verbose, CENTROIDS, tol, tol_optimal_init, seed));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -333,10 +356,9 @@ BEGIN_RCPP
 END_RCPP
 }
 
-RcppExport SEXP _beachball_debug(SEXP);
-
 static const R_CallMethodDef CallEntries[] = {
     {"_beachball_beachmat_colSums", (DL_FUNC) &_beachball_beachmat_colSums, 1},
+    {"_beachball_debug", (DL_FUNC) &_beachball_debug, 1},
     {"_beachball_set_seed", (DL_FUNC) &_beachball_set_seed, 1},
     {"_beachball_cluster_indices", (DL_FUNC) &_beachball_cluster_indices, 1},
     {"_beachball_check_NaN_Inf", (DL_FUNC) &_beachball_check_NaN_Inf, 1},
@@ -361,9 +383,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_beachball_get_class", (DL_FUNC) &_beachball_get_class, 1},
     {"_beachball_get_safe_slot", (DL_FUNC) &_beachball_get_safe_slot, 2},
     {"_beachball_transfer_data", (DL_FUNC) &_beachball_transfer_data, 1},
-    {"_beachball_Week4_mini_batch_kmeans", (DL_FUNC) &_beachball_Week4_mini_batch_kmeans, 1},
+    {"_beachball_Week4_mini_batch_kmeans", (DL_FUNC) &_beachball_Week4_mini_batch_kmeans, 13},
     {"_beachball_matrix_mean", (DL_FUNC) &_beachball_matrix_mean, 1},
-    {"_beachball_debug",                   (DL_FUNC) &_beachball_debug,                    1},
     {NULL, NULL, 0}
 };
 

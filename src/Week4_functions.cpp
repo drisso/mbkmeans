@@ -95,9 +95,28 @@ SEXP transfer_data(SEXP data){
 
       auto dat=beachmat::create_integer_matrix(data);
 
-      Rcpp::RObject dat1 = dat->yield();
+      //Rcpp::RObject dat1 = dat->yield();
 
-      SEXP final_matrix = as<Rcpp::IntegerMatrix>(dat1);
+      //SEXP final_matrix = as<Rcpp::IntegerMatrix>(dat1);
+
+      const size_t& nc=dat->get_ncol();
+      const size_t& nr=dat->get_nrow();
+
+
+      Rcpp::IntegerMatrix final_matrix(nr,nc);
+
+      for(int i =0;i<nr;i++){
+        for(int j=0; j<nc;j++){
+          Rcpp::IntegerVector tmp1(nr);
+
+          dat->get(i,j);
+
+          final_matrix(i,j)=dat->get(i,j);
+        }
+
+      }
+
+
 
       return final_matrix;
 
@@ -106,9 +125,26 @@ SEXP transfer_data(SEXP data){
       // returns a std::unique_ptr<beachmat::numeric_matrix> object
       auto dat = beachmat::create_numeric_matrix(data);
 
-      Rcpp::RObject dat1 = dat->yield();
+      //Rcpp::RObject dat1 = dat->yield();
 
-      SEXP final_matrix = as<NumericMatrix>(dat1);
+      //SEXP final_matrix = as<NumericMatrix>(dat1);
+
+      const size_t& nc=dat->get_ncol();
+      const size_t& nr=dat->get_nrow();
+
+
+      Rcpp::NumericMatrix final_matrix(nr,nc);
+
+      for(int i =0;i<nr;i++){
+        for(int j=0; j<nc;j++){
+          Rcpp::NumericVector tmp1(nr);
+
+          dat->get(i,j);
+
+          final_matrix(i,j)=dat->get(i,j);
+        }
+
+      }
 
 
       return final_matrix;

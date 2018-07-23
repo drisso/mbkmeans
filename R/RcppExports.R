@@ -18,6 +18,11 @@ debug <- function(data) {
     .Call(`_beachball_debug`, data)
 }
 
+#' @export
+random_choose <- function(data, init_fraction) {
+    .Call(`_beachball_random_choose`, data, init_fraction)
+}
+
 set_seed <- function(seed) {
     invisible(.Call(`_beachball_set_seed`, seed))
 }

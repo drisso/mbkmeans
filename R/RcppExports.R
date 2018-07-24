@@ -14,11 +14,10 @@ beachmat_colSums <- function(dmat) {
 }
 
 #' @export
-debug <- function(data) {
-    .Call(`_beachball_debug`, data)
+debug <- function(data, init_fraction) {
+    .Call(`_beachball_debug`, data, init_fraction)
 }
 
-#' @export
 random_choose <- function(data, init_fraction) {
     .Call(`_beachball_random_choose`, data, init_fraction)
 }

@@ -18,13 +18,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // debug
-SEXP debug(SEXP data);
-RcppExport SEXP _beachball_debug(SEXP dataSEXP) {
+SEXP debug(SEXP data, double init_fraction);
+RcppExport SEXP _beachball_debug(SEXP dataSEXP, SEXP init_fractionSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type data(dataSEXP);
-    rcpp_result_gen = Rcpp::wrap(debug(data));
+    Rcpp::traits::input_parameter< double >::type init_fraction(init_fractionSEXP);
+    rcpp_result_gen = Rcpp::wrap(debug(data, init_fraction));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -370,7 +371,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_beachball_beachmat_colSums", (DL_FUNC) &_beachball_beachmat_colSums, 1},
-    {"_beachball_debug", (DL_FUNC) &_beachball_debug, 1},
+    {"_beachball_debug", (DL_FUNC) &_beachball_debug, 2},
     {"_beachball_random_choose", (DL_FUNC) &_beachball_random_choose, 2},
     {"_beachball_set_seed", (DL_FUNC) &_beachball_set_seed, 1},
     {"_beachball_cluster_indices", (DL_FUNC) &_beachball_cluster_indices, 1},

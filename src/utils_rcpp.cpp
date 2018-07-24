@@ -9,6 +9,9 @@
 
 #include "utils_rcpp.h"
 
+#include "beachmat/numeric_matrix.h"
+#include "beachmat/integer_matrix.h"
+
 
 // use base R's set.seed() in Rcpp for RNG
 // http://thecoatlessprofessor.com/programming/set_rs_seed_in_rcpp_sequential_case
@@ -556,3 +559,67 @@ arma::mat SCALE(arma::mat data, bool mean_center = true, bool sd_scale = true) {
 }
 
 
+
+// this function transfer data into arma::mat
+//
+
+
+arma::mat transfer_matrix(SEXP data){
+  auto matrix_type=beachmat::find_sexp_type(data);
+  if(matrix_type==INTSXP){
+    auto matrix1=beachmat::create_integer_matrix(data);
+
+    const size_t& nc=matrix1->get_ncol();
+    const size_t& nr=matrix1->get_nrow();
+
+
+    Rcpp::IntegerMatrix final_matrix(nr,nc);
+
+    for(int i =0;i<nr;i++){
+      for(int j=0; j<nc;j++){
+        Rcpp::IntegerVector tmp1(nr);
+
+        matrix1->get(i,j);
+
+        final_matrix(i,j)=matrix1->get(i,j);
+      }
+    }
+
+    arma::mat final_matrix2 =Rcpp::as<arma::mat>(final_matrix);
+
+    return final_matrix2;
+
+
+  }else if(matrix_type==REALSXP){
+    auto matrix1 = beachmat::create_numeric_matrix(data);
+
+    const size_t& nc=matrix1->get_ncol();
+    const size_t& nr=matrix1->get_nrow();
+
+
+    Rcpp::NumericMatrix final_matrix(nr,nc);
+
+    for(int i =0;i<nr;i++){
+      for(int j=0; j<nc;j++){
+        Rcpp::NumericVector tmp1(nr);
+
+        matrix1->get(i,j);
+
+        final_matrix(i,j)=matrix1->get(i,j);
+      }
+    }
+
+    arma::mat final_matrix2 =Rcpp::as<arma::mat>(final_matrix);
+
+    return final_matrix2;
+
+
+  }else{
+    Rcpp::stop("Wrong type of matrix");
+  }
+
+
+
+
+
+}

@@ -18,5 +18,6 @@ double calc_silhouette(double inter, double outer);
 bool check_NaN_Inf(arma::mat x);
 Rcpp::List cluster_indices(arma::vec CLUSTER);
 void set_seed(int seed);
+arma::mat transfer_matrix(SEXP data);
 
 #endif

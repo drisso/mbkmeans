@@ -15,20 +15,6 @@ using namespace Rcpp;
 #include "Week4_functions.h"
 
 
-
-// [[Rcpp::export]]
-int type_integer_index(SEXP data){
-  auto iptr=beachmat::create_integer_matrix(data);
-  return 0;
-}
-
-// [[Rcpp::export]]
-int type_numeric_index(SEXP data){
-  auto dptr=beachmat::create_numeric_matrix(data);
-  return 0;
-}
-
-
 // [[Rcpp::export]]
 std::string make_to_string(const Rcpp::RObject& str) {
   Rcpp::StringVector as_str(str);
@@ -61,7 +47,7 @@ Rcpp::RObject get_safe_slot(const Rcpp::RObject& incoming, const std::string& sl
 
 
 // [[Rcpp::export]]
-SEXP transfer_data(SEXP data){
+arma::mat transfer_data(SEXP data){
   int matrix_type = TYPEOF(data);
 
   if(matrix_type ==13){

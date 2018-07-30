@@ -47,7 +47,7 @@ Rcpp::RObject get_safe_slot(const Rcpp::RObject& incoming, const std::string& sl
 
 
 // [[Rcpp::export]]
-arma::mat transfer_data(SEXP data){
+SEXP transfer_data(SEXP data){
   int matrix_type = TYPEOF(data);
 
   if(matrix_type ==13){

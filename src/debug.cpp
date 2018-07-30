@@ -59,12 +59,12 @@ SEXP debug(SEXP data, double init_fraction){
 
     auto final_matrix=beachmat::create_integer_matrix(data);
     //const size_t& nc = final_matrix->get_ncol();
-    //const size_t& nr = final_matrix->get_ncol();
+    //const size_t& nr = final_matrix->get_nrow();
     return get_result(final_matrix,init_fraction);
   }else if(matrix_type==REALSXP){
     auto final_matrix=beachmat::create_numeric_matrix(data);
     //const size_t& nc = final_matrix->get_ncol();
-    //const size_t& nr = final_matrix->get_ncol();
+    //const size_t& nr = final_matrix->get_nrow();
     return get_result(final_matrix,init_fraction);
 
   }else{

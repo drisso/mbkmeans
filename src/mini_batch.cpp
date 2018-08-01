@@ -43,6 +43,29 @@ int get_nrow(const T& data){
 }
 
 
+template<typename T1, typename T2>
+SEXP shuffle_matrix(const T1& data, const T2& init_fraction_value){
+
+  const size_t& nc = data->get_ncol();
+  const size_t& nr = data->get_nrow();
+  int fract = std::ceil(nr*init_fraction_value);
+
+  arma::uvec init = arma::conv_to< arma::uvec >::from(sample_vec(fract, 0, nr - 1, false));
+
+  arma::uvec samp_init = arma::sort(init);
+
+  Rcpp::NumericMatrix submat(samp_init.n_rows, nc);
+  Rcpp::NumericVector tmp(nc);
+
+  for(int i=0; i<samp_init.n_rows; i++){
+    data->get_row(samp_init[i], tmp.begin());
+    submat.row(i) = tmp;
+  }
+
+  return submat;
+
+}
+
 
 //' @export
 // [[Rcpp::export]]
@@ -94,11 +117,35 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
 
       if(init_fraction==1.0){
 
+        //SEXP centroids_matrix = transfer_data(data);
 
+        //update_centroids = Rcpp::as<arma::mat>(centroids_matrix);
 
+        SEXP trans_data = transfer_data(data);
+        arma::mat update_centroids = Rcpp::as<arma::mat>(trans_data);
 
 
       }else if(init_fraction <1.0 && init_fraction >0.0){
+
+        SEXP tran_data;
+        auto matrix_type=beachmat::find_sexp_type(data);
+
+        if(matrix_type == INTSXP){
+          auto final_matrix=beachmat::create_integer_matrix(data);
+          SEXP tran_data =  shuffle_matrix(final_matrix,init_fraction);
+          return tran_data;
+        }else if(matrix_type ==REALSXP){
+          auto final_matrix=beachmat::create_numeric_matrix(data);
+          SEXP tran_data = shuffle_matrix(final_matrix,init_fraction);
+          return tran_data;
+        }else{
+          Rcpp::stop("The type of matrix is wrong");
+        }
+
+        arma::mat update_centroids = Rcpp::as<arma::mat>(tran_data);
+
+       // SEXP centroids_matrix = shuffle_matrix(data,init_fraction = init_fraction);
+
 
       }else{
         Rcpp::stop("The value of fraction should be larger than 0 and not larger than 1");
@@ -110,6 +157,7 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
 
   }
 
+  return 0;
 
 }
 

@@ -29,6 +29,29 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// mini_batch
+Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, int num_init, double init_fraction, std::string initializer, int early_stop_iter, bool verbose, Rcpp::Nullable<Rcpp::NumericMatrix> CENTROIDS, double tol, double tol_optimal_init, int seed);
+RcppExport SEXP _beachball_mini_batch(SEXP dataSEXP, SEXP clustersSEXP, SEXP batch_sizeSEXP, SEXP max_itersSEXP, SEXP num_initSEXP, SEXP init_fractionSEXP, SEXP initializerSEXP, SEXP early_stop_iterSEXP, SEXP verboseSEXP, SEXP CENTROIDSSEXP, SEXP tolSEXP, SEXP tol_optimal_initSEXP, SEXP seedSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< int >::type clusters(clustersSEXP);
+    Rcpp::traits::input_parameter< int >::type batch_size(batch_sizeSEXP);
+    Rcpp::traits::input_parameter< int >::type max_iters(max_itersSEXP);
+    Rcpp::traits::input_parameter< int >::type num_init(num_initSEXP);
+    Rcpp::traits::input_parameter< double >::type init_fraction(init_fractionSEXP);
+    Rcpp::traits::input_parameter< std::string >::type initializer(initializerSEXP);
+    Rcpp::traits::input_parameter< int >::type early_stop_iter(early_stop_iterSEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::NumericMatrix> >::type CENTROIDS(CENTROIDSSEXP);
+    Rcpp::traits::input_parameter< double >::type tol(tolSEXP);
+    Rcpp::traits::input_parameter< double >::type tol_optimal_init(tol_optimal_initSEXP);
+    Rcpp::traits::input_parameter< int >::type seed(seedSEXP);
+    rcpp_result_gen = Rcpp::wrap(mini_batch(data, clusters, batch_size, max_iters, num_init, init_fraction, initializer, early_stop_iter, verbose, CENTROIDS, tol, tol_optimal_init, seed));
+    return rcpp_result_gen;
+END_RCPP
+}
 // random_choose
 SEXP random_choose(SEXP data, double init_fraction);
 RcppExport SEXP _beachball_random_choose(SEXP dataSEXP, SEXP init_fractionSEXP) {
@@ -267,28 +290,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// type_integer_index
-int type_integer_index(SEXP data);
-RcppExport SEXP _beachball_type_integer_index(SEXP dataSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type data(dataSEXP);
-    rcpp_result_gen = Rcpp::wrap(type_integer_index(data));
-    return rcpp_result_gen;
-END_RCPP
-}
-// type_numeric_index
-int type_numeric_index(SEXP data);
-RcppExport SEXP _beachball_type_numeric_index(SEXP dataSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type data(dataSEXP);
-    rcpp_result_gen = Rcpp::wrap(type_numeric_index(data));
-    return rcpp_result_gen;
-END_RCPP
-}
 // make_to_string
 std::string make_to_string(const Rcpp::RObject& str);
 RcppExport SEXP _beachball_make_to_string(SEXP strSEXP) {
@@ -369,9 +370,12 @@ BEGIN_RCPP
 END_RCPP
 }
 
+RcppExport SEXP _beachball_shuffle_matrix_final(SEXP, SEXP);
+
 static const R_CallMethodDef CallEntries[] = {
     {"_beachball_beachmat_colSums", (DL_FUNC) &_beachball_beachmat_colSums, 1},
     {"_beachball_debug", (DL_FUNC) &_beachball_debug, 2},
+    {"_beachball_mini_batch", (DL_FUNC) &_beachball_mini_batch, 13},
     {"_beachball_random_choose", (DL_FUNC) &_beachball_random_choose, 2},
     {"_beachball_set_seed", (DL_FUNC) &_beachball_set_seed, 1},
     {"_beachball_cluster_indices", (DL_FUNC) &_beachball_cluster_indices, 1},
@@ -391,14 +395,13 @@ static const R_CallMethodDef CallEntries[] = {
     {"_beachball_check_medoids", (DL_FUNC) &_beachball_check_medoids, 3},
     {"_beachball_SCALE", (DL_FUNC) &_beachball_SCALE, 3},
     {"_beachball_mini_batch_kmeans", (DL_FUNC) &_beachball_mini_batch_kmeans, 13},
-    {"_beachball_type_integer_index", (DL_FUNC) &_beachball_type_integer_index, 1},
-    {"_beachball_type_numeric_index", (DL_FUNC) &_beachball_type_numeric_index, 1},
     {"_beachball_make_to_string", (DL_FUNC) &_beachball_make_to_string, 1},
     {"_beachball_get_class", (DL_FUNC) &_beachball_get_class, 1},
     {"_beachball_get_safe_slot", (DL_FUNC) &_beachball_get_safe_slot, 2},
     {"_beachball_transfer_data", (DL_FUNC) &_beachball_transfer_data, 1},
     {"_beachball_Week4_mini_batch_kmeans", (DL_FUNC) &_beachball_Week4_mini_batch_kmeans, 13},
     {"_beachball_matrix_mean", (DL_FUNC) &_beachball_matrix_mean, 1},
+    {"_beachball_shuffle_matrix_final",    (DL_FUNC) &_beachball_shuffle_matrix_final,     2},
     {NULL, NULL, 0}
 };
 

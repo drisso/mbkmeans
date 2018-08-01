@@ -18,6 +18,11 @@ debug <- function(data, init_fraction) {
     .Call(`_beachball_debug`, data, init_fraction)
 }
 
+#' @export
+mini_batch <- function(data, clusters, batch_size, max_iters, num_init = 1L, init_fraction = 1.0, initializer = "kmeans++", early_stop_iter = 10L, verbose = FALSE, CENTROIDS = NULL, tol = 1e-4, tol_optimal_init = 0.5, seed = 1L) {
+    .Call(`_beachball_mini_batch`, data, clusters, batch_size, max_iters, num_init, init_fraction, initializer, early_stop_iter, verbose, CENTROIDS, tol, tol_optimal_init, seed)
+}
+
 random_choose <- function(data, init_fraction) {
     .Call(`_beachball_random_choose`, data, init_fraction)
 }
@@ -93,14 +98,6 @@ SCALE <- function(data, mean_center = TRUE, sd_scale = TRUE) {
 #' @export
 mini_batch_kmeans <- function(data, clusters, batch_size, max_iters, num_init = 1L, init_fraction = 1.0, initializer = "kmeans++", early_stop_iter = 10L, verbose = FALSE, CENTROIDS = NULL, tol = 1e-4, tol_optimal_init = 0.5, seed = 1L) {
     .Call(`_beachball_mini_batch_kmeans`, data, clusters, batch_size, max_iters, num_init, init_fraction, initializer, early_stop_iter, verbose, CENTROIDS, tol, tol_optimal_init, seed)
-}
-
-type_integer_index <- function(data) {
-    .Call(`_beachball_type_integer_index`, data)
-}
-
-type_numeric_index <- function(data) {
-    .Call(`_beachball_type_numeric_index`, data)
 }
 
 make_to_string <- function(str) {

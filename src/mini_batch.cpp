@@ -67,6 +67,28 @@ SEXP shuffle_matrix(const T1& data, const T2& init_fraction_value){
 }
 
 
+template<typename T1>
+SEXP shuffle_matrix_random(const T1& data, int cluster){
+  const size_t& nc = data->get_ncol();
+  const size_t& nr = data->get_nrow();
+
+  arma::uvec init = arma::conv_to< arma::uvec >::from(sample_vec(cluster, 0, nr - 1, false));
+
+  arma::uvec samp_init = arma::sort(init);
+
+  Rcpp::NumericMatrix submat(samp_init.n_rows, nc);
+  Rcpp::NumericVector tmp(nc);
+
+  for(int i=0; i<samp_init.n_rows; i++){
+    data->get_row(samp_init[i], tmp.begin());
+    submat.row(i) = tmp;
+  }
+
+  return submat;
+
+}
+
+
 //' @export
 // [[Rcpp::export]]
 Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, int num_init = 1, double init_fraction = 1.0, std::string initializer = "kmeans++",
@@ -109,53 +131,113 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
 
   arma::rowvec flag_exception(num_init, arma::fill::zeros);
 
+
+
   for (int init = 0; init < num_init; init++){
 
     arma::mat update_centroids;
 
-    if(initializer== "kmeans++"){
 
-      if(init_fraction==1.0){
+    if(!flag){
 
-        //SEXP centroids_matrix = transfer_data(data);
+      if(initializer== "kmeans++"){
 
-        //update_centroids = Rcpp::as<arma::mat>(centroids_matrix);
+        if(init_fraction==1.0){
 
-        SEXP trans_data = transfer_data(data);
-        arma::mat update_centroids = Rcpp::as<arma::mat>(trans_data);
+          //SEXP centroids_matrix = transfer_data(data);
+
+          //update_centroids = Rcpp::as<arma::mat>(centroids_matrix);
+
+          SEXP trans_data = transfer_data(data);
+
+          arma::mat final_data = Rcpp::as<arma::mat>(trans_data);
+
+          update_centroids = kmeans_pp_init(final_data, clusters, false);
+
+        }else if(init_fraction <1.0 && init_fraction >0.0){
 
 
-      }else if(init_fraction <1.0 && init_fraction >0.0){
+          SEXP tran_data;
+          auto matrix_type=beachmat::find_sexp_type(data);
 
-        SEXP tran_data;
+          if(matrix_type == INTSXP){
+            auto final_matrix=beachmat::create_integer_matrix(data);
+            SEXP tran_data =  shuffle_matrix(final_matrix,init_fraction);
+            return tran_data;
+          }else if(matrix_type ==REALSXP){
+            auto final_matrix=beachmat::create_numeric_matrix(data);
+            SEXP tran_data = shuffle_matrix(final_matrix,init_fraction);
+            return tran_data;
+          }else{
+            Rcpp::stop("The type of matrix is wrong");
+          }
+
+          arma::mat final_data = Rcpp::as<arma::mat>(tran_data);
+          update_centroids = kmeans_pp_init(final_data, clusters, false);
+
+
+          // SEXP centroids_matrix = shuffle_matrix(data,init_fraction = init_fraction);
+
+
+        }else{
+          Rcpp::stop("The value of fraction should be larger than 0 and not larger than 1");
+        }
+      }//kmeans++ ends
+
+      if(initializer == "random"){
+
+
+        //arma::uvec samp = arma::conv_to< arma::uvec >::from(sample_vec(clusters, 0, data.n_rows - 1, false));
+
+        //update_centroids = data.rows(samp);
+
+        SEXP tran_data_random;
         auto matrix_type=beachmat::find_sexp_type(data);
 
         if(matrix_type == INTSXP){
           auto final_matrix=beachmat::create_integer_matrix(data);
-          SEXP tran_data =  shuffle_matrix(final_matrix,init_fraction);
-          return tran_data;
+          SEXP tran_data_random =  shuffle_matrix_random(final_matrix,clusters);
+          return tran_data_random;
+
         }else if(matrix_type ==REALSXP){
           auto final_matrix=beachmat::create_numeric_matrix(data);
-          SEXP tran_data = shuffle_matrix(final_matrix,init_fraction);
-          return tran_data;
+          SEXP tran_data_random = shuffle_matrix_random(final_matrix,clusters);
+          return tran_data_random;
         }else{
           Rcpp::stop("The type of matrix is wrong");
         }
 
-        arma::mat update_centroids = Rcpp::as<arma::mat>(tran_data);
 
-       // SEXP centroids_matrix = shuffle_matrix(data,init_fraction = init_fraction);
+        update_centroids = Rcpp::as<arma::mat>(tran_data_random);
+        //update_centroids = kmeans_pp_init(final_data, clusters, false);
 
+      }//random ends
 
-      }else{
-        Rcpp::stop("The value of fraction should be larger than 0 and not larger than 1");
-      }
+    }else{
+      update_centroids = CENTROIDS1;
     }
+
+    arma::mat previous_centroids = update_centroids;
+
+    arma::mat output_centroids;
+
+    arma::rowvec output_SSE;
+
+    double previous_cost = arma::datum::inf;
+
+    int increment_early_stop = 0;
+
+    int count = 0;
+
+
+
 
 
 
 
   }
+
+
 
   return 0;
 

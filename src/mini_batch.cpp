@@ -371,23 +371,23 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
 
   }
 
-  int exc = arma::as_scalar(flag_exception(end_init - 1));                        // print warning OR stop function only if duplicates OR NA's are present in relevant output centroids [ end_init - 1 ]
+  //int exc = arma::as_scalar(flag_exception(end_init - 1));                        // print warning OR stop function only if duplicates OR NA's are present in relevant output centroids [ end_init - 1 ]
 
-  if (exc > 0) {
+  //if (exc > 0) {
 
-    if (initializer == "quantile_init") {
+  //if (initializer == "quantile_init") {
 
-      std::string message = "the centroid matrix using 'quantile_init' as initializer contains duplicates for number of clusters equal to : " + std::to_string(clusters);
+  //  std::string message = "the centroid matrix using 'quantile_init' as initializer contains duplicates for number of clusters equal to : " + std::to_string(clusters);
 
-      Rcpp::warning(message);}
+  //  Rcpp::warning(message);}
 
-    if (initializer == "optimal_init") {
+  //if (initializer == "optimal_init") {
 
-      std::string message = "The centroid matrix using 'optimal_init' as initializer contains NA's. Thus, the 'tol_optimal_init' parameter should be (probably) decreased for number of clusters equal to : " + std::to_string(clusters);
+  //  std::string message = "The centroid matrix using 'optimal_init' as initializer contains NA's. Thus, the 'tol_optimal_init' parameter should be (probably) decreased for number of clusters equal to : " + std::to_string(clusters);
 
-      Rcpp::stop(message);
-    }
-  }
+  //  Rcpp::stop(message);
+  //}
+  //}
 
   return Rcpp::List::create(Rcpp::Named("centroids") = centers_out, Rcpp::Named("WCSS_per_cluster") = bst_WCSS,
 

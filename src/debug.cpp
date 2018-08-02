@@ -53,24 +53,44 @@ SEXP get_result(const T1& data, const T2& init_fraction){
 
 //' @export
 // [[Rcpp::export]]
-SEXP debug(SEXP data, double init_fraction){
-  auto matrix_type=beachmat::find_sexp_type(data);
-  if(matrix_type==INTSXP){
+arma::mat debug(SEXP data, int clusters){
 
-    auto final_matrix=beachmat::create_integer_matrix(data);
-    //const size_t& nc = final_matrix->get_ncol();
-    //const size_t& nr = final_matrix->get_nrow();
-    return get_result(final_matrix,init_fraction);
-  }else if(matrix_type==REALSXP){
-    auto final_matrix=beachmat::create_numeric_matrix(data);
-    //const size_t& nc = final_matrix->get_ncol();
-    //const size_t& nr = final_matrix->get_nrow();
-    return get_result(final_matrix,init_fraction);
+  arma::mat update_centroids;
 
-  }else{
-    return 0;
-  }
+  SEXP trans_data = transfer_data(data);
+
+  arma::mat final_data = Rcpp::as<arma::mat>(trans_data);
+
+  update_centroids = kmeans_pp_init(final_data, clusters, false);
+
+  return update_centroids;
 }
+
+
+
+//debug for shuffle_matrix
+//auto matrix_type=beachmat::find_sexp_type(data);
+//if(matrix_type==INTSXP){
+
+  //auto final_matrix=beachmat::create_integer_matrix(data);
+  //const size_t& nc = final_matrix->get_ncol();
+  //const size_t& nr = final_matrix->get_nrow();
+  //return get_result(final_matrix,init_fraction);
+  //}else if(matrix_type==REALSXP){
+  //auto final_matrix=beachmat::create_numeric_matrix(data);
+  //const size_t& nc = final_matrix->get_ncol();
+  //const size_t& nr = final_matrix->get_nrow();
+  //return get_result(final_matrix,init_fraction);
+
+  //}else{
+  //return 0;
+  //}
+
+
+
+
+
+
 
 
 

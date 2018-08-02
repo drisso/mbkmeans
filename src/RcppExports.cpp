@@ -18,14 +18,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // debug
-SEXP debug(SEXP data, double init_fraction);
-RcppExport SEXP _beachball_debug(SEXP dataSEXP, SEXP init_fractionSEXP) {
+arma::mat debug(SEXP data, int clusters);
+RcppExport SEXP _beachball_debug(SEXP dataSEXP, SEXP clustersSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type data(dataSEXP);
-    Rcpp::traits::input_parameter< double >::type init_fraction(init_fractionSEXP);
-    rcpp_result_gen = Rcpp::wrap(debug(data, init_fraction));
+    Rcpp::traits::input_parameter< int >::type clusters(clustersSEXP);
+    rcpp_result_gen = Rcpp::wrap(debug(data, clusters));
     return rcpp_result_gen;
 END_RCPP
 }

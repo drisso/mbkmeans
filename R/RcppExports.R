@@ -14,8 +14,8 @@ beachmat_colSums <- function(dmat) {
 }
 
 #' @export
-debug <- function(data, init_fraction) {
-    .Call(`_beachball_debug`, data, init_fraction)
+debug <- function(data, clusters) {
+    .Call(`_beachball_debug`, data, clusters)
 }
 
 #' @export

@@ -157,7 +157,7 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
 
         }else if(init_fraction <1.0 && init_fraction >0.0){
 
-          SEXP tran_data;
+          Rcpp::NumericMatrix tran_data;
 
           auto matrix_type=beachmat::find_sexp_type(data);
 
@@ -203,7 +203,7 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
 
         //update_centroids = data.rows(samp);
 
-        SEXP tran_data_random;
+        Rcpp::NumericMatrix tran_data_random;
 
         auto matrix_type=beachmat::find_sexp_type(data);
 
@@ -257,7 +257,7 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
 
       //select the batch_data
 
-      SEXP batch_data_choose;
+      Rcpp::NumericMatrix batch_data_choose;
 
       auto matrix_type=beachmat::find_sexp_type(data);
 

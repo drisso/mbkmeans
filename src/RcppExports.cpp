@@ -18,7 +18,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // debug
-SEXP debug(SEXP data, double init_fraction, int clusters);
+arma::mat debug(SEXP data, double init_fraction, int clusters);
 RcppExport SEXP _beachball_debug(SEXP dataSEXP, SEXP init_fractionSEXP, SEXP clustersSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

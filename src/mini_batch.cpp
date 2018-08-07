@@ -165,7 +165,7 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
 
             auto final_matrix=beachmat::create_integer_matrix(data);
 
-            SEXP tran_data =  shuffle_matrix(final_matrix,init_fraction);
+             tran_data =  shuffle_matrix(final_matrix,init_fraction);
 
             //return tran_data;
 
@@ -173,7 +173,7 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
 
             auto final_matrix=beachmat::create_numeric_matrix(data);
 
-            SEXP tran_data = shuffle_matrix(final_matrix,init_fraction);
+             tran_data = shuffle_matrix(final_matrix,init_fraction);
 
             //return tran_data;
 
@@ -211,7 +211,7 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
 
           auto final_matrix=beachmat::create_integer_matrix(data);
 
-          SEXP tran_data_random =  shuffle_matrix_random(final_matrix,clusters);
+           tran_data_random =  shuffle_matrix_random(final_matrix,clusters);
 
           //return tran_data_random;
 
@@ -219,7 +219,7 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
 
           auto final_matrix=beachmat::create_numeric_matrix(data);
 
-          SEXP tran_data_random = shuffle_matrix_random(final_matrix,clusters);
+           tran_data_random = shuffle_matrix_random(final_matrix,clusters);
 
           //return tran_data_random;
 

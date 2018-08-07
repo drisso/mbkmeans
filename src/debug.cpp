@@ -46,14 +46,35 @@ SEXP shuffle_matrix(const T1& data, const T2& init_fraction_value){
 
 }
 
+template<typename T1>
+SEXP shuffle_matrix_random(const T1& data, int cluster){
+  const size_t& nc = data->get_ncol();
+  const size_t& nr = data->get_nrow();
+
+  arma::uvec init = arma::conv_to< arma::uvec >::from(sample_vec(cluster, 0, nr - 1, false));
+
+  arma::uvec samp_init = arma::sort(init);
+
+  Rcpp::NumericMatrix submat(samp_init.n_rows, nc);
+  Rcpp::NumericVector tmp(nc);
+
+  for(int i=0; i<samp_init.n_rows; i++){
+    data->get_row(samp_init[i], tmp.begin());
+    submat.row(i) = tmp;
+  }
+
+  return submat;
+
+}
+
 
 //' @export
 // [[Rcpp::export]]
-arma::mat debug(SEXP data, double init_fraction,int clusters){
+arma::mat debug(SEXP data, int clusters){
 
-  arma::mat update_centroids;
+  //arma::mat update_centroids;
 
-  Rcpp::NumericMatrix tran_data;
+  Rcpp::NumericMatrix tran_data_random;
 
   auto matrix_type=beachmat::find_sexp_type(data);
 
@@ -61,36 +82,27 @@ arma::mat debug(SEXP data, double init_fraction,int clusters){
 
     auto final_matrix=beachmat::create_integer_matrix(data);
 
-    tran_data =shuffle_matrix(final_matrix,init_fraction);
+    tran_data_random =  shuffle_matrix_random(final_matrix,clusters);
 
-    //return tran_data;
+    //return tran_data_random;
 
   }else if(matrix_type ==REALSXP){
 
     auto final_matrix=beachmat::create_numeric_matrix(data);
 
-    SEXP tran_data = shuffle_matrix(final_matrix,init_fraction);
+    tran_data_random = shuffle_matrix_random(final_matrix,clusters);
 
-    //return tran_data;
+    //return tran_data_random;
 
   }else{
 
     //Rcpp::stop("The type of matrix is wrong");
+   tran_data_random = data;
 
-    SEXP tran_data = data;
-
-    //return data;
   }
 
-  arma::mat final_data = Rcpp::as<arma::mat>(tran_data);
-
-  update_centroids = kmeans_pp_init(final_data, clusters, false);
-
-  //return tran_data;
-
-  //return 3;
-
-
+  arma:: mat update_centroids = Rcpp::as<arma::mat>(tran_data_random);
+  //update_centroids = final_data;
 
   return update_centroids;
 }

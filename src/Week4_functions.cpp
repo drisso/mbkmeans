@@ -46,102 +46,63 @@ Rcpp::RObject get_safe_slot(const Rcpp::RObject& incoming, const std::string& sl
 }
 
 
+
 // [[Rcpp::export]]
 SEXP transfer_data(SEXP data){
-  int matrix_type = TYPEOF(data);
 
-  if(matrix_type ==13){
+  auto matrix_type=beachmat::find_sexp_type(data);
+
+  if(matrix_type== INTSXP){
 
     auto dat=beachmat::create_integer_matrix(data);
 
-    Rcpp::RObject dat1 = dat->yield();
+    const size_t& nc=dat->get_ncol();
 
-    SEXP final_matrix = as<IntegerMatrix>(dat1);
+    const size_t& nr=dat->get_nrow();
 
-    return final_matrix;
+    Rcpp::IntegerMatrix final_matrix(nr,nc);
 
-  }else if(matrix_type==14){
+    for(int i =0;i<nr;i++){
 
-    // returns a std::unique_ptr<beachmat::numeric_matrix> object
-    auto dat = beachmat::create_numeric_matrix(data);
+      for(int j=0; j<nc;j++){
 
-    Rcpp::RObject dat1 = dat->yield();
+        Rcpp::IntegerVector tmp1(nr);
 
-    SEXP final_matrix = as<NumericMatrix>(dat1);
+        dat->get(i,j);
 
-    return final_matrix;
-
-  }else if(matrix_type==25){
-
-    Rcpp::RObject h5seed=get_safe_slot(data, "seed");
-    Rcpp::RObject first_val=get_safe_slot(h5seed, "first_val");
-    int identify_hdf5matrix= first_val.sexp_type();
-
-    if(identify_hdf5matrix==13){
-
-      auto dat=beachmat::create_integer_matrix(data);
-
-      //Rcpp::RObject dat1 = dat->yield();
-
-      //SEXP final_matrix = as<Rcpp::IntegerMatrix>(dat1);
-
-      const size_t& nc=dat->get_ncol();
-      const size_t& nr=dat->get_nrow();
-
-
-      Rcpp::IntegerMatrix final_matrix(nr,nc);
-
-      for(int i =0;i<nr;i++){
-        for(int j=0; j<nc;j++){
-          Rcpp::IntegerVector tmp1(nr);
-
-          dat->get(i,j);
-
-          final_matrix(i,j)=dat->get(i,j);
-        }
-
+        final_matrix(i,j)=dat->get(i,j);
       }
 
-
-
-      return final_matrix;
-
-    }else if(identify_hdf5matrix==14){
-
-      // returns a std::unique_ptr<beachmat::numeric_matrix> object
-      auto dat = beachmat::create_numeric_matrix(data);
-
-      //Rcpp::RObject dat1 = dat->yield();
-
-      //SEXP final_matrix = as<NumericMatrix>(dat1);
-
-      const size_t& nc=dat->get_ncol();
-      const size_t& nr=dat->get_nrow();
-
-
-      Rcpp::NumericMatrix final_matrix(nr,nc);
-
-      for(int i =0;i<nr;i++){
-        for(int j=0; j<nc;j++){
-          Rcpp::NumericVector tmp1(nr);
-
-          dat->get(i,j);
-
-          final_matrix(i,j)=dat->get(i,j);
-        }
-
-      }
-
-
-      return final_matrix;
-    }else{
-      return 0;
     }
 
+    return final_matrix;
 
-return 0;
+  }else if(matrix_type== REALSXP){
+
+    auto dat = beachmat::create_numeric_matrix(data);
+
+    const size_t& nc=dat->get_ncol();
+
+    const size_t& nr=dat->get_nrow();
+
+    Rcpp::IntegerMatrix final_matrix(nr,nc);
+
+    for(int i =0;i<nr;i++){
+
+      for(int j=0; j<nc;j++){
+
+        Rcpp::IntegerVector tmp1(nr);
+
+        dat->get(i,j);
+
+        final_matrix(i,j)=dat->get(i,j);
+      }
+
+    }
+
+    return final_matrix;
+
+  }else{
+    Rcpp::stop("The type of matrix is wrong.");
   }
-
-
-return 0;
 }

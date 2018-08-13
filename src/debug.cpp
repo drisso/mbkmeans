@@ -22,89 +22,85 @@ using namespace arma;
 
 
 
-//shuffle the matrix and select randomly rows(nrows = init_fraction*total)
-template<typename T1, typename T2>
-SEXP shuffle_matrix(const T1& data, const T2& init_fraction_value){
 
-  const size_t& nc = data->get_ncol();
-  const size_t& nr = data->get_nrow();
-  int fract = std::ceil(nr*init_fraction_value);
+//get the number of rows
+template<typename T>
+int get_nrow(const T& data){
+  auto matrix_type=beachmat::find_sexp_type(data);
+  if(matrix_type== INTSXP){
+    auto final_matrix=beachmat::create_integer_matrix(data);
+    //const size_t& nc = final_matrix->get_ncol();
+    const size_t& nr = final_matrix->get_nrow();
+    int n_col = nr;
+    return n_col;
 
-  arma::uvec init = arma::conv_to< arma::uvec >::from(sample_vec(fract, 0, nr - 1, false));
+  }else if(matrix_type== REALSXP){
+    auto final_matrix=beachmat::create_numeric_matrix(data);
+    //const size_t& nc = final_matrix->get_ncol();
+    const size_t& nr = final_matrix->get_nrow();
+    int n_col = nr;
+    return n_col;
+  }else{
 
-  arma::uvec samp_init = arma::sort(init);
-
-  Rcpp::NumericMatrix submat(samp_init.n_rows, nc);
-  Rcpp::NumericVector tmp(nc);
-
-  for(int i=0; i<samp_init.n_rows; i++){
-    data->get_row(samp_init[i], tmp.begin());
-    submat.row(i) = tmp;
+    return 0;
   }
-
-  return submat;
-
 }
+
 
 template<typename T1>
-SEXP shuffle_matrix_random(const T1& data, int cluster){
-  const size_t& nc = data->get_ncol();
-  const size_t& nr = data->get_nrow();
+arma::vec pred_WCSS1(const T1& data, Rcpp::NumericMatrix CENTROIDS){
 
-  arma::uvec init = arma::conv_to< arma::uvec >::from(sample_vec(cluster, 0, nr - 1, false));
+    const size_t& nc = data->get_ncol();
+    const size_t& nr = data->get_nrow();
 
-  arma::uvec samp_init = arma::sort(init);
+    //Rcpp::NumericMatrix submat(samp_init.n_rows, nc);
+    Rcpp::NumericMatrix WCSS_matrix;
 
-  Rcpp::NumericMatrix submat(samp_init.n_rows, nc);
-  Rcpp::NumericVector tmp(nc);
+    Rcpp::NumericVector tmp_vec(nc);
 
-  for(int i=0; i<samp_init.n_rows; i++){
-    data->get_row(samp_init[i], tmp.begin());
-    submat.row(i) = tmp;
-  }
+    Rcpp::NumericVector tmp(nc);
 
-  return submat;
+    arma::vec final_vec;
 
+    arma::mat CENTROIDS1 = Rcpp::as<arma::mat>(CENTROIDS);
+
+    for(int i=0; i<nr; i++){
+
+      data->get_row(i, tmp.begin());
+
+      //WCSS_matrix[i] = WCSS(tmp[i],CENTROIDS1);
+
+      data->get_row(WCSS_matrix[i],tmp_vec.begin());
+
+      final_vec = tmp_vec;
+    }
+
+    return final_vec;
 }
+
 
 
 //' @export
 // [[Rcpp::export]]
-arma::mat debug(SEXP data, int clusters){
+arma::mat debug(SEXP data, Rcpp::Nullable<Rcpp::NumericMatrix> CENTROIDS = R_NilValue, bool fuzzy = false, double eps = 1.0e-6) {
 
-  //arma::mat update_centroids;
+  arma::mat CENTROIDS1;
 
-  Rcpp::NumericMatrix tran_data_random;
+  if (CENTROIDS.isNotNull()) {
 
-  auto matrix_type=beachmat::find_sexp_type(data);
-
-  if(matrix_type == INTSXP){
-
-    auto final_matrix=beachmat::create_integer_matrix(data);
-
-    tran_data_random =  shuffle_matrix_random(final_matrix,clusters);
-
-    //return tran_data_random;
-
-  }else if(matrix_type ==REALSXP){
-
-    auto final_matrix=beachmat::create_numeric_matrix(data);
-
-    tran_data_random = shuffle_matrix_random(final_matrix,clusters);
-
-    //return tran_data_random;
-
-  }else{
-
-    //Rcpp::stop("The type of matrix is wrong");
-   tran_data_random = data;
-
+    CENTROIDS1 = Rcpp::as<arma::mat>(CENTROIDS);
   }
 
-  arma:: mat update_centroids = Rcpp::as<arma::mat>(tran_data_random);
-  //update_centroids = final_data;
+  int data_n_rows = get_nrow(data);
 
-  return update_centroids;
+  arma::rowvec CLUSTERS(data_n_rows);
+
+  arma::mat soft_CLUSTERS(data_n_rows, CENTROIDS1.n_rows);
+
+  //arma::vec final = pred_WCSS1(data,CENTROIDS1);
+
+  return 0;
+
 }
 
 

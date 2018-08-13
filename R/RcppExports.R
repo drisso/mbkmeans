@@ -14,13 +14,17 @@ beachmat_colSums <- function(dmat) {
 }
 
 #' @export
-debug <- function(data, clusters) {
-    .Call(`_beachball_debug`, data, clusters)
+debug <- function(data, CENTROIDS = NULL, fuzzy = FALSE, eps = 1.0e-6) {
+    .Call(`_beachball_debug`, data, CENTROIDS, fuzzy, eps)
 }
 
 #' @export
 mini_batch <- function(data, clusters, batch_size, max_iters, num_init = 1L, init_fraction = 1.0, initializer = "kmeans++", early_stop_iter = 10L, verbose = FALSE, CENTROIDS = NULL, tol = 1e-4, tol_optimal_init = 0.5, seed = 1L) {
     .Call(`_beachball_mini_batch`, data, clusters, batch_size, max_iters, num_init, init_fraction, initializer, early_stop_iter, verbose, CENTROIDS, tol, tol_optimal_init, seed)
+}
+
+predict_mini_batch <- function(data, CENTROIDS = NULL, fuzzy = FALSE, eps = 1.0e-6) {
+    .Call(`_beachball_predict_mini_batch`, data, CENTROIDS, fuzzy, eps)
 }
 
 random_choose <- function(data, init_fraction) {

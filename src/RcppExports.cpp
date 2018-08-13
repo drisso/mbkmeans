@@ -386,8 +386,6 @@ BEGIN_RCPP
 END_RCPP
 }
 
-RcppExport SEXP _beachball_transfer_data2(SEXP);
-
 static const R_CallMethodDef CallEntries[] = {
     {"_beachball_beachmat_colSums", (DL_FUNC) &_beachball_beachmat_colSums, 1},
     {"_beachball_debug", (DL_FUNC) &_beachball_debug, 4},
@@ -418,7 +416,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_beachball_transfer_data", (DL_FUNC) &_beachball_transfer_data, 1},
     {"_beachball_Week4_mini_batch_kmeans", (DL_FUNC) &_beachball_Week4_mini_batch_kmeans, 13},
     {"_beachball_matrix_mean", (DL_FUNC) &_beachball_matrix_mean, 1},
-    {"_beachball_transfer_data2",          (DL_FUNC) &_beachball_transfer_data2,           1},
     {NULL, NULL, 0}
 };
 

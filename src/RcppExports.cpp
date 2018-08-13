@@ -18,14 +18,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // debug
-arma::mat debug(SEXP data, int clusters);
-RcppExport SEXP _beachball_debug(SEXP dataSEXP, SEXP clustersSEXP) {
+arma::mat debug(SEXP data, Rcpp::Nullable<Rcpp::NumericMatrix> CENTROIDS, bool fuzzy, double eps);
+RcppExport SEXP _beachball_debug(SEXP dataSEXP, SEXP CENTROIDSSEXP, SEXP fuzzySEXP, SEXP epsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type data(dataSEXP);
-    Rcpp::traits::input_parameter< int >::type clusters(clustersSEXP);
-    rcpp_result_gen = Rcpp::wrap(debug(data, clusters));
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::NumericMatrix> >::type CENTROIDS(CENTROIDSSEXP);
+    Rcpp::traits::input_parameter< bool >::type fuzzy(fuzzySEXP);
+    Rcpp::traits::input_parameter< double >::type eps(epsSEXP);
+    rcpp_result_gen = Rcpp::wrap(debug(data, CENTROIDS, fuzzy, eps));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -49,6 +51,20 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type tol_optimal_init(tol_optimal_initSEXP);
     Rcpp::traits::input_parameter< int >::type seed(seedSEXP);
     rcpp_result_gen = Rcpp::wrap(mini_batch(data, clusters, batch_size, max_iters, num_init, init_fraction, initializer, early_stop_iter, verbose, CENTROIDS, tol, tol_optimal_init, seed));
+    return rcpp_result_gen;
+END_RCPP
+}
+// predict_mini_batch
+Rcpp::List predict_mini_batch(SEXP data, Rcpp::Nullable<Rcpp::NumericMatrix> CENTROIDS, bool fuzzy, double eps);
+RcppExport SEXP _beachball_predict_mini_batch(SEXP dataSEXP, SEXP CENTROIDSSEXP, SEXP fuzzySEXP, SEXP epsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::NumericMatrix> >::type CENTROIDS(CENTROIDSSEXP);
+    Rcpp::traits::input_parameter< bool >::type fuzzy(fuzzySEXP);
+    Rcpp::traits::input_parameter< double >::type eps(epsSEXP);
+    rcpp_result_gen = Rcpp::wrap(predict_mini_batch(data, CENTROIDS, fuzzy, eps));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -370,10 +386,13 @@ BEGIN_RCPP
 END_RCPP
 }
 
+RcppExport SEXP _beachball_transfer_data2(SEXP);
+
 static const R_CallMethodDef CallEntries[] = {
     {"_beachball_beachmat_colSums", (DL_FUNC) &_beachball_beachmat_colSums, 1},
-    {"_beachball_debug", (DL_FUNC) &_beachball_debug, 2},
+    {"_beachball_debug", (DL_FUNC) &_beachball_debug, 4},
     {"_beachball_mini_batch", (DL_FUNC) &_beachball_mini_batch, 13},
+    {"_beachball_predict_mini_batch", (DL_FUNC) &_beachball_predict_mini_batch, 4},
     {"_beachball_random_choose", (DL_FUNC) &_beachball_random_choose, 2},
     {"_beachball_set_seed", (DL_FUNC) &_beachball_set_seed, 1},
     {"_beachball_cluster_indices", (DL_FUNC) &_beachball_cluster_indices, 1},
@@ -399,6 +418,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_beachball_transfer_data", (DL_FUNC) &_beachball_transfer_data, 1},
     {"_beachball_Week4_mini_batch_kmeans", (DL_FUNC) &_beachball_Week4_mini_batch_kmeans, 13},
     {"_beachball_matrix_mean", (DL_FUNC) &_beachball_matrix_mean, 1},
+    {"_beachball_transfer_data2",          (DL_FUNC) &_beachball_transfer_data2,           1},
     {NULL, NULL, 0}
 };
 

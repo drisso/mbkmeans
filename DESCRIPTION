@@ -34,5 +34,6 @@ LinkingTo:
   Rcpp, 
   RcppArmadillo (>= 0.7.2),
   Rhdf5lib, 
-  beachmat
+  beachmat,
+  ClusterR
 SystemRequirements: C++11

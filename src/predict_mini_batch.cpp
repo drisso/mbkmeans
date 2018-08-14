@@ -11,7 +11,7 @@
 #include "utils_rcpp.h"
 #include "beachmat/numeric_matrix.h"
 #include "beachmat/integer_matrix.h"
-#include "Week4_functions.h"
+#include "functions.h"
 
 #include <algorithm>
 #include <iostream>

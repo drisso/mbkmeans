@@ -10,8 +10,9 @@
 
 #include "beachmat/numeric_matrix.h"
 #include "beachmat/integer_matrix.h"
-#include "Week4_functions.h"
+#include "functions.h"
 #include "utils_rcpp.h"
+//#include "ClusterR/utils_rcpp.h"
 
 #include <algorithm>
 #include <iostream>

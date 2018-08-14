@@ -8,10 +8,11 @@
 #include <omp.h>
 #endif
 
-#include "utils_rcpp.h"
 #include "beachmat/numeric_matrix.h"
 #include "beachmat/integer_matrix.h"
 #include "functions.h"
+#include "utils_rcpp.h"
+//#include "ClusterR/utils_rcpp.h"
 
 #include <algorithm>
 #include <iostream>
@@ -24,7 +25,9 @@ using namespace arma;
 //get the number of rows
 template<typename T>
 int get_nrow(const T& data){
+
   auto matrix_type=beachmat::find_sexp_type(data);
+
   if(matrix_type== INTSXP){
     auto final_matrix=beachmat::create_integer_matrix(data);
     //const size_t& nc = final_matrix->get_ncol();
@@ -45,9 +48,9 @@ int get_nrow(const T& data){
 }
 
 
-//shuffle the matrix and select randomly rows(nrows = init_fraction*total)
+//subset the matrix and select randomly rows(nrows = init_fraction*total)
 template<typename T1, typename T2>
-SEXP shuffle_matrix(const T1& data, const T2& init_fraction_value){
+SEXP subset_matrix(const T1& data, const T2& init_fraction_value){
 
   const size_t& nc = data->get_ncol();
   const size_t& nr = data->get_nrow();
@@ -70,9 +73,9 @@ SEXP shuffle_matrix(const T1& data, const T2& init_fraction_value){
 }
 
 
-//shuffle the matrix and select randomly rows(nrow  = cluster)
+//subset the matrix and select randomly rows(nrow  = cluster)
 template<typename T1>
-SEXP shuffle_matrix_random(const T1& data, int cluster){
+SEXP subset_matrix_random(const T1& data, int cluster){
   const size_t& nc = data->get_ncol();
   const size_t& nr = data->get_nrow();
 
@@ -106,21 +109,24 @@ Rcpp::List predict_mini_batch(SEXP data, Rcpp::Nullable<Rcpp::NumericMatrix> CEN
 
   int data_n_rows = get_nrow(data);
 
+  SEXP trans_data = transfer_data(data);
+
+  arma::mat dat_final = Rcpp::as<arma::mat>(trans_data);
+
   arma::rowvec CLUSTERS(data_n_rows);
 
   arma::mat soft_CLUSTERS(data_n_rows, CENTROIDS1.n_rows);
 
+  for (unsigned int j = 0; j < data_n_rows; j++) {
 
- // for (unsigned int j = 0; j < dat_n_rows; j++) {
+    arma::vec tmp_vec = WCSS(arma::conv_to< arma::rowvec >::from(dat_final.row(j)), CENTROIDS1);                  // returns a rowvec with the SSE for each cluster
 
-//    arma::vec tmp_vec = WCSS(arma::conv_to< arma::rowvec >::from(data.row(j)), CENTROIDS1);                  // returns a rowvec with the SSE for each cluster
+    soft_CLUSTERS.row(j) = arma::conv_to< arma::rowvec >::from(tmp_vec);
 
-  //  soft_CLUSTERS.row(j) = arma::conv_to< arma::rowvec >::from(tmp_vec);
+    int tmp_idx = MinMat(tmp_vec);                                                                        // returns the index of the tmp_vec with the lowest SSE
 
-    //int tmp_idx = MinMat(tmp_vec);                                                                        // returns the index of the tmp_vec with the lowest SSE
-
-  //  CLUSTERS(j) = tmp_idx;
-  // }
+    CLUSTERS(j) = tmp_idx+1;
+   }
 
   if (fuzzy) {
 

@@ -30,15 +30,15 @@ int get_nrow(const T& data){
     auto final_matrix=beachmat::create_integer_matrix(data);
     //const size_t& nc = final_matrix->get_ncol();
     const size_t& nr = final_matrix->get_nrow();
-    int n_col = nr;
-    return n_col;
+    int n_row = nr;
+    return n_row;
 
   }else if(matrix_type== REALSXP){
     auto final_matrix=beachmat::create_numeric_matrix(data);
     //const size_t& nc = final_matrix->get_ncol();
     const size_t& nr = final_matrix->get_nrow();
-    int n_col = nr;
-    return n_col;
+    int n_row = nr;
+    return n_row;
   }else{
 
     return 0;

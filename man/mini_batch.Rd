@@ -43,6 +43,7 @@ Mini-batch-k-means for both matrix and HDF5Matrix
 This function performs k-means clustering using mini batches.
 
 \strong{kmeans++}: kmeans++ initialization. Reference : http://theory.stanford.edu/~sergei/papers/kMeansPP-soda.pdf AND http://stackoverflow.com/questions/5466323/how-exactly-does-k-means-work
+
 \strong{random}: random selection of data rows as initial centroids
 }
 \references{

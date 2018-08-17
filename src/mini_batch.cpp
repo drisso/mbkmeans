@@ -1,6 +1,8 @@
 #define ARMA_DONT_PRINT_ERRORS
 # include <RcppArmadillo.h>
+# include <ClusterRHeader.h>
 // [[Rcpp::depends("RcppArmadillo")]]
+// [[Rcpp::depends(ClusterR)]]
 // [[Rcpp::plugins(openmp)]]
 // [[Rcpp::plugins(cpp11)]]
 
@@ -11,7 +13,7 @@
 #include "beachmat/numeric_matrix.h"
 #include "beachmat/integer_matrix.h"
 #include "functions.h"
-#include "utils_rcpp.h"
+//#include "utils_rcpp.h"
 //#include "ClusterR/utils_rcpp.h"
 
 #include <algorithm>
@@ -20,7 +22,7 @@
 #include <math.h>
 
 using namespace arma;
-
+using namespace clustR;
 
 //get the number of rows
 template<typename T>
@@ -50,11 +52,13 @@ int get_nrow(const T& data){
 template<typename T1, typename T2>
 SEXP subset_matrix(const T1& data, const T2& init_fraction_value){
 
+  ClustHeader clust_header;
+
   const size_t& nc = data->get_ncol();
   const size_t& nr = data->get_nrow();
   int fract = std::ceil(nr*init_fraction_value);
 
-  arma::uvec init = arma::conv_to< arma::uvec >::from(sample_vec(fract, 0, nr - 1, false));
+  arma::uvec init = arma::conv_to< arma::uvec >::from(clust_header.sample_vec(fract, 0, nr - 1, false));
 
   arma::uvec samp_init = arma::sort(init);
 
@@ -74,10 +78,13 @@ SEXP subset_matrix(const T1& data, const T2& init_fraction_value){
 //subset the matrix and select randomly rows(nrow  = cluster)
 template<typename T1>
 SEXP subset_matrix_random(const T1& data, int cluster){
+
+  ClustHeader clust_header;
+
   const size_t& nc = data->get_ncol();
   const size_t& nr = data->get_nrow();
 
-  arma::uvec init = arma::conv_to< arma::uvec >::from(sample_vec(cluster, 0, nr - 1, false));
+  arma::uvec init = arma::conv_to< arma::uvec >::from(clust_header.sample_vec(cluster, 0, nr - 1, false));
 
   arma::uvec samp_init = arma::sort(init);
 
@@ -130,8 +137,9 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
 
                       int early_stop_iter = 10, bool verbose = false, Rcpp::Nullable<Rcpp::NumericMatrix> CENTROIDS = R_NilValue, double tol = 1e-4,  int seed = 1){
 
+  ClustHeader clust_header;
 
-  set_seed(seed);             // R's RNG
+  clust_header.set_seed(seed);             // R's RNG
 
   int dat_n_rows = get_nrow(data);    // use the template function in this file
 
@@ -184,7 +192,7 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
 
           arma::mat final_data = Rcpp::as<arma::mat>(trans_data);
 
-          update_centroids = kmeans_pp_init(final_data, clusters, false);
+          update_centroids = clust_header.kmeans_pp_init(final_data, clusters, false);
 
         }else if(init_fraction <1.0 && init_fraction >0.0){
 
@@ -216,7 +224,7 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
 
           arma::mat final_data = Rcpp::as<arma::mat>(tran_data);
 
-          update_centroids = kmeans_pp_init(final_data, clusters, false);
+          update_centroids = clust_header.kmeans_pp_init(final_data, clusters, false);
 
           // SEXP centroids_matrix = shuffle_matrix(data,init_fraction = init_fraction);
 
@@ -327,9 +335,9 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
 
       for (unsigned int j = 0; j < batch_data.n_rows; j++) {
 
-        arma::vec tmp_vec = WCSS(arma::conv_to< arma::rowvec >::from(batch_data.row(j)), update_centroids);         // returns a rowvec with the SSE for each cluster
+        arma::vec tmp_vec = clust_header.WCSS(arma::conv_to< arma::rowvec >::from(batch_data.row(j)), update_centroids);         // returns a rowvec with the SSE for each cluster
 
-        int tmp_idx = MinMat(tmp_vec);                                                                              // returns the index of the tmp_vec with the lowest SSE
+        int tmp_idx = clust_header.MinMat(tmp_vec);                                                                              // returns the index of the tmp_vec with the lowest SSE
 
         total_SSE(tmp_idx) += tmp_vec(tmp_idx);                                                                     // assigns to total_SSE the minimum cost
 
@@ -353,7 +361,7 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
         update_centroids.row(idx) = tmp_row;
       }
 
-      double tmp_norm = squared_norm(previous_centroids - update_centroids);
+      double tmp_norm = clust_header.squared_norm(previous_centroids - update_centroids);
 
       double calc_cost = arma::accu(total_SSE);
 

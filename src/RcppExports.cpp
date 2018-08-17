@@ -7,16 +7,14 @@
 using namespace Rcpp;
 
 // debug
-arma::mat debug(SEXP data, Rcpp::Nullable<Rcpp::NumericMatrix> CENTROIDS, bool fuzzy, double eps);
-RcppExport SEXP _beachball_debug(SEXP dataSEXP, SEXP CENTROIDSSEXP, SEXP fuzzySEXP, SEXP epsSEXP) {
+arma::vec debug(Rcpp::IntegerMatrix data, Rcpp::NumericMatrix CENTROIDS);
+RcppExport SEXP _beachball_debug(SEXP dataSEXP, SEXP CENTROIDSSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type data(dataSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::NumericMatrix> >::type CENTROIDS(CENTROIDSSEXP);
-    Rcpp::traits::input_parameter< bool >::type fuzzy(fuzzySEXP);
-    Rcpp::traits::input_parameter< double >::type eps(epsSEXP);
-    rcpp_result_gen = Rcpp::wrap(debug(data, CENTROIDS, fuzzy, eps));
+    Rcpp::traits::input_parameter< Rcpp::IntegerMatrix >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type CENTROIDS(CENTROIDSSEXP);
+    rcpp_result_gen = Rcpp::wrap(debug(data, CENTROIDS));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -32,8 +30,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // mini_batch
-Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, int num_init, double init_fraction, std::string initializer, int early_stop_iter, bool verbose, Rcpp::Nullable<Rcpp::NumericMatrix> CENTROIDS, double tol, double tol_optimal_init, int seed);
-RcppExport SEXP _beachball_mini_batch(SEXP dataSEXP, SEXP clustersSEXP, SEXP batch_sizeSEXP, SEXP max_itersSEXP, SEXP num_initSEXP, SEXP init_fractionSEXP, SEXP initializerSEXP, SEXP early_stop_iterSEXP, SEXP verboseSEXP, SEXP CENTROIDSSEXP, SEXP tolSEXP, SEXP tol_optimal_initSEXP, SEXP seedSEXP) {
+Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, int num_init, double init_fraction, std::string initializer, int early_stop_iter, bool verbose, Rcpp::Nullable<Rcpp::NumericMatrix> CENTROIDS, double tol, int seed);
+RcppExport SEXP _beachball_mini_batch(SEXP dataSEXP, SEXP clustersSEXP, SEXP batch_sizeSEXP, SEXP max_itersSEXP, SEXP num_initSEXP, SEXP init_fractionSEXP, SEXP initializerSEXP, SEXP early_stop_iterSEXP, SEXP verboseSEXP, SEXP CENTROIDSSEXP, SEXP tolSEXP, SEXP seedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -48,9 +46,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
     Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::NumericMatrix> >::type CENTROIDS(CENTROIDSSEXP);
     Rcpp::traits::input_parameter< double >::type tol(tolSEXP);
-    Rcpp::traits::input_parameter< double >::type tol_optimal_init(tol_optimal_initSEXP);
     Rcpp::traits::input_parameter< int >::type seed(seedSEXP);
-    rcpp_result_gen = Rcpp::wrap(mini_batch(data, clusters, batch_size, max_iters, num_init, init_fraction, initializer, early_stop_iter, verbose, CENTROIDS, tol, tol_optimal_init, seed));
+    rcpp_result_gen = Rcpp::wrap(mini_batch(data, clusters, batch_size, max_iters, num_init, init_fraction, initializer, early_stop_iter, verbose, CENTROIDS, tol, seed));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -273,9 +270,9 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_beachball_debug", (DL_FUNC) &_beachball_debug, 4},
+    {"_beachball_debug", (DL_FUNC) &_beachball_debug, 2},
     {"_beachball_transfer_data", (DL_FUNC) &_beachball_transfer_data, 1},
-    {"_beachball_mini_batch", (DL_FUNC) &_beachball_mini_batch, 13},
+    {"_beachball_mini_batch", (DL_FUNC) &_beachball_mini_batch, 12},
     {"_beachball_predict_mini_batch", (DL_FUNC) &_beachball_predict_mini_batch, 4},
     {"_beachball_set_seed", (DL_FUNC) &_beachball_set_seed, 1},
     {"_beachball_cluster_indices", (DL_FUNC) &_beachball_cluster_indices, 1},

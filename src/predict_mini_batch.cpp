@@ -138,7 +138,7 @@ arma::rowvec clusters_WCSS(const T&data,arma::mat CENTROIDS){
     arma::rowvec CLUSTERS(data_n_rows);
     for (unsigned int j = 0; j < data_n_rows; j++) {
 
-      Rcpp::NumericVector tmp(data_n_cols);
+      Rcpp::IntegerVector tmp(data_n_cols);
       final_matrix->get_row(j, tmp.begin());
       dat_final.row(j) = tmp;
       arma::mat data_final = Rcpp::as<arma::mat>(dat_final);

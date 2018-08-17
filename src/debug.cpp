@@ -73,7 +73,7 @@ int get_ncol(const T& data){
 
 
 template<typename T>
-arma::rowvec clusters_wcss(const T&data,arma::mat CENTROIDS){
+arma::rowvec clusters_WCSS(const T&data,arma::mat CENTROIDS){
 
   auto matrix_type=beachmat::find_sexp_type(data);
 
@@ -123,9 +123,11 @@ arma::rowvec clusters_wcss(const T&data,arma::mat CENTROIDS){
     }
     return CLUSTERS;
   }
-
-
 }
+
+
+
+
 
 
 
@@ -149,7 +151,7 @@ arma::rowvec debug(SEXP data, Rcpp::Nullable<Rcpp::NumericMatrix> CENTROIDS = R_
 
   arma::mat soft_CLUSTERS(data_n_rows, CENTROIDS1.n_rows);
 
-  CLUSTERS=clusters_wcss(data,CENTROIDS1);
+  CLUSTERS=clusters_WCSS(data,CENTROIDS1);
 
   //for (unsigned int j = 0; j < data_n_rows; j++) {
 

@@ -249,15 +249,19 @@ Rcpp::List predict_mini_batch(SEXP data, Rcpp::Nullable<Rcpp::NumericMatrix> CEN
 
 
   if (fuzzy) {
+//
+//     arma::mat fuzzy_mat(soft_CLUSTERS.n_rows, soft_CLUSTERS.n_cols);
+//
+//     for (unsigned int i = 0; i < soft_CLUSTERS.n_rows; i++) {
+//
+//       fuzzy_mat.row(i) = norm_fuzzy(arma::conv_to< arma::rowvec >::from(soft_CLUSTERS.row(i)), eps);
+//     }
+//
+//     return Rcpp::List::create(Rcpp::Named("clusters") = CLUSTERS, Rcpp::Named("fuzzy_clusters") = fuzzy_mat);
 
-    arma::mat fuzzy_mat(soft_CLUSTERS.n_rows, soft_CLUSTERS.n_cols);
+  Rcpp::stop("fuzzy clustering is currently not implemented.");
+  }
 
-    for (unsigned int i = 0; i < soft_CLUSTERS.n_rows; i++) {
-
-      fuzzy_mat.row(i) = norm_fuzzy(arma::conv_to< arma::rowvec >::from(soft_CLUSTERS.row(i)), eps);
-    }
-
-    return Rcpp::List::create(Rcpp::Named("clusters") = CLUSTERS, Rcpp::Named("fuzzy_clusters") = fuzzy_mat);}
 
   else {
 

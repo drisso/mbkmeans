@@ -1,4 +1,5 @@
 #' @importFrom Rcpp sourceCpp
+#' @import ClusterR
 #' @useDynLib beachball, .registration = TRUE
 #'
 NULL

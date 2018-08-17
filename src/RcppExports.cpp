@@ -6,18 +6,6 @@
 
 using namespace Rcpp;
 
-// debug
-arma::rowvec debug(SEXP data, Rcpp::Nullable<Rcpp::NumericMatrix> CENTROIDS);
-RcppExport SEXP _beachball_debug(SEXP dataSEXP, SEXP CENTROIDSSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type data(dataSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::NumericMatrix> >::type CENTROIDS(CENTROIDSSEXP);
-    rcpp_result_gen = Rcpp::wrap(debug(data, CENTROIDS));
-    return rcpp_result_gen;
-END_RCPP
-}
 // transfer_data
 SEXP transfer_data(SEXP data);
 RcppExport SEXP _beachball_transfer_data(SEXP dataSEXP) {
@@ -270,7 +258,6 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_beachball_debug", (DL_FUNC) &_beachball_debug, 2},
     {"_beachball_transfer_data", (DL_FUNC) &_beachball_transfer_data, 1},
     {"_beachball_mini_batch", (DL_FUNC) &_beachball_mini_batch, 12},
     {"_beachball_predict_mini_batch", (DL_FUNC) &_beachball_predict_mini_batch, 4},

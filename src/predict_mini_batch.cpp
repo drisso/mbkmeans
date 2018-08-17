@@ -1,6 +1,8 @@
 #define ARMA_DONT_PRINT_ERRORS
 # include <RcppArmadillo.h>
+# include <ClusterRHeader.h>
 // [[Rcpp::depends("RcppArmadillo")]]
+// [[Rcpp::depends(ClusterR)]]
 // [[Rcpp::plugins(openmp)]]
 // [[Rcpp::plugins(cpp11)]]
 
@@ -11,8 +13,6 @@
 #include "beachmat/numeric_matrix.h"
 #include "beachmat/integer_matrix.h"
 #include "functions.h"
-#include "utils_rcpp.h"
-//#include "ClusterR/utils_rcpp.h"
 
 #include <algorithm>
 #include <iostream>
@@ -20,7 +20,7 @@
 #include <math.h>
 
 using namespace arma;
-
+using namespace clustR;
 
 //get the number of rows
 template<typename T>
@@ -74,58 +74,10 @@ int get_ncol(const T& data){
   }
 }
 
-
-//subset the matrix and select randomly rows(nrows = init_fraction*total)
-template<typename T1, typename T2>
-SEXP subset_matrix(const T1& data, const T2& init_fraction_value){
-
-  const size_t& nc = data->get_ncol();
-  const size_t& nr = data->get_nrow();
-  int fract = std::ceil(nr*init_fraction_value);
-
-  arma::uvec init = arma::conv_to< arma::uvec >::from(sample_vec(fract, 0, nr - 1, false));
-
-  arma::uvec samp_init = arma::sort(init);
-
-  Rcpp::NumericMatrix submat(samp_init.n_rows, nc);
-  Rcpp::NumericVector tmp(nc);
-
-  for(int i=0; i<samp_init.n_rows; i++){
-    data->get_row(samp_init[i], tmp.begin());
-    submat.row(i) = tmp;
-  }
-
-  return submat;
-
-}
-
-
-//subset the matrix and select randomly rows(nrow  = cluster)
-template<typename T1>
-SEXP subset_matrix_random(const T1& data, int cluster){
-  const size_t& nc = data->get_ncol();
-  const size_t& nr = data->get_nrow();
-
-  arma::uvec init = arma::conv_to< arma::uvec >::from(sample_vec(cluster, 0, nr - 1, false));
-
-  arma::uvec samp_init = arma::sort(init);
-
-  Rcpp::NumericMatrix submat(samp_init.n_rows, nc);
-  Rcpp::NumericVector tmp(nc);
-
-  for(int i=0; i<samp_init.n_rows; i++){
-    data->get_row(samp_init[i], tmp.begin());
-    submat.row(i) = tmp;
-  }
-
-  return submat;
-
-}
-
-
-
 template<typename T>
 arma::rowvec clusters_WCSS(const T&data,arma::mat CENTROIDS){
+
+  ClustHeader clust_header;
 
   auto matrix_type=beachmat::find_sexp_type(data);
 
@@ -142,11 +94,11 @@ arma::rowvec clusters_WCSS(const T&data,arma::mat CENTROIDS){
       final_matrix->get_row(j, tmp.begin());
       dat_final.row(j) = tmp;
       arma::mat data_final = Rcpp::as<arma::mat>(dat_final);
-      arma::vec tmp_vec = WCSS(arma::conv_to< arma::rowvec >::from(data_final.row(j)), CENTROIDS);                 // returns a rowvec with the SSE for each cluster
+      arma::vec tmp_vec = clust_header.WCSS(arma::conv_to< arma::rowvec >::from(data_final.row(j)), CENTROIDS);                 // returns a rowvec with the SSE for each cluster
 
       //soft_CLUSTERS.row(j) = arma::conv_to< arma::rowvec >::from(tmp_vec);
 
-      int tmp_idx = MinMat(tmp_vec);                                                                        // returns the index of the tmp_vec with the lowest SSE
+      int tmp_idx = clust_header.MinMat(tmp_vec);                                                                        // returns the index of the tmp_vec with the lowest SSE
       CLUSTERS(j) = tmp_idx+1;
     }
     return CLUSTERS;
@@ -166,11 +118,11 @@ arma::rowvec clusters_WCSS(const T&data,arma::mat CENTROIDS){
       final_matrix->get_row(j, tmp.begin());
       dat_final.row(j) = tmp;
       arma::mat data_final = Rcpp::as<arma::mat>(dat_final);
-      arma::vec tmp_vec = WCSS(arma::conv_to< arma::rowvec >::from(data_final.row(j)), CENTROIDS);                 // returns a rowvec with the SSE for each cluster
+      arma::vec tmp_vec = clust_header.WCSS(arma::conv_to< arma::rowvec >::from(data_final.row(j)), CENTROIDS);                 // returns a rowvec with the SSE for each cluster
 
       //soft_CLUSTERS.row(j) = arma::conv_to< arma::rowvec >::from(tmp_vec);
 
-      int tmp_idx = MinMat(tmp_vec);                                                                        // returns the index of the tmp_vec with the lowest SSE
+      int tmp_idx = clust_header.MinMat(tmp_vec);                                                                        // returns the index of the tmp_vec with the lowest SSE
       CLUSTERS(j) = tmp_idx+1;
     }
     return CLUSTERS;

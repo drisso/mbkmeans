@@ -7,13 +7,13 @@
 using namespace Rcpp;
 
 // debug
-arma::vec debug(Rcpp::IntegerMatrix data, Rcpp::NumericMatrix CENTROIDS);
+arma::rowvec debug(SEXP data, Rcpp::Nullable<Rcpp::NumericMatrix> CENTROIDS);
 RcppExport SEXP _beachball_debug(SEXP dataSEXP, SEXP CENTROIDSSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::IntegerMatrix >::type data(dataSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type CENTROIDS(CENTROIDSSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::NumericMatrix> >::type CENTROIDS(CENTROIDSSEXP);
     rcpp_result_gen = Rcpp::wrap(debug(data, CENTROIDS));
     return rcpp_result_gen;
 END_RCPP

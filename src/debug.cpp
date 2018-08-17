@@ -21,7 +21,6 @@
 
 using namespace arma;
 
-//get the number of rows
 template<typename T>
 int get_nrow(const T& data){
 
@@ -31,15 +30,39 @@ int get_nrow(const T& data){
     auto final_matrix=beachmat::create_integer_matrix(data);
     //const size_t& nc = final_matrix->get_ncol();
     const size_t& nr = final_matrix->get_nrow();
-    int n_col = nr;
-    return n_col;
+    int n_row = nr;
+    return n_row;
 
   }else if(matrix_type== REALSXP){
     auto final_matrix=beachmat::create_numeric_matrix(data);
     //const size_t& nc = final_matrix->get_ncol();
     const size_t& nr = final_matrix->get_nrow();
-    int n_col = nr;
-    return n_col;
+    int n_row = nr;
+    return n_row;
+  }else{
+
+    return 0;
+  }
+}
+
+template<typename T>
+int get_ncol(const T& data){
+
+  auto matrix_type=beachmat::find_sexp_type(data);
+
+  if(matrix_type== INTSXP){
+    auto final_matrix=beachmat::create_integer_matrix(data);
+    const size_t& nc = final_matrix->get_ncol();
+    //const size_t& nr = final_matrix->get_nrow();
+    int n_row = nc;
+    return n_row;
+
+  }else if(matrix_type== REALSXP){
+    auto final_matrix=beachmat::create_numeric_matrix(data);
+    const size_t& nc = final_matrix->get_ncol();
+    //const size_t& nr = final_matrix->get_nrow();
+    int n_row = nc;
+    return n_row;
   }else{
 
     return 0;
@@ -48,70 +71,108 @@ int get_nrow(const T& data){
 
 
 
+
 template<typename T>
-arma::vec distance_wcss(const T&data,arma::mat centroid){
+arma::rowvec clusters_wcss(const T&data,arma::mat CENTROIDS){
 
-  const size_t& nc = data->get_ncol();
-  const size_t& nr = data->get_nrow();
+  auto matrix_type=beachmat::find_sexp_type(data);
 
-  arma::rowvec CLUSTERS(nr);
+  if(matrix_type == INTSXP){
 
-  arma::vec tmp_c(centroid.n_rows);
+    auto final_matrix=beachmat::create_integer_matrix(data);
+    int data_n_rows = get_nrow(data);
+    int data_n_cols = get_ncol(data);
+    Rcpp::IntegerMatrix dat_final(data_n_rows,data_n_cols);
+    arma::rowvec CLUSTERS(data_n_rows);
+    for (unsigned int j = 0; j < data_n_rows; j++) {
 
-  arma::vec tmp_data(nc);
+      Rcpp::NumericVector tmp(data_n_cols);
+      final_matrix->get_row(j, tmp.begin());
+      dat_final.row(j) = tmp;
+      arma::mat data_final = Rcpp::as<arma::mat>(dat_final);
+      arma::vec tmp_vec = WCSS(arma::conv_to< arma::rowvec >::from(data_final.row(j)), CENTROIDS);                 // returns a rowvec with the SSE for each cluster
 
-  Rcpp::NumericMatrix submat(nr,nc);
+      //soft_CLUSTERS.row(j) = arma::conv_to< arma::rowvec >::from(tmp_vec);
 
-  arma::vec tmp_vec;
-
- // arma::rowvec CLUSTERS(nr);
-
-  arma::mat soft_CLUSTERS(nr, centroid.n_rows);
-
-
-  for(unsigned int i=0;i<nr;i++){
-
-
-      data->get_row(i,tmp_data.begin());
-
-      //arma::vec tmp_ss = WCSS(tmp_data,centroid);
-
-       tmp_vec = WCSS(arma::conv_to< arma::rowvec >::from(tmp_data), centroid);
-
-      //soft_CLUSTERS.row(i) = arma::conv_to< arma::rowvec >::from(tmp_vec);
-
-      int tmp_idx = MinMat(tmp_vec);
-
-      CLUSTERS(i) = tmp_idx;
+      int tmp_idx = MinMat(tmp_vec);                                                                        // returns the index of the tmp_vec with the lowest SSE
+      CLUSTERS(j) = tmp_idx+1;
+    }
+    return CLUSTERS;
 
 
+  }else if(matrix_type ==REALSXP){
+    auto final_matrix=beachmat::create_numeric_matrix(data);
+    int data_n_rows = get_nrow(data);
+    int data_n_cols = get_ncol(data);
+    Rcpp::NumericMatrix dat_final(data_n_rows,data_n_cols);
+    arma::rowvec CLUSTERS(data_n_rows);
 
 
+    for (unsigned int j = 0; j < data_n_rows; j++) {
 
+      Rcpp::NumericVector tmp(data_n_cols);
+      final_matrix->get_row(j, tmp.begin());
+      dat_final.row(j) = tmp;
+      arma::mat data_final = Rcpp::as<arma::mat>(dat_final);
+      arma::vec tmp_vec = WCSS(arma::conv_to< arma::rowvec >::from(data_final.row(j)), CENTROIDS);                 // returns a rowvec with the SSE for each cluster
 
+      //soft_CLUSTERS.row(j) = arma::conv_to< arma::rowvec >::from(tmp_vec);
 
+      int tmp_idx = MinMat(tmp_vec);                                                                        // returns the index of the tmp_vec with the lowest SSE
+      CLUSTERS(j) = tmp_idx+1;
+    }
+    return CLUSTERS;
   }
 
-  return CLUSTERS;
 
 }
 
 
-// [[Rcpp::export]]
-arma::vec debug(Rcpp::IntegerMatrix data, Rcpp::NumericMatrix CENTROIDS){
 
-  arma::mat CENTROIDS1 = Rcpp::as<arma::mat>(CENTROIDS);
+// [[Rcpp::export]]
+arma::rowvec debug(SEXP data, Rcpp::Nullable<Rcpp::NumericMatrix> CENTROIDS = R_NilValue){
+
+  arma::mat CENTROIDS1;
+
+  if (CENTROIDS.isNotNull()) {
+
+    CENTROIDS1 = Rcpp::as<arma::mat>(CENTROIDS);
+  }
 
   int data_n_rows = get_nrow(data);
 
-  arma::vec tmp_vec_wcss;
+  int data_n_cols = get_ncol(data);
 
-  auto final_matrix=beachmat::create_integer_matrix(data);
+  Rcpp::NumericMatrix dat_final(data_n_rows,data_n_cols);
 
-  tmp_vec_wcss =distance_wcss(final_matrix,CENTROIDS1);
+  arma::rowvec CLUSTERS(data_n_rows);
 
+  arma::mat soft_CLUSTERS(data_n_rows, CENTROIDS1.n_rows);
 
-  return tmp_vec_wcss;
+  CLUSTERS=clusters_wcss(data,CENTROIDS1);
+
+  //for (unsigned int j = 0; j < data_n_rows; j++) {
+
+    //Rcpp::NumericVector tmp(data_n_cols);
+
+    //auto final_matrix=beachmat::create_numeric_matrix(data);
+
+    //final_matrix->get_row(j, tmp.begin());
+
+   // dat_final.row(j) = tmp;
+
+    //arma::mat data_final = Rcpp::as<arma::mat>(dat_final);
+
+    //arma::vec tmp_vec = WCSS(arma::conv_to< arma::rowvec >::from(data_final.row(j)), CENTROIDS1);                 // returns a rowvec with the SSE for each cluster
+
+    //soft_CLUSTERS.row(j) = arma::conv_to< arma::rowvec >::from(tmp_vec);
+
+    //int tmp_idx = MinMat(tmp_vec);                                                                        // returns the index of the tmp_vec with the lowest SSE
+
+    //CLUSTERS(j) = tmp_idx+1;
+ // }
+
+  return CLUSTERS;
 
 
 }

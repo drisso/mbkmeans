@@ -9,7 +9,8 @@ mini_batch(data, clusters, batch_size, max_iters, num_init = 1L,
   verbose = FALSE, CENTROIDS = NULL, tol = 1e-04, seed = 1L)
 }
 \arguments{
-\item{data}{numeric matrix or integer matrix or HDF5Matrix}
+\item{data}{matrix, DelayedMatrix, or HDF5Matrix containing numeric or
+integer data (obseravtions in rows, variables in columns)}
 
 \item{clusters}{the number of clusters}
 
@@ -17,35 +18,68 @@ mini_batch(data, clusters, batch_size, max_iters, num_init = 1L,
 
 \item{max_iters}{the maximum number of clustering iterations}
 
-\item{num_init}{number of times the algorithm will be run with different centroid seeds}
+\item{num_init}{number of times the algorithm will be run with different
+centroid seeds}
 
-\item{init_fraction}{percentage of data to use for the initialization centroids (applies if initializer is \emph{kmeans++} ). Should be a float number between 0.0 and 1.0.}
+\item{init_fraction}{percentage of data to use for the initialization
+centroids (applies if initializer is \emph{kmeans++} ). Should be a float
+number between 0.0 and 1.0.}
 
-\item{initializer}{the method of initialization. One of \emph{kmeans++} and \emph{random}. See details for more information}
+\item{initializer}{the method of initialization. One of \emph{kmeans++} and
+\emph{random}. See details for more information}
 
-\item{early_stop_iter}{continue that many iterations after calculation of the best within-cluster-sum-of-squared-error}
+\item{early_stop_iter}{continue that many iterations after calculation of the
+best within-cluster-sum-of-squared-error}
 
-\item{verbose}{either TRUE or FALSE, indicating whether progress is printed during clustering}
+\item{verbose}{either TRUE or FALSE, indicating whether progress is printed
+during clustering}
 
-\item{CENTROIDS}{a matrix of initial cluster centroids. The rows of the CENTROIDS matrix should be equal to the number of clusters and the columns should be equal to the columns of the data}
+\item{CENTROIDS}{a matrix of initial cluster centroids. The rows of the
+CENTROIDS matrix should be equal to the number of clusters and the columns
+should be equal to the columns of the data}
 
-\item{tol}{a float number. If, in case of an iteration (iteration > 1 and iteration < max_iters) 'tol' is greater than the squared norm of the centroids, then kmeans has converged}
+\item{tol}{a float number. If, in case of an iteration (iteration > 1 and
+iteration < max_iters) 'tol' is greater than the squared norm of the
+centroids, then kmeans has converged}
 
 \item{seed}{integer value for random number generator (RNG)}
 }
 \value{
-a list with the following attributes: centroids, WCSS_per_cluster, best_initialization, iters_per_initialization
+a list with the following attributes: centroids, WCSS_per_cluster,
+ best_initialization, iters_per_initialization
 }
 \description{
-Mini-batch-k-means for both matrix and HDF5Matrix
+Mini-batch-k-means for in-memory, delayed, and on-disk matrices
 }
 \details{
-This function performs k-means clustering using mini batches.
+This function performs k-means clustering using the mini-batch
+algorithm of Sculley (2010).
 
-\strong{kmeans++}: kmeans++ initialization. Reference : http://theory.stanford.edu/~sergei/papers/kMeansPP-soda.pdf AND http://stackoverflow.com/questions/5466323/how-exactly-does-k-means-work
+This implementation relies very heavily on the
+\code{\link[ClusterR]{MiniBatchKmeans}} implementation. We provide the
+ability to work with DelayedMatrix and HDF5Matrix through the \code{beachmat}
+library.
 
-\strong{random}: random selection of data rows as initial centroids
+\strong{kmeans++}: uses the algorithm of Arthur and Vassilvitskii (2007) to
+initialize the centroids.
+
+\strong{random}: random selection of data rows as initial centroids.
+}
+\examples{
+data(iris)
+km = mini_batch(as.matrix(iris[,1:4]), clusters = 3,
+               batch_size = 10, max_iters = 10)
+
 }
 \references{
-https://github.com/mlampros/ClusterR
+Sculley (2010) Web-Scale K-Means Clustering. WWW 2010, April
+26–30, 2010, Raleigh, North Carolina, USA.
+
+Arthur and Vassilvitskii (2007) k-means++: The Advantages of Careful Seeding.
+Proceedings of the eighteenth annual ACM-SIAM symposium on Discrete
+algorithms. Society for Industrial and Applied Mathematics Philadelphia, PA,
+USA.
+}
+\author{
+Lampros Mouselimis and Yuwei Ni
 }

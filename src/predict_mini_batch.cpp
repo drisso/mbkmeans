@@ -163,7 +163,7 @@ arma::rowvec clusters_WCSS(const T&data,arma::mat CENTROIDS){
 //'                              CENTROIDS = km$centroids)
 //' @export
 // [[Rcpp::export]]
-Rcpp::List predict_mini_batch(SEXP data, Rcpp::Nullable<Rcpp::NumericMatrix> CENTROIDS = R_NilValue, bool fuzzy = false, double eps = 1.0e-6) {
+arma::rowvec predict_mini_batch(SEXP data, Rcpp::Nullable<Rcpp::NumericMatrix> CENTROIDS = R_NilValue, bool fuzzy = false, double eps = 1.0e-6) {
 
   arma::mat CENTROIDS1;
 
@@ -230,7 +230,7 @@ Rcpp::List predict_mini_batch(SEXP data, Rcpp::Nullable<Rcpp::NumericMatrix> CEN
 
 
   else {
-    return Rcpp::List::create(Rcpp::Named("clusters") = CLUSTERS);
+    return CLUSTERS;
   }
 }
 

@@ -18,3 +18,18 @@ system.time(km <- stats::kmeans(data, centers = 3))
 
 object_size(data)
 object_size(data2)
+
+library(DelayedArray)
+DelayedArray:::set_verbose_block_processing(FALSE)
+block_size <- 1000L
+system.time(
+km_block <- blockApply(
+  x = data,
+  FUN = predict_MBatchKMeans,
+  CENTROIDS = km$centroids,
+  grid = RegularArrayGrid(
+    refdim = dim(data),
+    spacings = c(block_size, ncol(data))))
+)
+table(clusters[1,], unlist(km_block))
+

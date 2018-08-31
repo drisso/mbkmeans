@@ -10,7 +10,9 @@ system.time(clusters <- predict_mini_batch(data, CENTROIDS = km$centroids))
 
 data2 <- as.matrix(data)
 system.time(km <- MiniBatchKmeans(data2, clusters = 3, batch_size = 100, init_fraction = .1, max_iters = 10))
+system.time(km <- mini_batch(data2, clusters = 3, batch_size = 100, init_fraction = .1, max_iters = 10))
 system.time(clusters <- predict_MBatchKMeans(data2, CENTROIDS = km$centroids))
+system.time(clusters <- predict_mini_batch(data2, CENTROIDS = km$centroids))
 
 system.time(km <- stats::kmeans(data, centers = 3))
 

@@ -74,6 +74,7 @@ int get_ncol(const T& data){
   }
 }
 
+//calculate the clusters
 template<typename T>
 arma::rowvec clusters_WCSS(const T&data,arma::mat CENTROIDS){
 
@@ -171,9 +172,6 @@ Rcpp::List predict_mini_batch(SEXP data, Rcpp::Nullable<Rcpp::NumericMatrix> CEN
   arma::mat soft_CLUSTERS(data_n_rows, CENTROIDS1.n_rows);
 
   CLUSTERS =clusters_WCSS(data,CENTROIDS1);
-
-
-
 
   //for (unsigned int j = 0; j < data_n_rows; j++) {
 

@@ -26,7 +26,7 @@ data <- t(mat)[,1:1000]
 
 data<-as.matrix(1:30,nrow=10)
 
-predict2(data,block_size=1L, clusters = 3, batch_size = 100, init_fraction = .1, max_iters = 10)
+predict2(data,block_size=1000L, clusters = 3, batch_size = 100, init_fraction = .1, max_iters = 10)
 
 clusters = 3
 block_size=5L

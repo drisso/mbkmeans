@@ -10,14 +10,21 @@
 #' @param max_iters the maximum number of clustering iterations
 #' @param initializer the method of initialization. One of \emph{kmeans++} and \emph{random}
 #'
-#'
 #' @return  It returns a vector with the clusters
 #'
+#' @section
+#' blocksize: \code{\link[beachball]{blocksize}}
 #'
+#'@export
 
 
 
 predict2<-function(data,block_size,clusters,batch_size,init_fraction,max_iters,initializer = "kmeans++"){
+
+  if(missing(block_size)) {
+    #min(floor(as.numeric(get_ram())/(2*8*ncol(data))), nrow(data))
+    block_size = blocksize(data)
+  }
 
   km<-mini_batch(data, clusters = clusters, batch_size = batch_size, init_fraction = init_fraction, max_iters = max_iters)
 

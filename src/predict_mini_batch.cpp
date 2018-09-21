@@ -87,15 +87,15 @@ arma::rowvec clusters_WCSS(const T&data,arma::mat CENTROIDS){
     auto final_matrix=beachmat::create_integer_matrix(data);
     int data_n_rows = get_nrow(data);
     int data_n_cols = get_ncol(data);
-    Rcpp::IntegerMatrix dat_final(data_n_rows,data_n_cols);
+    Rcpp::IntegerMatrix dat_final(1,data_n_cols);
+    Rcpp::IntegerVector tmp(data_n_cols);
     arma::rowvec CLUSTERS(data_n_rows);
     for (unsigned int j = 0; j < data_n_rows; j++) {
 
-      Rcpp::IntegerVector tmp(data_n_cols);
       final_matrix->get_row(j, tmp.begin());
-      dat_final.row(j) = tmp;
+      dat_final.row(0) = tmp;
       arma::mat data_final = Rcpp::as<arma::mat>(dat_final);
-      arma::vec tmp_vec = clust_header.WCSS(arma::conv_to< arma::rowvec >::from(data_final.row(j)), CENTROIDS);                 // returns a rowvec with the SSE for each cluster
+      arma::vec tmp_vec = clust_header.WCSS(arma::conv_to< arma::rowvec >::from(data_final.row(0)), CENTROIDS);                 // returns a rowvec with the SSE for each cluster
 
       //soft_CLUSTERS.row(j) = arma::conv_to< arma::rowvec >::from(tmp_vec);
 
@@ -109,17 +109,17 @@ arma::rowvec clusters_WCSS(const T&data,arma::mat CENTROIDS){
     auto final_matrix=beachmat::create_numeric_matrix(data);
     int data_n_rows = get_nrow(data);
     int data_n_cols = get_ncol(data);
-    Rcpp::NumericMatrix dat_final(data_n_rows,data_n_cols);
+    Rcpp::NumericMatrix dat_final(1,data_n_cols);
+    Rcpp::NumericVector tmp(data_n_cols);
     arma::rowvec CLUSTERS(data_n_rows);
 
 
     for (unsigned int j = 0; j < data_n_rows; j++) {
 
-      Rcpp::NumericVector tmp(data_n_cols);
       final_matrix->get_row(j, tmp.begin());
-      dat_final.row(j) = tmp;
+      dat_final.row(0) = tmp;
       arma::mat data_final = Rcpp::as<arma::mat>(dat_final);
-      arma::vec tmp_vec = clust_header.WCSS(arma::conv_to< arma::rowvec >::from(data_final.row(j)), CENTROIDS);                 // returns a rowvec with the SSE for each cluster
+      arma::vec tmp_vec = clust_header.WCSS(arma::conv_to< arma::rowvec >::from(data_final.row(0)), CENTROIDS);                 // returns a rowvec with the SSE for each cluster
 
       //soft_CLUSTERS.row(j) = arma::conv_to< arma::rowvec >::from(tmp_vec);
 

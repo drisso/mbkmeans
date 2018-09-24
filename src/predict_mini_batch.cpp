@@ -76,7 +76,7 @@ int get_ncol(const T& data){
 
 //calculate the clusters
 template<typename T>
-arma::rowvec clusters_WCSS(const T&data,arma::mat CENTROIDS){
+arma::rowvec clusters_WCSS(const T&data,Rcpp::NumericMatrix CENTROIDS){
 
   ClustHeader clust_header;
 
@@ -87,16 +87,29 @@ arma::rowvec clusters_WCSS(const T&data,arma::mat CENTROIDS){
     auto final_matrix=beachmat::create_integer_matrix(data);
     int data_n_rows = get_nrow(data);
     int data_n_cols = get_ncol(data);
-    Rcpp::IntegerMatrix dat_final(1,data_n_cols);
+    Rcpp::NumericMatrix dat_final(1,data_n_cols);
     Rcpp::IntegerVector tmp(data_n_cols);
     arma::rowvec CLUSTERS(data_n_rows);
+    int centrod_n_row = get_nrow(CENTROIDS);
+
+    arma::vec tmp_vec(centrod_n_row);
+
+    arma::vec tmp_vec2(centrod_n_row);
+
     for (unsigned int j = 0; j < data_n_rows; j++) {
 
       final_matrix->get_row(j, tmp.begin());
       dat_final.row(0) = tmp;
-      arma::mat data_final = Rcpp::as<arma::mat>(dat_final);
-      arma::vec tmp_vec = clust_header.WCSS(arma::conv_to< arma::rowvec >::from(data_final.row(0)), CENTROIDS);                 // returns a rowvec with the SSE for each cluster
 
+      //arma::mat data_final = Rcpp::as<arma::mat>(dat_final);
+      //arma::vec tmp_vec = clust_header.WCSS(arma::conv_to< arma::rowvec >::from(data_final.row(0)), CENTROIDS);                 // returns a rowvec with the SSE for each cluster
+      for(unsigned int i =0; i<centrod_n_row;i++){
+
+        tmp_vec(i)= Rcpp::sum(Rcpp::pow(dat_final.row(0) - CENTROIDS.row(i),2));
+
+        tmp_vec2(i) = arma::as_scalar(tmp_vec(i));
+
+      }
       //soft_CLUSTERS.row(j) = arma::conv_to< arma::rowvec >::from(tmp_vec);
 
       int tmp_idx = clust_header.MinMat(tmp_vec);                                                                        // returns the index of the tmp_vec with the lowest SSE
@@ -112,18 +125,30 @@ arma::rowvec clusters_WCSS(const T&data,arma::mat CENTROIDS){
     Rcpp::NumericMatrix dat_final(1,data_n_cols);
     Rcpp::NumericVector tmp(data_n_cols);
     arma::rowvec CLUSTERS(data_n_rows);
+    int centrod_n_row = get_nrow(CENTROIDS);
 
+    arma::vec tmp_vec(centrod_n_row);
+
+    arma::vec tmp_vec2(centrod_n_row);
 
     for (unsigned int j = 0; j < data_n_rows; j++) {
 
       final_matrix->get_row(j, tmp.begin());
       dat_final.row(0) = tmp;
-      arma::mat data_final = Rcpp::as<arma::mat>(dat_final);
-      arma::vec tmp_vec = clust_header.WCSS(arma::conv_to< arma::rowvec >::from(data_final.row(0)), CENTROIDS);                 // returns a rowvec with the SSE for each cluster
+      //arma::mat data_final = Rcpp::as<arma::mat>(dat_final);
+      //arma::vec tmp_vec = clust_header.WCSS(arma::conv_to< arma::rowvec >::from(data_final.row(0)), CENTROIDS);                 // returns a rowvec with the SSE for each cluster
+
+      for(unsigned int i =0; i<centrod_n_row;i++){
+
+        tmp_vec(i)= Rcpp::sum(Rcpp::pow(dat_final.row(0) - CENTROIDS.row(i),2));
+
+        tmp_vec2(i) = arma::as_scalar(tmp_vec(i));
+
+      }
 
       //soft_CLUSTERS.row(j) = arma::conv_to< arma::rowvec >::from(tmp_vec);
 
-      int tmp_idx = clust_header.MinMat(tmp_vec);                                                                        // returns the index of the tmp_vec with the lowest SSE
+      int tmp_idx = clust_header.MinMat(tmp_vec2);                                                                        // returns the index of the tmp_vec with the lowest SSE
       CLUSTERS(j) = tmp_idx+1;
     }
     return CLUSTERS;
@@ -150,14 +175,16 @@ arma::rowvec clusters_WCSS(const T&data,arma::mat CENTROIDS){
 //'
 //' @export
 // [[Rcpp::export]]
-Rcpp::List predict_mini_batch(SEXP data, Rcpp::Nullable<Rcpp::NumericMatrix> CENTROIDS = R_NilValue, bool fuzzy = false, double eps = 1.0e-6) {
+Rcpp::List predict_mini_batch(SEXP data, Rcpp::NumericMatrix CENTROIDS, bool fuzzy = false, double eps = 1.0e-6) {
 
   arma::mat CENTROIDS1;
 
-  if (CENTROIDS.isNotNull()) {
+
+  //if (CENTROIDS.isNotNull()) {
 
     CENTROIDS1 = Rcpp::as<arma::mat>(CENTROIDS);
-  }
+
+  //}
 
   //SEXP trans_data = transfer_data(data);
 
@@ -171,7 +198,10 @@ Rcpp::List predict_mini_batch(SEXP data, Rcpp::Nullable<Rcpp::NumericMatrix> CEN
 
   arma::mat soft_CLUSTERS(data_n_rows, CENTROIDS1.n_rows);
 
-  CLUSTERS =clusters_WCSS(data,CENTROIDS1);
+  CLUSTERS =clusters_WCSS(data,CENTROIDS);
+
+
+
 
   //for (unsigned int j = 0; j < data_n_rows; j++) {
 

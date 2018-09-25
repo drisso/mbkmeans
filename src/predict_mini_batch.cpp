@@ -87,11 +87,8 @@ arma::rowvec clusters_WCSS(const T&data,Rcpp::NumericMatrix CENTROIDS){
     auto final_matrix=beachmat::create_integer_matrix(data);
     int data_n_rows = get_nrow(data);
     int data_n_cols = get_ncol(data);
-<<<<<<< HEAD
+
     Rcpp::NumericMatrix dat_final(1,data_n_cols);
-=======
-    Rcpp::IntegerMatrix dat_final(1,data_n_cols);
->>>>>>> effd41d5f6de8ca129bab16ff952739d23241eda
     Rcpp::IntegerVector tmp(data_n_cols);
     arma::rowvec CLUSTERS(data_n_rows);
     int centrod_n_row = get_nrow(CENTROIDS);
@@ -102,15 +99,11 @@ arma::rowvec clusters_WCSS(const T&data,Rcpp::NumericMatrix CENTROIDS){
 
       final_matrix->get_row(j, tmp.begin());
       dat_final.row(0) = tmp;
-<<<<<<< HEAD
+
 
       //arma::mat data_final = Rcpp::as<arma::mat>(dat_final);
       //arma::vec tmp_vec = clust_header.WCSS(arma::conv_to< arma::rowvec >::from(data_final.row(0)), CENTROIDS);                 // returns a rowvec with the SSE for each cluster
       for(unsigned int i =0; i<centrod_n_row;i++){
-=======
-      arma::mat data_final = Rcpp::as<arma::mat>(dat_final);
-      arma::vec tmp_vec = clust_header.WCSS(arma::conv_to< arma::rowvec >::from(data_final.row(0)), CENTROIDS);                 // returns a rowvec with the SSE for each cluster
->>>>>>> effd41d5f6de8ca129bab16ff952739d23241eda
 
         tmp_vec(i)= Rcpp::sum(Rcpp::pow(dat_final.row(0) - CENTROIDS.row(i),2));
 
@@ -140,7 +133,7 @@ arma::rowvec clusters_WCSS(const T&data,Rcpp::NumericMatrix CENTROIDS){
 
       final_matrix->get_row(j, tmp.begin());
       dat_final.row(0) = tmp;
-<<<<<<< HEAD
+
       //arma::mat data_final = Rcpp::as<arma::mat>(dat_final);
       //arma::vec tmp_vec = clust_header.WCSS(arma::conv_to< arma::rowvec >::from(data_final.row(0)), CENTROIDS);                 // returns a rowvec with the SSE for each cluster
 
@@ -149,10 +142,6 @@ arma::rowvec clusters_WCSS(const T&data,Rcpp::NumericMatrix CENTROIDS){
         tmp_vec(i)= Rcpp::sum(Rcpp::pow(dat_final.row(0) - CENTROIDS.row(i),2));
 
       }
-=======
-      arma::mat data_final = Rcpp::as<arma::mat>(dat_final);
-      arma::vec tmp_vec = clust_header.WCSS(arma::conv_to< arma::rowvec >::from(data_final.row(0)), CENTROIDS);                 // returns a rowvec with the SSE for each cluster
->>>>>>> effd41d5f6de8ca129bab16ff952739d23241eda
 
       //soft_CLUSTERS.row(j) = arma::conv_to< arma::rowvec >::from(tmp_vec);
 
@@ -195,11 +184,8 @@ arma::rowvec clusters_WCSS(const T&data,Rcpp::NumericMatrix CENTROIDS){
 //'                              CENTROIDS = km$centroids)
 //' @export
 // [[Rcpp::export]]
-<<<<<<< HEAD
 Rcpp::List predict_mini_batch(SEXP data, Rcpp::NumericMatrix CENTROIDS, bool fuzzy = false, double eps = 1.0e-6) {
-=======
-arma::rowvec predict_mini_batch(SEXP data, Rcpp::Nullable<Rcpp::NumericMatrix> CENTROIDS = R_NilValue, bool fuzzy = false, double eps = 1.0e-6) {
->>>>>>> effd41d5f6de8ca129bab16ff952739d23241eda
+
 
   //arma::mat CENTROIDS1;
 
@@ -259,17 +245,10 @@ arma::rowvec predict_mini_batch(SEXP data, Rcpp::Nullable<Rcpp::NumericMatrix> C
 //     return Rcpp::List::create(Rcpp::Named("clusters") = CLUSTERS, Rcpp::Named("fuzzy_clusters") = fuzzy_mat);
 
   Rcpp::stop("fuzzy clustering is currently not implemented.");
-<<<<<<< HEAD
+
   }else {
 
     return Rcpp::List::create(Rcpp::Named("clusters") = CLUSTERS);
-=======
-  }
-
-
-  else {
-    return CLUSTERS;
->>>>>>> effd41d5f6de8ca129bab16ff952739d23241eda
   }
 }
 

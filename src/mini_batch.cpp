@@ -426,9 +426,25 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
   //}
   //}
 
+  Rcpp::Environment package_env("package:beachball");
+
+  Rcpp::Function rfunctioin = package_env["predict_mini_batch"];
+
+  Rcpp::List clusterfinal;
+
+  clusterfinal= rfunctioin(data,centers_out);
+
+  //arma::rowvec CLUSTERS;
+
+  //Rcpp::NumericMatrix centers;
+
+  //CLUSTERS = predict_mini_batch(data,centers);
+
   return Rcpp::List::create(Rcpp::Named("centroids") = centers_out, Rcpp::Named("WCSS_per_cluster") = bst_WCSS,
 
-                            Rcpp::Named("best_initialization") = end_init, Rcpp::Named("iters_per_initialization") = iter_before_stop);
+                            Rcpp::Named("best_initialization") = end_init, Rcpp::Named("iters_per_initialization") = iter_before_stop, Rcpp::Named("Clusters") = clusterfinal);
+
+
 }
 
 

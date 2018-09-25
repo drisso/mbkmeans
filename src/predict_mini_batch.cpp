@@ -192,10 +192,7 @@ Rcpp::List predict_mini_batch(SEXP data, Rcpp::NumericMatrix CENTROIDS, bool fuz
 
   //arma::mat soft_CLUSTERS(data_n_rows, CENTROIDS1.n_rows);
 
-  CLUSTERS =clusters_WCSS(data,CENTROIDS);
-
-
-
+  CLUSTERS = clusters_WCSS(data,CENTROIDS);
 
   //for (unsigned int j = 0; j < data_n_rows; j++) {
 
@@ -220,24 +217,19 @@ Rcpp::List predict_mini_batch(SEXP data, Rcpp::NumericMatrix CENTROIDS, bool fuz
     //CLUSTERS(j) = tmp_idx+1;
     // }
 
-
-
   if (fuzzy) {
-//
+
 //     arma::mat fuzzy_mat(soft_CLUSTERS.n_rows, soft_CLUSTERS.n_cols);
-//
+
 //     for (unsigned int i = 0; i < soft_CLUSTERS.n_rows; i++) {
-//
+
 //       fuzzy_mat.row(i) = norm_fuzzy(arma::conv_to< arma::rowvec >::from(soft_CLUSTERS.row(i)), eps);
 //     }
-//
+
 //     return Rcpp::List::create(Rcpp::Named("clusters") = CLUSTERS, Rcpp::Named("fuzzy_clusters") = fuzzy_mat);
 
   Rcpp::stop("fuzzy clustering is currently not implemented.");
-  }
-
-
-  else {
+  }else {
 
     return Rcpp::List::create(Rcpp::Named("clusters") = CLUSTERS);
   }

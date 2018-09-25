@@ -54,13 +54,10 @@ BEGIN_RCPP
 END_RCPP
 }
 
-RcppExport SEXP _beachball_debug(SEXP, SEXP);
-
 static const R_CallMethodDef CallEntries[] = {
     {"_beachball_transfer_data", (DL_FUNC) &_beachball_transfer_data, 1},
     {"_beachball_mini_batch", (DL_FUNC) &_beachball_mini_batch, 12},
     {"_beachball_predict_mini_batch", (DL_FUNC) &_beachball_predict_mini_batch, 4},
-    {"_beachball_debug",              (DL_FUNC) &_beachball_debug,               2},
     {NULL, NULL, 0}
 };
 

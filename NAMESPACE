@@ -2,7 +2,7 @@
 
 export(blocksize)
 export(mini_batch)
-export(predict2)
+export(predict_MB_blocksize)
 export(predict_mini_batch)
 exportMethods(kmeans)
 import(ClusterR)

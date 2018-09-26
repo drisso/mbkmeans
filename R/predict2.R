@@ -1,6 +1,6 @@
-#' Predict2
+#' predict_MB_blocksize
 #'
-#'Generic function to dectect potential confounders for one predictor of interest no matter the outcome varible and predictor of interest are continuous or categorical.
+#' Predict Mini-batch-k-means by block for both matrix and HDF5Matrix
 #'
 #' @param data   numeric matrix or integer matrix or HDF5Matrix
 #' @param block_size   the number of rows of data
@@ -17,27 +17,26 @@
 #'
 #'@export
 
-
-
-predict2<-function(data,block_size,clusters,batch_size,init_fraction,max_iters,initializer = "kmeans++"){
+predict_MB_blocksize<-function(data,block_size,clusters,batch_size,init_fraction,max_iters,initializer = "kmeans++"){
 
   if(missing(block_size)) {
     #min(floor(as.numeric(get_ram())/(2*8*ncol(data))), nrow(data))
     block_size = blocksize(data)
   }
 
-  km<-mini_batch(data, clusters = clusters, batch_size = batch_size, init_fraction = init_fraction, max_iters = max_iters)
+  km<-mini_batch(data, clusters = clusters, batch_size = batch_size, init_fraction = init_fraction, max_iters = max_iters,initializer =initializer )
 
   ##for each row, do predict_mini_batch
     km_block <- blockApply(
     x = data,
-    FUN = predict_MBatchKMeans,
+    ##FUN = predict_MBatchKMeans,
+    FUN = predict_mini_batch,
     CENTROIDS = km$centroids,
     grid = RegularArrayGrid(
       refdim = dim(data),
       spacings = c(block_size, ncol(data))))
 
-    clean_data<-unlist(km_block)
+    clean_data<-unlist(km_block,use.names = FALSE)
 
     clean_data
 }

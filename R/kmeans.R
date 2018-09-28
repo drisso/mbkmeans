@@ -17,8 +17,8 @@ NULL
 #'   \code{reduceMethod = "none"}.
 #' @param ... Arguments to pass to \code{\link[stats]{kmeans}}.
 #' @return k-means output
-#' @name kmeans
-#' @rdname kmeans
+#' @name mbkmeans
+#' @rdname mbkmeans
 #' @export
 #' @importClassesFrom SummarizedExperiment SummarizedExperiment
 #' @importFrom methods as
@@ -26,10 +26,10 @@ NULL
 #' se <- SummarizedExperiment(matrix(rnorm(100), ncol=10))
 #' kmeans(se, centers = 2, reduceMethod = "none")
 setMethod(
-  f = "kmeans",
+  f = "mbkmeans",
   signature = signature(x = "SummarizedExperiment"),
   definition = function(x, ...){
-    kmeans(as(x,"SingleCellExperiment"),...)
+    mbkmeans(as(x,"SingleCellExperiment"),...)
 
   })
 
@@ -39,7 +39,7 @@ setMethod(
 #' @importFrom SummarizedExperiment assays
 #' @importFrom SingleCellExperiment reducedDim reducedDimNames
 setMethod(
-  f = "kmeans",
+  f = "mbkmeans",
   signature = signature(x = "SingleCellExperiment"),
   definition = function(x, reduceMethod = "PCA", whichAssay = 1, ...)
   {
@@ -47,7 +47,7 @@ setMethod(
     if(reduceMethod=="none"){
       if(NCOL(x)>10000)
         message("Note that you are running kmeans with more than 10,000 cells using all of the dimensions. You might consider running a dimensionality reduction step first.")
-      fit <- kmeans(assays(x)[[whichAssay]], ...)
+      fit <- mbkmeans(assays(x)[[whichAssay]], ...)
     }
     else{
       if(is.null(reducedDimNames(x))){
@@ -61,45 +61,33 @@ setMethod(
 	           reducedDimNames() to see what names are in this object.")
 
       }
-      fit <- kmeans(reducedDim(x, reduceMethod), ...)
+      fit <- mbkmeans(reducedDim(x, reduceMethod), ...)
 
     }
 
     return(fit)
   })
 
-#' @rdname kmeans
+#' @rdname mbkmeans
 #' @export
 #' @importClassesFrom SingleCellExperiment LinearEmbeddingMatrix
 #' @importFrom SingleCellExperiment sampleFactors
 setMethod(
-  f = "kmeans",
+  f = "mbkmeans",
   signature = signature(x = "LinearEmbeddingMatrix"),
   definition = function(x, ...)
   {
-    kmeans(sampleFactors(x), ...)
+    mbkmeans(sampleFactors(x), ...)
   })
 
-#' @rdname kmeans
+#' @rdname mbkmeans
 #' @export
 #' @importClassesFrom DelayedArray DelayedMatrix
 setMethod(
-  f = "kmeans",
-  signature = signature(x = "DelayedMatrix"),
-  definition = function(x, ...)
+  f = "mbkmeans",
+  signature = signature(x = "ANY"),
+  definition = function(x ) #put arguments here
   {
-    stop("kmeans is not yet implemented for a DelayedMatrix/HDF5Matrix object")
+	  mini_batch(x)#put arguments here
   })
 
-#' @rdname kmeans
-#' @export
-#' @importFrom stats kmeans
-# Do we need this function, or will it be called automatically?
-# See https://stat.ethz.ch/pipermail/r-devel/2009-March/052680.html and ?Methods_for_S3
-setMethod(
-  f = "kmeans",
-  signature = signature(x = "matrix"),
-  definition = function(x, ...)
-  {
-    stats::kmeans(x,...)
-  })

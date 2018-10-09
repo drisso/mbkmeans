@@ -46,6 +46,11 @@ This function performs k-means clustering using mini batches.
 
 \strong{random}: random selection of data rows as initial centroids
 }
+\examples{
+data = matrix(1:30,nrow = 10)
+data1 = as(data,"HDF5Matrix")
+
+}
 \references{
 https://github.com/mlampros/ClusterR
 }

@@ -127,7 +127,7 @@ SEXP subset_matrix_random(const T1& data, int cluster){
 //'
 //'@examples
 //'data = matrix(1:30,nrow = 10)
-//'data1 = as(data,"HDF5Matrix)
+//'data1 = as(data,"HDF5Matrix")
 //'
 //' @export
 // [[Rcpp::export]]
@@ -428,11 +428,11 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
 
   Rcpp::Environment package_env("package:beachball");
 
-  Rcpp::Function rfunctioin = package_env["predict_mini_batch"];
+  Rcpp::Function rfunction = package_env["predict_mini_batch"];
 
   Rcpp::List clusterfinal;
 
-  clusterfinal= rfunctioin(data,centers_out);
+  clusterfinal= rfunction(data,centers_out);
 
   //arma::rowvec CLUSTERS;
 

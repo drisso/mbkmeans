@@ -35,7 +35,7 @@ transfer_data <- function(data) {
 #'
 #'@examples
 #'data = matrix(1:30,nrow = 10)
-#'data1 = as(data,"HDF5Matrix)
+#'data1 = as(data,"HDF5Matrix")
 #'
 #' @export
 mini_batch <- function(data, clusters, batch_size, max_iters, num_init = 1L, init_fraction = 1.0, initializer = "kmeans++", early_stop_iter = 10L, verbose = FALSE, CENTROIDS = NULL, tol = 1e-4, seed = 1L) {

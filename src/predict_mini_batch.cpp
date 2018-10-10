@@ -87,6 +87,7 @@ arma::rowvec clusters_WCSS(const T&data,Rcpp::NumericMatrix CENTROIDS){
     auto final_matrix=beachmat::create_integer_matrix(data);
     int data_n_rows = get_nrow(data);
     int data_n_cols = get_ncol(data);
+
     Rcpp::NumericMatrix dat_final(1,data_n_cols);
     Rcpp::IntegerVector tmp(data_n_cols);
     arma::rowvec CLUSTERS(data_n_rows);
@@ -98,6 +99,7 @@ arma::rowvec clusters_WCSS(const T&data,Rcpp::NumericMatrix CENTROIDS){
 
       final_matrix->get_row(j, tmp.begin());
       dat_final.row(0) = tmp;
+
 
       //arma::mat data_final = Rcpp::as<arma::mat>(dat_final);
       //arma::vec tmp_vec = clust_header.WCSS(arma::conv_to< arma::rowvec >::from(data_final.row(0)), CENTROIDS);                 // returns a rowvec with the SSE for each cluster
@@ -131,6 +133,7 @@ arma::rowvec clusters_WCSS(const T&data,Rcpp::NumericMatrix CENTROIDS){
 
       final_matrix->get_row(j, tmp.begin());
       dat_final.row(0) = tmp;
+
       //arma::mat data_final = Rcpp::as<arma::mat>(dat_final);
       //arma::vec tmp_vec = clust_header.WCSS(arma::conv_to< arma::rowvec >::from(data_final.row(0)), CENTROIDS);                 // returns a rowvec with the SSE for each cluster
 
@@ -150,26 +153,39 @@ arma::rowvec clusters_WCSS(const T&data,Rcpp::NumericMatrix CENTROIDS){
 
 }
 
-
-
 //' Predict_mini_batch
 //'
-//' Prediction function for Mini-batch-k-means for both matrix and HDF5Matrix
+//' Prediction function for Mini-batch-k-means for in-memory, delayed, and on-disk matrices
 //'
 //'
-//'@param data numeric matrix or integer matrix or HDF5Matrix
-//'@param CENTROIDS a matrix of initial cluster centroids. The rows of the CENTROIDS matrix should be equal to the number of clusters and the columns should equal the columns of the data.
+//'@param data matrix, DelayedMatrix, or HDF5Matrix containing numeric or
+//'  integer data (obseravtions in rows, variables in columns)
+//'@param CENTROIDS a matrix of initial cluster centroids. The rows of the
+//'  CENTROIDS matrix should be equal to the number of clusters and the columns
+//'  should equal the columns of the data.
 //'@return it returns a vector with the clusters.
 //'@details
 //'
-//'This function takes the data and the output centroids and returns the clusters.
+//'This function takes the data and the output centroids and returns the
+//'clusters.
 //'
-//'@references
-//'https://github.com/mlampros/ClusterR
+//'This implementation relies very heavily on the
+//'\code{\link[ClusterR]{MiniBatchKmeans}} implementation. We provide the
+//'ability to work with DelayedMatrix and HDF5Matrix through the \code{beachmat}
+//'library.
 //'
+//'@author Lampros Mouselimis and Yuwei Ni
+//'
+//'@examples
+//'data(iris)
+//'km = mini_batch(as.matrix(iris[,1:4]), clusters = 3,
+//'                batch_size = 10, max_iters = 10)
+//'clusters = predict_mini_batch(as.matrix(iris[,1:4]),
+//'                              CENTROIDS = km$centroids)
 //' @export
 // [[Rcpp::export]]
 Rcpp::List predict_mini_batch(SEXP data, Rcpp::NumericMatrix CENTROIDS, bool fuzzy = false, double eps = 1.0e-6) {
+
 
   //arma::mat CENTROIDS1;
 
@@ -229,6 +245,7 @@ Rcpp::List predict_mini_batch(SEXP data, Rcpp::NumericMatrix CENTROIDS, bool fuz
 //     return Rcpp::List::create(Rcpp::Named("clusters") = CLUSTERS, Rcpp::Named("fuzzy_clusters") = fuzzy_mat);
 
   Rcpp::stop("fuzzy clustering is currently not implemented.");
+
   }else {
 
     return Rcpp::List::create(Rcpp::Named("clusters") = CLUSTERS);

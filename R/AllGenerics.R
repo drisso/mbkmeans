@@ -1,6 +1,6 @@
 setGeneric(
-  name = "kmeans",
+  name = "mbkmeans",
   def = function(x, ...) {
-    standardGeneric("kmeans")
+    standardGeneric("mbkmeans")
   }
 )

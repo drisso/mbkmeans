@@ -4,7 +4,7 @@
 #'
 #' @param data   numeric matrix or integer matrix or HDF5Matrix
 #'
-#' @references package:benchmarkme
+#' @importFrom benchmarkme get_ram
 #'
 #' @return  It returns a value of the maximum number of rows
 #'

@@ -22,7 +22,8 @@ Imports:
 	Rcpp,
   SingleCellExperiment,
   SummarizedExperiment,
-  ClusterR
+  ClusterR,
+  benchmarkme
 Suggests:
   beachmat, 
   HDF5Array,

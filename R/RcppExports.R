@@ -5,6 +5,40 @@ transfer_data <- function(data) {
     .Call(`_mbkmeans_transfer_data`, data)
 }
 
+#' Predict_mini_batch
+#'
+#' Prediction function for Mini-batch-k-means for in-memory, delayed, and on-disk matrices
+#'
+#'
+#'@param data matrix, DelayedMatrix, or HDF5Matrix containing numeric or
+#'  integer data (obseravtions in rows, variables in columns)
+#'@param CENTROIDS a matrix of initial cluster centroids. The rows of the
+#'  CENTROIDS matrix should be equal to the number of clusters and the columns
+#'  should equal the columns of the data.
+#'@return it returns a vector with the clusters.
+#'@details
+#'
+#'This function takes the data and the output centroids and returns the
+#'clusters.
+#'
+#'This implementation relies very heavily on the
+#'\code{\link[ClusterR]{MiniBatchKmeans}} implementation. We provide the
+#'ability to work with DelayedMatrix and HDF5Matrix through the \code{beachmat}
+#'library.
+#'
+#'@author Lampros Mouselimis and Yuwei Ni
+#'
+#'@examples
+#'data(iris)
+#'km = mini_batch(as.matrix(iris[,1:4]), clusters = 3,
+#'                batch_size = 10, max_iters = 10)
+#'clusters = predict_mini_batch(as.matrix(iris[,1:4]),
+#'                              CENTROIDS = km$centroids)
+#' @export
+predict_mini_batch <- function(data, CENTROIDS, fuzzy = FALSE, eps = 1.0e-6) {
+    .Call(`_mbkmeans_predict_mini_batch`, data, CENTROIDS, fuzzy, eps)
+}
+
 #'
 #' Mini_batch
 #'
@@ -40,39 +74,5 @@ transfer_data <- function(data) {
 #' @export
 mini_batch <- function(data, clusters, batch_size, max_iters, num_init = 1L, init_fraction = 1.0, initializer = "kmeans++", early_stop_iter = 10L, verbose = FALSE, CENTROIDS = NULL, tol = 1e-4, seed = 1L) {
     .Call(`_mbkmeans_mini_batch`, data, clusters, batch_size, max_iters, num_init, init_fraction, initializer, early_stop_iter, verbose, CENTROIDS, tol, seed)
-}
-
-#' Predict_mini_batch
-#'
-#' Prediction function for Mini-batch-k-means for in-memory, delayed, and on-disk matrices
-#'
-#'
-#'@param data matrix, DelayedMatrix, or HDF5Matrix containing numeric or
-#'  integer data (obseravtions in rows, variables in columns)
-#'@param CENTROIDS a matrix of initial cluster centroids. The rows of the
-#'  CENTROIDS matrix should be equal to the number of clusters and the columns
-#'  should equal the columns of the data.
-#'@return it returns a vector with the clusters.
-#'@details
-#'
-#'This function takes the data and the output centroids and returns the
-#'clusters.
-#'
-#'This implementation relies very heavily on the
-#'\code{\link[ClusterR]{MiniBatchKmeans}} implementation. We provide the
-#'ability to work with DelayedMatrix and HDF5Matrix through the \code{beachmat}
-#'library.
-#'
-#'@author Lampros Mouselimis and Yuwei Ni
-#'
-#'@examples
-#'data(iris)
-#'km = mini_batch(as.matrix(iris[,1:4]), clusters = 3,
-#'                batch_size = 10, max_iters = 10)
-#'clusters = predict_mini_batch(as.matrix(iris[,1:4]),
-#'                              CENTROIDS = km$centroids)
-#' @export
-predict_mini_batch <- function(data, CENTROIDS, fuzzy = FALSE, eps = 1.0e-6) {
-    .Call(`_mbkmeans_predict_mini_batch`, data, CENTROIDS, fuzzy, eps)
 }
 

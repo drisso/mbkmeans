@@ -13,30 +13,29 @@ Description:
     Implements the mini-batch k-means algorithm for large
     datasets, including support for on-disk data representation.
 Depends:
-  R (>= 3.5),
-  ClusterR
+    R (>= 3.5)
 Imports:
-	stats,
+    stats,
 	methods,
 	DelayedArray,
 	Rcpp,
-  SingleCellExperiment,
-  SummarizedExperiment,
-  ClusterR,
-  benchmarkme
+    SingleCellExperiment,
+    SummarizedExperiment,
+    ClusterR,
+    benchmarkme
 Suggests:
-  beachmat, 
-  HDF5Array,
-  Matrix,
-  Rhdf5lib
+    beachmat, 
+    HDF5Array,
+    Matrix,
+    Rhdf5lib
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.0
 LinkingTo: 
-  Rcpp, 
-  RcppArmadillo (>= 0.7.2),
-  Rhdf5lib, 
-  beachmat,
-  ClusterR
+    Rcpp, 
+    RcppArmadillo (>= 0.7.2),
+    Rhdf5lib, 
+    beachmat,
+    ClusterR
 SystemRequirements: C++11

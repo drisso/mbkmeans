@@ -5,32 +5,45 @@
 NULL
 
 
-#' @title Mini_Batch k-means for large single cell sequencing data
+#' @title Mini-Batch k-means for large single cell sequencing data
 #'
-#' @description This is a wrapper for stats::kmeans() for
-#' large single cell sequencing data with the dimensionality
-#' reduction results as input in in the reducedDim() slot.
-#' @param x The object on which to run Mini_Batch k-means.
-#' @param reduceMethod Name of dimensionality reduction results to use as input
-#'   to k-means.
-#' @param whichAssay The assay to use as input to Mini_Batch k-means. Used only if
-#'   \code{reduceMethod = "none"}.
-#' @param ... Arguments to pass to \code{\link[stats]{kmeans}}.
-#' @return k-means output
+#' @description This is an implementation of the mini-batch k-means algorithm of
+#'   Sculley (2010) for large single cell sequencing data with the
+#'   dimensionality reduction results as input in in the reducedDim() slot.
+#'
+#' @details The implementation is largely based on the
+#'   \code{\link[ClusterR]{MiniBatchKmeans}} function of the \code{ClusterR}
+#'   package. The contribution of this package is to provide support for on-disk
+#'   data representations such as HDF5, through the use of \code{DelayedMatrix}
+#'   and \code{HDF5Matrix} objects, as well as for sparse data representation
+#'   through the classes of the \code{Matrix} package.
+#'   We also provide high-level methods for objects of class
+#'   \code{SummarizedExperiment}, \code{SingleCellExperiment}, and
+#'   \code{LinearEmbeddingMatrix}.
+#'
+#' @param x The object on which to run mini-batch k-means. It can be a
+#'   matrix-like object (e.g., matrix, Matrix, DelayedMatrix, HDF5Matrix) with
+#'   genes in the rows and samples in the columns.
+#'   Specialized methods are defined for SummarizedExperiment and
+#'   SingleCellExperiment.
+#' @param ... Arguments to pass to the matrix method.
+#' @return A list with the following attributes: centroids, WCSS_per_cluster,
+#'   best_initialization, iters_per_initialization.
 #' @name mbkmeans
 #' @rdname mbkmeans
 #' @export
 #' @importClassesFrom SummarizedExperiment SummarizedExperiment
-#' @importFrom methods as
+#' @references Sculley. Web-Scale K-Means Clustering. WWW 2010, April 26–30, 2010, Raleigh, North Carolina, USA. ACM 978-1-60558-799-8/10/04.
+#' @author Lampros Mouselimis and Yuwei Ni
 #' @examples
+#' library(SummarizedExperiment)
 #' se <- SummarizedExperiment(matrix(rnorm(100), ncol=10))
-#' mbkmeans(se, clusters = 2, reduceMethod = "none")
+#' mbkmeans(se, clusters = 2)
 setMethod(
   f = "mbkmeans",
   signature = signature(x = "SummarizedExperiment"),
-  definition = function(x, ...){
-    mbkmeans(as(x,"SingleCellExperiment"),...)
-
+  definition = function(x, whichAssay = 1, ...){
+     mbkmeans(t(assay(x, whichAssay)), ...)
   })
 
 #' @rdname mbkmeans
@@ -38,7 +51,11 @@ setMethod(
 #' @importClassesFrom SingleCellExperiment SingleCellExperiment
 #' @importFrom SummarizedExperiment assays
 #' @importFrom SingleCellExperiment reducedDim reducedDimNames
+#' @param reduceMethod Name of dimensionality reduction results to use as input
+#'   to mini-batch k-means.
+#' @param whichAssay The assay to use as input to mini-batch k-means. If x is a SingleCellExperiment, this is ignored unless \code{reduceMethod = "none"}.
 #' @examples
+#' library(SingleCellExperiment)
 #' sce <- SingleCellExperiment(matrix(rnorm(100), ncol=10))
 #' mbkmeans(sce, clusters = 2, reduceMethod = "none")
 setMethod(
@@ -50,7 +67,7 @@ setMethod(
     if(reduceMethod=="none"){
       if(NCOL(x)>10000)
         message("Note that you are running kmeans with more than 10,000 cells using all of the dimensions. You might consider running a dimensionality reduction step first.")
-      fit <- mbkmeans(assays(x)[[whichAssay]], ...)
+      fit <- mbkmeans(t(assay(x, whichAssay)), ...)
     }
     else{
       if(is.null(reducedDimNames(x))){
@@ -133,20 +150,19 @@ setMethod(
                         CENTROIDS = NULL, tol = 1e-4, seed = 1)
   {
 
-    if(!is(data, "matrix") & !is(data, "Matrix") & !is(data, "HDF5Matrix") &
-       !is(data, "DelayedMatrix")) {
+    if(!is(x, "matrix") & !is(x, "Matrix") & !is(x, "HDF5Matrix") &
+       !is(x, "DelayedMatrix")) {
 
       stop("x is not of a supported type")
 
     } else {
 
-      fit <- mini_batch(x, clusters, batch_size, max_iters, num_init,
+      fit <- mini_batch(t(x), clusters, batch_size, max_iters, num_init,
                         init_fraction, initializer, early_stop_iter,
                         verbose, CENTROIDS, tol, seed)
 
     }
 
     return(fit)
-
-  })
+})
 

@@ -6,9 +6,9 @@
 \alias{mbkmeans,SingleCellExperiment-method}
 \alias{mbkmeans,LinearEmbeddingMatrix-method}
 \alias{mbkmeans,ANY-method}
-\title{Mini_Batch k-means for large single cell sequencing data}
+\title{Mini-Batch k-means for large single cell sequencing data}
 \usage{
-\S4method{mbkmeans}{SummarizedExperiment}(x, ...)
+\S4method{mbkmeans}{SummarizedExperiment}(x, whichAssay = 1, ...)
 
 \S4method{mbkmeans}{SingleCellExperiment}(x, reduceMethod = "PCA",
   whichAssay = 1, ...)
@@ -21,15 +21,14 @@
   CENTROIDS = NULL, tol = 1e-04, seed = 1)
 }
 \arguments{
-\item{x}{The object on which to run Mini_Batch k-means.}
+\item{x}{The object on which to run mini-batch k-means.}
 
-\item{...}{Arguments to pass to \code{\link[stats]{kmeans}}.}
+\item{whichAssay}{The assay to use as input to mini-batch k-means. If x is a SingleCellExperiment, this is ignored unless \code{reduceMethod = "none"}.}
+
+\item{...}{Arguments to pass to the matrix method.}
 
 \item{reduceMethod}{Name of dimensionality reduction results to use as input
-to k-means.}
-
-\item{whichAssay}{The assay to use as input to Mini_Batch k-means. Used only if
-\code{reduceMethod = "none"}.}
+to mini-batch k-means.}
 
 \item{clusters}{the number of clusters}
 
@@ -64,17 +63,28 @@ centroids, then kmeans has converged}
 \item{seed}{integer value for random number generator (RNG)}
 }
 \value{
-k-means output
+A list with the following attributes: centroids, WCSS_per_cluster,
+  best_initialization, iters_per_initialization.
 
 a list with the following attributes: centroids, WCSS_per_cluster,
  best_initialization, iters_per_initialization
 }
 \description{
-This is a wrapper for stats::kmeans() for
-large single cell sequencing data with the dimensionality
-reduction results as input in in the reducedDim() slot.
+This is an implementation of the mini-batch k-means algorithm of
+  Sculley (2010) for large single cell sequencing data with the
+  dimensionality reduction results as input in in the reducedDim() slot.
 }
 \details{
+The implementation is largely based on the
+  \code{\link[ClusterR]{MiniBatchKmeans}} function of the \code{ClusterR}
+  package. The contribution of this package is to provide support for on-disk
+  data representations such as HDF5, through the use of \code{DelayedMatrix}
+  and \code{HDF5Matrix} objects, as well as for sparse data representation
+  through the classes of the \code{Matrix} package.
+  We also provide high-level methods for objects of class
+  \code{SummarizedExperiment}, \code{SingleCellExperiment}, and
+  \code{LinearEmbeddingMatrix}.
+
 This function performs k-means clustering using mini batches.
 
 \strong{kmeans++}: kmeans++ initialization. Reference :
@@ -84,8 +94,10 @@ http://stackoverflow.com/questions/5466323/how-exactly-does-k-means-work
 \strong{random}: random selection of data rows as initial centroids
 }
 \examples{
+library(SummarizedExperiment)
 se <- SummarizedExperiment(matrix(rnorm(100), ncol=10))
-mbkmeans(se, clusters = 2, reduceMethod = "none")
+mbkmeans(se, clusters = 2)
+library(SingleCellExperiment)
 sce <- SingleCellExperiment(matrix(rnorm(100), ncol=10))
 mbkmeans(sce, clusters = 2, reduceMethod = "none")
 x<-matrix(rnorm(100), ncol=10)
@@ -93,5 +105,10 @@ mbkmeans(x,clusters = 3)
 
 }
 \references{
+Sculley. Web-Scale K-Means Clustering. WWW 2010, April 26–30, 2010, Raleigh, North Carolina, USA. ACM 978-1-60558-799-8/10/04.
+
 https://github.com/mlampros/ClusterR
+}
+\author{
+Lampros Mouselimis and Yuwei Ni
 }

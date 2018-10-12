@@ -248,7 +248,13 @@ Rcpp::List predict_mini_batch(SEXP data, Rcpp::NumericMatrix CENTROIDS, bool fuz
 
   }else {
 
-    return Rcpp::List::create(Rcpp::Named("clusters") = CLUSTERS);
+    //return CLUSTERS;
+
+    Rcpp::NumericVector final_cluster = Rcpp::wrap(CLUSTERS);
+
+    final_cluster.attr("dim") = R_NilValue;
+
+    return Rcpp::List::create(Rcpp::Named("clusters") = final_cluster);
   }
 }
 

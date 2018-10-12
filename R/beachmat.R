@@ -1,4 +1,4 @@
 #' @importFrom Rcpp sourceCpp
-#' @useDynLib beachball, .registration = TRUE
+#' @useDynLib mbkmeans, .registration = TRUE
 #'
 NULL

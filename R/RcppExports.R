@@ -2,7 +2,7 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 transfer_data <- function(data) {
-    .Call(`_beachball_transfer_data`, data)
+    .Call(`_mbkmeans_transfer_data`, data)
 }
 
 #'
@@ -39,7 +39,7 @@ transfer_data <- function(data) {
 #'
 #' @export
 mini_batch <- function(data, clusters, batch_size, max_iters, num_init = 1L, init_fraction = 1.0, initializer = "kmeans++", early_stop_iter = 10L, verbose = FALSE, CENTROIDS = NULL, tol = 1e-4, seed = 1L) {
-    .Call(`_beachball_mini_batch`, data, clusters, batch_size, max_iters, num_init, init_fraction, initializer, early_stop_iter, verbose, CENTROIDS, tol, seed)
+    .Call(`_mbkmeans_mini_batch`, data, clusters, batch_size, max_iters, num_init, init_fraction, initializer, early_stop_iter, verbose, CENTROIDS, tol, seed)
 }
 
 #' Predict_mini_batch
@@ -73,6 +73,6 @@ mini_batch <- function(data, clusters, batch_size, max_iters, num_init = 1L, ini
 #'                              CENTROIDS = km$centroids)
 #' @export
 predict_mini_batch <- function(data, CENTROIDS, fuzzy = FALSE, eps = 1.0e-6) {
-    .Call(`_beachball_predict_mini_batch`, data, CENTROIDS, fuzzy, eps)
+    .Call(`_mbkmeans_predict_mini_batch`, data, CENTROIDS, fuzzy, eps)
 }
 

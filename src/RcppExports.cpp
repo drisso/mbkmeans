@@ -8,7 +8,7 @@ using namespace Rcpp;
 
 // transfer_data
 SEXP transfer_data(SEXP data);
-RcppExport SEXP _beachball_transfer_data(SEXP dataSEXP) {
+RcppExport SEXP _mbkmeans_transfer_data(SEXP dataSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -19,7 +19,7 @@ END_RCPP
 }
 // mini_batch
 Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, int num_init, double init_fraction, std::string initializer, int early_stop_iter, bool verbose, Rcpp::Nullable<Rcpp::NumericMatrix> CENTROIDS, double tol, int seed);
-RcppExport SEXP _beachball_mini_batch(SEXP dataSEXP, SEXP clustersSEXP, SEXP batch_sizeSEXP, SEXP max_itersSEXP, SEXP num_initSEXP, SEXP init_fractionSEXP, SEXP initializerSEXP, SEXP early_stop_iterSEXP, SEXP verboseSEXP, SEXP CENTROIDSSEXP, SEXP tolSEXP, SEXP seedSEXP) {
+RcppExport SEXP _mbkmeans_mini_batch(SEXP dataSEXP, SEXP clustersSEXP, SEXP batch_sizeSEXP, SEXP max_itersSEXP, SEXP num_initSEXP, SEXP init_fractionSEXP, SEXP initializerSEXP, SEXP early_stop_iterSEXP, SEXP verboseSEXP, SEXP CENTROIDSSEXP, SEXP tolSEXP, SEXP seedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -41,7 +41,7 @@ END_RCPP
 }
 // predict_mini_batch
 Rcpp::List predict_mini_batch(SEXP data, Rcpp::NumericMatrix CENTROIDS, bool fuzzy, double eps);
-RcppExport SEXP _beachball_predict_mini_batch(SEXP dataSEXP, SEXP CENTROIDSSEXP, SEXP fuzzySEXP, SEXP epsSEXP) {
+RcppExport SEXP _mbkmeans_predict_mini_batch(SEXP dataSEXP, SEXP CENTROIDSSEXP, SEXP fuzzySEXP, SEXP epsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -55,13 +55,13 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_beachball_transfer_data", (DL_FUNC) &_beachball_transfer_data, 1},
-    {"_beachball_mini_batch", (DL_FUNC) &_beachball_mini_batch, 12},
-    {"_beachball_predict_mini_batch", (DL_FUNC) &_beachball_predict_mini_batch, 4},
+    {"_mbkmeans_transfer_data", (DL_FUNC) &_mbkmeans_transfer_data, 1},
+    {"_mbkmeans_mini_batch", (DL_FUNC) &_mbkmeans_mini_batch, 12},
+    {"_mbkmeans_predict_mini_batch", (DL_FUNC) &_mbkmeans_predict_mini_batch, 4},
     {NULL, NULL, 0}
 };
 
-RcppExport void R_init_beachball(DllInfo *dll) {
+RcppExport void R_init_mbkmeans(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
 }

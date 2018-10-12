@@ -426,7 +426,7 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
   //}
   //}
 
-  Rcpp::Environment package_env("package:beachball");
+  Rcpp::Environment package_env("package:mbkmeans");
 
   Rcpp::Function rfunction = package_env["predict_mini_batch"];
 

@@ -1,6 +1,6 @@
 #' @importFrom Rcpp sourceCpp
 #' @import ClusterR
-#' @useDynLib beachball, .registration = TRUE
+#' @useDynLib mbkmeans, .registration = TRUE
 #'
 NULL
 

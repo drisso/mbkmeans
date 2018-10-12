@@ -21,7 +21,6 @@
   CENTROIDS = NULL, tol = 1e-04, seed = 1)
 }
 \arguments{
-
 \item{x}{The object on which to run Mini_Batch k-means.}
 
 \item{...}{Arguments to pass to \code{\link[stats]{kmeans}}.}
@@ -30,7 +29,6 @@
 to k-means.}
 
 \item{whichAssay}{The assay to use as input to Mini_Batch k-means. Used only if
-
 \code{reduceMethod = "none"}.}
 
 \item{clusters}{the number of clusters}
@@ -88,6 +86,11 @@ http://stackoverflow.com/questions/5466323/how-exactly-does-k-means-work
 \examples{
 se <- SummarizedExperiment(matrix(rnorm(100), ncol=10))
 mbkmeans(se, clusters = 2, reduceMethod = "none")
+sce <- SingleCellExperiment(matrix(rnorm(100), ncol=10))
+mbkmeans(sce, clusters = 2, reduceMethod = "none")
+x<-matrix(rnorm(100), ncol=10)
+mbkmeans(x,clusters = 3)
+
 }
 \references{
 https://github.com/mlampros/ClusterR

@@ -69,7 +69,7 @@ predict_mini_batch <- function(data, CENTROIDS, fuzzy = FALSE, eps = 1.0e-6) {
 #'
 #'@examples
 #'data = matrix(1:30,nrow = 10)
-#'data1 = as(data,"HDF5Matrix")
+#'mini_batch(data, 2, 10, 10)
 #'
 #' @export
 mini_batch <- function(data, clusters, batch_size, max_iters, num_init = 1L, init_fraction = 1.0, initializer = "kmeans++", early_stop_iter = 10L, verbose = FALSE, CENTROIDS = NULL, tol = 1e-4, seed = 1L) {

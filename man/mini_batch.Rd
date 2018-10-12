@@ -48,7 +48,7 @@ This function performs k-means clustering using mini batches.
 }
 \examples{
 data = matrix(1:30,nrow = 10)
-data1 = as(data,"HDF5Matrix")
+mini_batch(data, 2, 10, 10)
 
 }
 \references{

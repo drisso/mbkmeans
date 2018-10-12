@@ -15,6 +15,3 @@ It returns a value of the maximum number of rows
 \description{
 Return the maximum number of rows to use based on the amount of ram memory
 }
-\references{
-package:benchmarkme
-}

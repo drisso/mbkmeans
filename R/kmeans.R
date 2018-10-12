@@ -5,15 +5,15 @@
 NULL
 
 
-#' @title k-means for large single cell sequencing data
+#' @title Mini_Batch k-means for large single cell sequencing data
 #'
 #' @description This is a wrapper for stats::kmeans() for
 #' large single cell sequencing data with the dimensionality
 #' reduction results as input in in the reducedDim() slot.
-#' @param x The object on which to run k-means.
+#' @param x The object on which to run Mini_Batch k-means.
 #' @param reduceMethod Name of dimensionality reduction results to use as input
 #'   to k-means.
-#' @param whichAssay The assay to use as input to k-means. Used only if
+#' @param whichAssay The assay to use as input to Mini_Batch k-means. Used only if
 #'   \code{reduceMethod = "none"}.
 #' @param ... Arguments to pass to \code{\link[stats]{kmeans}}.
 #' @return k-means output
@@ -38,6 +38,9 @@ setMethod(
 #' @importClassesFrom SingleCellExperiment SingleCellExperiment
 #' @importFrom SummarizedExperiment assays
 #' @importFrom SingleCellExperiment reducedDim reducedDimNames
+#' @examples
+#' sce <- SingleCellExperiment(matrix(rnorm(100), ncol=10))
+#' mbkmeans(sce, clusters = 2, reduceMethod = "none")
 setMethod(
   f = "mbkmeans",
   signature = signature(x = "SingleCellExperiment"),
@@ -115,6 +118,10 @@ setMethod(
 #'\strong{random}: random selection of data rows as initial centroids
 #'
 #'@references https://github.com/mlampros/ClusterR
+#'
+#'@examples
+#'x<-matrix(rnorm(100), ncol=10)
+#'mbkmeans(x,clusters = 3)
 #'
 setMethod(
   f = "mbkmeans",

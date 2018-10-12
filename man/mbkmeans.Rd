@@ -21,7 +21,11 @@
   CENTROIDS = NULL, tol = 1e-04, seed = 1)
 }
 \arguments{
-\item{x}{The object on which to run mini-batch k-means.}
+\item{x}{The object on which to run mini-batch k-means. It can be a
+matrix-like object (e.g., matrix, Matrix, DelayedMatrix, HDF5Matrix) with
+genes in the rows and samples in the columns.
+Specialized methods are defined for SummarizedExperiment and
+SingleCellExperiment.}
 
 \item{whichAssay}{The assay to use as input to mini-batch k-means. If x is a SingleCellExperiment, this is ignored unless \code{reduceMethod = "none"}.}
 

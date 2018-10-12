@@ -1,4 +1,4 @@
-Package: beachball
+Package: mbkmeans
 Type: Package
 Title: Clustering Large Single-Cell Datasets
 Version: 0.1.0
@@ -10,7 +10,7 @@ Authors@R:
       person("Elizabeth", "Purdom", role = c("aut", "cph"),
              email = "epurdom@stat.berkeley.edu"))
 Description:
-    Implements k-means and k-nearest-neighbor algorithms for large
+    Implements the mini-batch k-means algorithm for large
     datasets, including support for on-disk data representation.
 Depends:
   R (>= 3.5),

@@ -6,7 +6,7 @@
 \alias{mbkmeans,SingleCellExperiment-method}
 \alias{mbkmeans,LinearEmbeddingMatrix-method}
 \alias{mbkmeans,ANY-method}
-\title{k-means for large single cell sequencing data}
+\title{Mini_Batch k-means for large single cell sequencing data}
 \usage{
 \S4method{mbkmeans}{SummarizedExperiment}(x, ...)
 
@@ -21,14 +21,16 @@
   CENTROIDS = NULL, tol = 1e-04, seed = 1)
 }
 \arguments{
-\item{x}{The object on which to run k-means.}
+
+\item{x}{The object on which to run Mini_Batch k-means.}
 
 \item{...}{Arguments to pass to \code{\link[stats]{kmeans}}.}
 
 \item{reduceMethod}{Name of dimensionality reduction results to use as input
 to k-means.}
 
-\item{whichAssay}{The assay to use as input to k-means. Used only if
+\item{whichAssay}{The assay to use as input to Mini_Batch k-means. Used only if
+
 \code{reduceMethod = "none"}.}
 
 \item{clusters}{the number of clusters}

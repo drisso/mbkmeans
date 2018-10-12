@@ -5,15 +5,15 @@
 NULL
 
 
-#' @title k-means for large single cell sequencing data
+#' @title Mini_Batch k-means for large single cell sequencing data
 #'
 #' @description This is a wrapper for stats::kmeans() for
 #' large single cell sequencing data with the dimensionality
 #' reduction results as input in in the reducedDim() slot.
-#' @param x The object on which to run k-means.
+#' @param x The object on which to run Mini_Batch k-means.
 #' @param reduceMethod Name of dimensionality reduction results to use as input
 #'   to k-means.
-#' @param whichAssay The assay to use as input to k-means. Used only if
+#' @param whichAssay The assay to use as input to Mini_Batch k-means. Used only if
 #'   \code{reduceMethod = "none"}.
 #' @param ... Arguments to pass to \code{\link[stats]{kmeans}}.
 #' @return k-means output
@@ -38,6 +38,9 @@ setMethod(
 #' @importClassesFrom SingleCellExperiment SingleCellExperiment
 #' @importFrom SummarizedExperiment assays
 #' @importFrom SingleCellExperiment reducedDim reducedDimNames
+#' @examples
+#' sce <- SingleCellExperiment(matrix(rnorm(100), ncol=10))
+#' mbkmeans(sce, clusters = 2, reduceMethod = "none")
 setMethod(
   f = "mbkmeans",
   signature = signature(x = "SingleCellExperiment"),
@@ -52,21 +55,21 @@ setMethod(
     else{
       if(is.null(reducedDimNames(x))){
         stop("There are no dimensionality reduction results
-           stored in this object. Use reduceDims() to store
-           dimensionality reduction results.")
+             stored in this object. Use reduceDims() to store
+             dimensionality reduction results.")
       }
       if(!(reduceMethod %in% reducedDimNames(x))){
         stop("The argument reduceMethod does not match one
-	           of the reducedDimNames() in this object. Use
-	           reducedDimNames() to see what names are in this object.")
+             of the reducedDimNames() in this object. Use
+             reducedDimNames() to see what names are in this object.")
 
       }
       fit <- mbkmeans(reducedDim(x, reduceMethod), ...)
 
-    }
+      }
 
     return(fit)
-  })
+    })
 
 #' @rdname mbkmeans
 #' @export
@@ -116,6 +119,10 @@ setMethod(
 #'
 #'@references https://github.com/mlampros/ClusterR
 #'
+#'@examples
+#'x<-matrix(rnorm(100), ncol=10)
+#'mbkmeans(x,clusters = 3)
+#'
 setMethod(
   f = "mbkmeans",
   signature = signature(x ="ANY"),
@@ -140,5 +147,6 @@ setMethod(
     }
 
     return(fit)
-})
+
+  })
 

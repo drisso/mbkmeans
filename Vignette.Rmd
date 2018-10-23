@@ -5,12 +5,15 @@ date: "10/15/2018"
 output: html_document
 ---
 
-#2.2 example dataset
+# example dataset
 
 ```{r}
 #BiocManager::install("TENxPBMCData", version = "devel")
 library(TENxPBMCData)
 library(scater)
+library(scran)
+library(SingleCellExperiment)
+library(mbkmeans)
 tenx_pbmc4k <- TENxPBMCData(dataset = "pbmc4k")
 tenx_pbmc4k
 
@@ -54,8 +57,20 @@ sce <- denoisePCA(sce, technical=var.fit$trend, approximate=TRUE)
 
 ```
 
-
+#data analysis
 ```{r}
 
+data<-matrix(1:30,nrow=6)
+
+mbkmeans(data,clusters=3,batch_size = 5,max_iters = 4)
+
+data2<-SingleCellExperiment(assays = list(counts = data))
+
+data2<-head(assay(sce),10)
+
+mbkmeans(data2,clusters =100,batch_size = 5,max_iters = 4)
+
+
 ```
+
 

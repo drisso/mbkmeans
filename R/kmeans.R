@@ -43,7 +43,7 @@ setMethod(
   f = "mbkmeans",
   signature = signature(x = "SummarizedExperiment"),
   definition = function(x, whichAssay = 1, ...){
-     mbkmeans(t(assay(x, whichAssay)), ...)
+     mbkmeans(assay(x, whichAssay), ...)
   })
 
 #' @rdname mbkmeans
@@ -67,7 +67,7 @@ setMethod(
     if(reduceMethod=="none"){
       if(NCOL(x)>10000)
         message("Note that you are running kmeans with more than 10,000 cells using all of the dimensions. You might consider running a dimensionality reduction step first.")
-      fit <- mbkmeans(t(assay(x, whichAssay)), ...)
+      fit <- mbkmeans(assay(x, whichAssay), ...)
     }
     else{
       if(is.null(reducedDimNames(x))){
@@ -145,7 +145,7 @@ setMethod(
   signature = signature(x ="ANY"),
   definition = function(x, clusters, batch_size = blocksize(x),
                         max_iters =10, num_init = 1,
-                        init_fraction = 1, initializer = "kmeans++",
+                        init_fraction = .25, initializer = "kmeans++",
                         early_stop_iter = 10, verbose = FALSE,
                         CENTROIDS = NULL, tol = 1e-4, seed = 1)
   {

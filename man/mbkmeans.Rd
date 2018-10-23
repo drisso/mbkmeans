@@ -16,7 +16,7 @@
 \S4method{mbkmeans}{LinearEmbeddingMatrix}(x, ...)
 
 \S4method{mbkmeans}{ANY}(x, clusters, batch_size = blocksize(x),
-  max_iters = 10, num_init = 1, init_fraction = 1,
+  max_iters = 10, num_init = 1, init_fraction = 0.25,
   initializer = "kmeans++", early_stop_iter = 10, verbose = FALSE,
   CENTROIDS = NULL, tol = 1e-04, seed = 1)
 }

@@ -1,0 +1,61 @@
+---
+title: "vignette"
+author: "Yuwei Ni"
+date: "10/15/2018"
+output: html_document
+---
+
+#2.2 example dataset
+
+```{r}
+#BiocManager::install("TENxPBMCData", version = "devel")
+library(TENxPBMCData)
+library(scater)
+tenx_pbmc4k <- TENxPBMCData(dataset = "pbmc4k")
+tenx_pbmc4k
+
+#Quality control on the cells
+
+sce <- calculateQCMetrics(tenx_pbmc4k) 
+
+hist(sce$total_counts/1e3, xlab="Library sizes (thousands)", main="", 
+    breaks=20, col="grey80", ylab="Number of cells")
+
+
+#normalization
+clusters <- quickCluster(sce, min.mean=0.1, method="igraph")
+sce <- computeSumFactors(sce, cluster=clusters, min.mean=0.1)
+summary(sizeFactors(sce))
+
+plot(sizeFactors(sce), sce$total_counts/1e3, log="xy",
+    ylab="Library size (thousands)", xlab="Size factor")
+
+#sce <- computeSpikeFactors(sce, type="Spike", general.use=FALSE) there are no spike-in transcripts available
+
+sce <- normalize(sce)
+
+#modelling and removing technical noise
+#var.fit <- trendVar(sce, parametric=TRUE, loess.args=list(span=0.4))
+
+
+#new.trend <- makeTechTrend(x=sce)
+var.fit <- trendVar(sce, use.spikes=FALSE, loess.args=list(span=0.05))
+var.out <- decomposeVar(sce, var.fit)
+
+plot(var.fit$mean, var.fit$var, pch=16)
+curve(var.fit$trend(x), col="dodgerblue", add=TRUE)
+
+counts(sce) <- as.matrix(counts(sce))
+logcounts(sce) <- as.matrix(logcounts(sce))
+
+
+sce <- denoisePCA(sce, technical=var.fit$trend, approximate=TRUE)
+
+
+```
+
+
+```{r}
+
+```
+

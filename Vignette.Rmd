@@ -8,52 +8,25 @@ output: html_document
 # example dataset
 
 ```{r}
-#BiocManager::install("TENxPBMCData", version = "devel")
 library(TENxPBMCData)
 library(scater)
-library(scran)
 library(SingleCellExperiment)
 library(mbkmeans)
+library(DelayedMatrixStats)
 tenx_pbmc4k <- TENxPBMCData(dataset = "pbmc4k")
 tenx_pbmc4k
 
-#Quality control on the cells
-
-sce <- calculateQCMetrics(tenx_pbmc4k) 
-
-hist(sce$total_counts/1e3, xlab="Library sizes (thousands)", main="", 
-    breaks=20, col="grey80", ylab="Number of cells")
-
-
 #normalization
-clusters <- quickCluster(sce, min.mean=0.1, method="igraph")
-sce <- computeSumFactors(sce, cluster=clusters, min.mean=0.1)
-summary(sizeFactors(sce))
 
-plot(sizeFactors(sce), sce$total_counts/1e3, log="xy",
-    ylab="Library size (thousands)", xlab="Size factor")
-
-#sce <- computeSpikeFactors(sce, type="Spike", general.use=FALSE) there are no spike-in transcripts available
-
-sce <- normalize(sce)
-
-#modelling and removing technical noise
-#var.fit <- trendVar(sce, parametric=TRUE, loess.args=list(span=0.4))
+sce <- normalize(tenx_pbmc4k)
 
 
-#new.trend <- makeTechTrend(x=sce)
-var.fit <- trendVar(sce, use.spikes=FALSE, loess.args=list(span=0.05))
-var.out <- decomposeVar(sce, var.fit)
+vars <- rowVars(logcounts(sce))
 
-plot(var.fit$mean, var.fit$var, pch=16)
-curve(var.fit$trend(x), col="dodgerblue", add=TRUE)
+names(vars) <- rownames(sce)
+vars <- sort(vars, decreasing = TRUE)
 
-counts(sce) <- as.matrix(counts(sce))
-logcounts(sce) <- as.matrix(logcounts(sce))
-
-
-sce <- denoisePCA(sce, technical=var.fit$trend, approximate=TRUE)
-
+sce1000 <- sce[names(vars)[1:1000],]
 
 ```
 
@@ -64,11 +37,13 @@ data<-matrix(1:30,nrow=6)
 
 mbkmeans(data,clusters=3,batch_size = 5,max_iters = 4)
 
-data2<-SingleCellExperiment(assays = list(counts = data))
-
 data2<-head(assay(sce),10)
 
-mbkmeans(data2,clusters =100,batch_size = 5,max_iters = 4)
+
+mbkmeans(data2,clusters =4,batch_size = 100,max_iters = 4)
+
+mbkmeans(sce1000,clusters =3,batch_size = 4,max_iters = 4,reduceMethod = "none",whichAssay = "logcounts")
+nrow(sce)
 
 
 ```

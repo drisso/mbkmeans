@@ -17,35 +17,20 @@ tenx_pbmc4k <- TENxPBMCData(dataset = "pbmc4k")
 tenx_pbmc4k
 
 #normalization
-
 sce <- normalize(tenx_pbmc4k)
 
-
 vars <- rowVars(logcounts(sce))
-
 names(vars) <- rownames(sce)
 vars <- sort(vars, decreasing = TRUE)
 
-sce1000 <- sce[names(vars)[1:1000],]
-
+sce1000 <- sce[names(vars)[1:1000], 1:100]
 ```
 
 #data analysis
 ```{r}
-
-data<-matrix(1:30,nrow=6)
-
-mbkmeans(data,clusters=3,batch_size = 5,max_iters = 4)
-
-data2<-head(assay(sce),10)
-
-
-mbkmeans(data2,clusters =4,batch_size = 100,max_iters = 4)
-
-mbkmeans(sce1000,clusters =3,batch_size = 4,max_iters = 4,reduceMethod = "none",whichAssay = "logcounts")
-nrow(sce)
-
-
+system.time(res <- mbkmeans(sce1000, clusters =3, batch_size = 4340,
+                            reduceMethod = "none",
+                            whichAssay = "logcounts"))
 ```
 
 

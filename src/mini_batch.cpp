@@ -392,19 +392,20 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
 
       if(initializer== "kmeans++"){
 
-        if(init_fraction==1.0){
-
-          //SEXP centroids_matrix = transfer_data(data);
-
-          //update_centroids = Rcpp::as<arma::mat>(centroids_matrix);
-
-          SEXP trans_data = transfer_data(data);
-
-          arma::mat final_data = Rcpp::as<arma::mat>(trans_data);
-
-          update_centroids = clust_header.kmeans_pp_init(final_data, clusters, false);
-
-        }else if(init_fraction <1.0 && init_fraction >0.0){
+        // if(init_fraction==1.0){
+        //
+        //   //SEXP centroids_matrix = transfer_data(data);
+        //
+        //   //update_centroids = Rcpp::as<arma::mat>(centroids_matrix);
+        //
+        //   SEXP trans_data = transfer_data(data);
+        //
+        //   arma::mat final_data = Rcpp::as<arma::mat>(trans_data);
+        //
+        //   update_centroids = clust_header.kmeans_pp_init(final_data, clusters, false);
+        //
+        // }else
+        if(init_fraction <= 1.0 && init_fraction >0.0){
 
           Rcpp::NumericMatrix tran_data;
 

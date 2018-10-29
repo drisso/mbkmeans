@@ -5,7 +5,11 @@ date: "10/15/2018"
 output: html_document
 ---
 
-# example dataset
+#1 Installation
+
+#2 Introduction
+
+#2.1 Example dataset
 
 ```{r}
 library(TENxPBMCData)
@@ -26,11 +30,20 @@ vars <- sort(vars, decreasing = TRUE)
 sce1000 <- sce[names(vars)[1:1000], 1:100]
 ```
 
-#data analysis
+
+#3 mbkmeans
+
+The main funciton is mbkmeans function which provides centroids and clusters results based on input data. This funciton takes ant matrix-like object as input, such as SummarizedExperiment, SingleCellExperiment, matrix, DelayedMatrix and HDF5Matrix. In this example, the input is SingleCellExperiment object and returns a list object includings centroids, within-cluster-sum-of-squares(WCSS) per cluster, initialization, iters_per_initiazation and Clusters.
+
 ```{r}
-system.time(res <- mbkmeans(sce1000, clusters =3, batch_size = 4340,
+res <- mbkmeans(sce1000, clusters =10, 
                             reduceMethod = "none",
-                            whichAssay = "logcounts"))
+                            whichAssay = "logcounts")
+
+
 ```
+
+For SingleCellExperiment matrix, the function provides reduceMethod and whichAssay option, 
+
 
 

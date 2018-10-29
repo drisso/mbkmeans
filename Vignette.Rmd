@@ -18,7 +18,6 @@ library(SingleCellExperiment)
 library(mbkmeans)
 library(DelayedMatrixStats)
 tenx_pbmc4k <- TENxPBMCData(dataset = "pbmc4k")
-tenx_pbmc4k
 
 #normalization
 sce <- normalize(tenx_pbmc4k)
@@ -33,17 +32,45 @@ sce1000 <- sce[names(vars)[1:1000], 1:100]
 
 #3 mbkmeans
 
-The main funciton is mbkmeans function which provides centroids and clusters results based on input data. This funciton takes ant matrix-like object as input, such as SummarizedExperiment, SingleCellExperiment, matrix, DelayedMatrix and HDF5Matrix. In this example, the input is SingleCellExperiment object and returns a list object includings centroids, within-cluster-sum-of-squares(WCSS) per cluster, initialization, iters_per_initiazation and Clusters.
+
+mbkmeans package is an implementation of mini-batch k-means for large single cell sequencing data. The main funciton is mbkmeans function which provides centroids and clusters results based on input data. This funciton takes ant matrix-like object as input, such as SummarizedExperiment, SingleCellExperiment, matrix, DelayedMatrix and HDF5Matrix. In this example, the input is SingleCellExperiment object and returns a list object includings centroids, within-cluster-sum-of-squares(WCSS) per cluster, initialization, iters_per_initiazation and Clusters.
+
 
 ```{r}
-res <- mbkmeans(sce1000, clusters =10, 
+res <- mbkmeans(sce1000, clusters = 5, 
                             reduceMethod = "none",
                             whichAssay = "logcounts")
-
-
 ```
 
-For SingleCellExperiment matrix, the function provides reduceMethod and whichAssay option, 
+
+The number of clusters is set through clusters option. In this case, we set there are total 5 clusters. For SingleCellExperiment matrix object, the function provides reduceMethod and whichAssay option. The reduceMethod is the results for large data to reduce dimensionality, and the default is Principal Component Analysis(PCA) method. The whichAssay is the assay to use as inpit to mini-batch k-means, and it is used only when reduceMethod option is "none". See ?mbkmeans for more details.
+
+
+#3.1 parameters
+
+
+There are many parameters for mbkmeans function which makes the function more flexible and suitable for more situations. 
+
+
+#3.1.1 batch size calculation
+
+
+The size of mini batches is set through batch_size parameter. The default value uses the blocksize funciton. The blocksize fucntion considers both the number of data column and the amount of RAM on the current matchine to calculate the batch size. The calculation uses get_ram funciton in benchmarkme package, and see benchmarkme vignette for more details.
+
+
+```{r}
+batchsize <- blocksize(sce1000)
+```
+
+
+#3.1.2 two different initializer ways
+
+
+The preformance of mini-batch k-means greatly depends on the process of initialization. And there are two different initializer ways in mbkmeans: one is random initializer, the traditional method of initialization; the other is kmeans++. The default initializer way is "kmeans++". The percentage of data to use for the initialization centroids is set through init_fraction parameter, which should be larger than 0 and less than 1, and the default value is 0.25.
+
+
+
+
 
 
 

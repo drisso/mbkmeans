@@ -69,6 +69,23 @@ batchsize <- blocksize(sce1000)
 The preformance of mini-batch k-means greatly depends on the process of initialization. And there are two different initializer ways in mbkmeans: one is random initializer, the traditional method of initialization; the other is kmeans++. The default initializer way is "kmeans++". The percentage of data to use for the initialization centroids is set through init_fraction parameter, which should be larger than 0 and less than 1, and the default value is 0.25.
 
 
+```{r}
+res <- mbkmeans(sce1000, clusters = 5, 
+                            reduceMethod = "none",
+                            whichAssay = "logcounts",initializer = "random")
+
+```
+
+
+#4 predict_mini_batch
+
+
+The mbkmeans function can calculate the centroids and provide the clusters results based on data, while predict_mini_batch function just gives clusters results with data and centroids as input.
+
+```{r}
+pre_res<-predict_mini_batch(t(sce1000),CENTROIDS = res$centroids)
+
+```
 
 
 

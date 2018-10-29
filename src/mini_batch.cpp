@@ -12,7 +12,7 @@
 
 #include "beachmat/numeric_matrix.h"
 #include "beachmat/integer_matrix.h"
-#include "functions.h"
+//#include "functions.h"
 
 #include <algorithm>
 #include <iostream>

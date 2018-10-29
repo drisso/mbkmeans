@@ -6,17 +6,6 @@
 
 using namespace Rcpp;
 
-// transfer_data
-SEXP transfer_data(SEXP data);
-RcppExport SEXP _mbkmeans_transfer_data(SEXP dataSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type data(dataSEXP);
-    rcpp_result_gen = Rcpp::wrap(transfer_data(data));
-    return rcpp_result_gen;
-END_RCPP
-}
 // predict_mini_batch
 Rcpp::NumericVector predict_mini_batch(SEXP data, Rcpp::NumericMatrix CENTROIDS, bool fuzzy, double eps);
 RcppExport SEXP _mbkmeans_predict_mini_batch(SEXP dataSEXP, SEXP CENTROIDSSEXP, SEXP fuzzySEXP, SEXP epsSEXP) {
@@ -55,7 +44,6 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_mbkmeans_transfer_data", (DL_FUNC) &_mbkmeans_transfer_data, 1},
     {"_mbkmeans_predict_mini_batch", (DL_FUNC) &_mbkmeans_predict_mini_batch, 4},
     {"_mbkmeans_mini_batch", (DL_FUNC) &_mbkmeans_mini_batch, 12},
     {NULL, NULL, 0}

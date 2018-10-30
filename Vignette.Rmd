@@ -5,18 +5,31 @@ date: "10/15/2018"
 output: html_document
 ---
 
+
 #1 Installation
+
 
 #2 Introduction
 
-#2.1 Example dataset
 
-```{r}
+This vignette provides an introductory example on how to work with the mbkmeans package, which is an implementation of the mini-batcg k-means algorithm for large single cell sequencing data.
+
+
+```{r options, include=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(cache=FALSE, error=FALSE, message=FALSE, warning=FALSE)
 library(TENxPBMCData)
 library(scater)
 library(SingleCellExperiment)
 library(mbkmeans)
 library(DelayedMatrixStats)
+
+```
+
+
+#2.1 Example dataset
+
+
+```{r}
 tenx_pbmc4k <- TENxPBMCData(dataset = "pbmc4k")
 
 #normalization
@@ -83,7 +96,7 @@ res <- mbkmeans(sce1000, clusters = 5,
 The mbkmeans function can calculate the centroids and provide the clusters results based on data, while predict_mini_batch function just gives clusters results with data and centroids as input.
 
 ```{r}
-pre_res<-predict_mini_batch(t(sce1000),CENTROIDS = res$centroids)
+#pre_res<-predict_mini_batch(t(sce1000),CENTROIDS = res$centroids)
 
 ```
 

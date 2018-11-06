@@ -1,4 +1,4 @@
----
+ 12---
 title: "vignette"
 author: "Yuwei Ni"
 date: "10/15/2018"
@@ -7,6 +7,12 @@ output: html_document
 
 
 #1 Installation
+
+The package has been published in Github, the way of installation is as follows:
+
+```{r}
+install_github("drisso/mbkmeans")
+```
 
 
 #2 Introduction
@@ -22,6 +28,7 @@ library(scater)
 library(SingleCellExperiment)
 library(mbkmeans)
 library(DelayedMatrixStats)
+library(ClusterR)
 
 ```
 
@@ -90,17 +97,25 @@ res <- mbkmeans(sce1000, clusters = 5,
 ```
 
 
-#4 predict_mini_batch
-
-
-The mbkmeans function can calculate the centroids and provide the clusters results based on data, while predict_mini_batch function just gives clusters results with data and centroids as input.
-
+#4 Speed
 ```{r}
-#pre_res<-predict_mini_batch(t(sce1000),CENTROIDS = res$centroids)
+
+mat <- HDF5Array("benchmarking/pbmc3k_rectangular.h5", name = "counts")=
+data <- t(mat)[,1:1000]
+data2 <- as.matrix(data)
+
+#kmeans++
+system.time(clusterR_res <- MiniBatchKmeans(data2, clusters = 3, batch_size = 100, init_fraction = .1, max_iters = 10))
+
+system.time(mbk_res<-mbkmeans(data2,clusters = 3, batch_size = 100, init_fraction = .1, max_iters = 10))
+
+#random
+system.time(clusterR_res <- MiniBatchKmeans(data2, clusters = 3, batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random"))
+
+system.time(mbk_res<-mbkmeans(data2,clusters = 3, batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random"))
+
 
 ```
-
-
 
 
 

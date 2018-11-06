@@ -1,24 +1,39 @@
- 12---
-title: "vignette"
-author: "Yuwei Ni"
-date: "10/15/2018"
-output: html_document
+---
+title: "An introduction to mbkmeans"
+author: "Yuwei Ni and Davide Risso"
+date: "Last modified: November 6, 2018; Compiled: `r format(Sys.time(), '%B %d, %Y')`"
+bibliography: biblio.bib
+output:
+  BiocStyle::html_document:
+    toc: true
+vignette: >
+  %\VignetteEncoding{UTF-8}
 ---
 
+# Installation
 
-#1 Installation
-
+To install the package, please use the following.
 
 ```{r}
-install_github("drisso/mbkmeans")
+devtools::install_github("drisso/mbkmeans")
 ```
 
 
-#2 Introduction
+# Introduction
 
+This vignette provides an introductory example on how to work with the `mbkmeans` package, which contains an implementation of the mini-batch k-means algorithm proposed in [@sculley2010web] for large single cell sequencing data.
 
-This vignette provides an introductory example on how to work with the mbkmeans package, which is an implementation of the mini-batcg k-means algorithm for large single cell sequencing data.
+The main function to be used by the users is `mbkmeans`. This is implemented as an S4 generic and methods are implemented for `matrix`, `Matrix`, `HDF5Matrix`, `DelayedMatrix`, `SummarizedExperiment`, and `SingleCellExperiment`.
 
+Most of this work was inspired by the `MiniBatchKmeans` function implemented in the `ClusterR` R package and we re-use many of the C++ functions implemented there.
+
+Our main contribution here is to provide an interface to the `DelayedArray` and `HDF5Array` packages, allowing the user to run the mini-batch k-means algorithm on data that do not fit entirely in memory.
+
+The motivation for this work is the clustering of large single-cell RNA-seq datasets, and hence the main focus is on Bioconductor's `SingleCellExperiment` and `SummarizedExperiment` data container. For this reason, `mbkmeans` assumes a data representation typical of genomic data, in which genes (variables) are in the rows and cells (observations) are in the column. This is contrary to most other statistical applications, and notably to the `stats::kmeans()` and `ClusterR::MiniBatchKmeans()` functions that assume observations in rows.
+
+We provide a lower level `mini_batch()` function that expects observations in rows and is expected to be a direct replacement of `ClusterR::MiniBatchKmeans()` for `HDF5` data. The rest of this document shows the typical use case through the `mbkmeans()` interface, users interested in the `mini_batch()` function should refer to its man page.
+
+## Example dataset
 
 ```{r options, include=FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(cache=FALSE, error=FALSE, message=FALSE, warning=FALSE)
@@ -28,12 +43,13 @@ library(SingleCellExperiment)
 library(mbkmeans)
 library(DelayedMatrixStats)
 library(ClusterR)
-
 ```
 
+To illustrate a typical use case, we use the `pbmc4k` dataset of the `TENxPBMCData` package. This dataset contains a set of about 4,000 cells from peripheral blood from a healthy donor and is expected to contain several cell types (clusters).
 
-#2.1 Example dataset
+Note that we do not aim at biologically meaningful clusters here (that would entail a more sophisticated normalization and dimensionality reduction), but we only aim to show how to run mini-batch k-means on a large HDF5-backed matrix.
 
+We normalize the data simply by scaling for the total number of counts using `scater` and select the 1,000 most variable genes and first 100 cells to speed-up computations.
 
 ```{r}
 tenx_pbmc4k <- TENxPBMCData(dataset = "pbmc4k")
@@ -45,24 +61,25 @@ vars <- rowVars(logcounts(sce))
 names(vars) <- rownames(sce)
 vars <- sort(vars, decreasing = TRUE)
 
-sce1000 <- sce[names(vars)[1:1000], 1:100]
+sce1000 <- sce[names(vars)[1:1000],]
 ```
 
+# `mbkmeans`
 
-#3 mbkmeans
+The main funciton, `mbkmeans`, returns a list object includings centroids, within-cluster-sum-of-squares(WCSS) per cluster, initialization, iters_per_initiazation and Clusters.
 
+It takes any matrix-like object as input, such as `SummarizedExperiment`, `SingleCellExperiment`, `matrix`, `DelayedMatrix` and `HDF5Matrix`. 
 
-mbkmeans package is an implementation of mini-batch k-means for large single cell sequencing data. The main funciton is mbkmeans function which provides centroids and clusters results based on input data. This funciton takes ant matrix-like object as input, such as SummarizedExperiment, SingleCellExperiment, matrix, DelayedMatrix and HDF5Matrix. In this example, the input is SingleCellExperiment object and returns a list object includings centroids, within-cluster-sum-of-squares(WCSS) per cluster, initialization, iters_per_initiazation and Clusters.
-
+In this example, the input is a `SingleCellExperiment` object.
 
 ```{r}
 res <- mbkmeans(sce1000, clusters = 5, 
-                            reduceMethod = "none",
-                            whichAssay = "logcounts")
+                reduceMethod = NA,
+                whichAssay = "logcounts")
 ```
 
 
-The number of clusters is set through clusters option. In this case, we set there are total 5 clusters. For SingleCellExperiment matrix object, the function provides reduceMethod and whichAssay option. The reduceMethod is the results for large data to reduce dimensionality, and the default is Principal Component Analysis(PCA) method. The whichAssay is the assay to use as inpit to mini-batch k-means, and it is used only when reduceMethod option is "none". See ?mbkmeans for more details.
+The number of clusters is set through clusters option. In this case, we set it to 5 for no particular reason. For SingleCellExperiment matrix object, the function provides reduceMethod and whichAssay option. The reduceMethod is the results for large data to reduce dimensionality, and the default is Principal Component Analysis(PCA) method. The whichAssay is the assay to use as inpit to mini-batch k-means, and it is used only when reduceMethod option is "none". See ?mbkmeans for more details.
 
 
 #3.1 parameters

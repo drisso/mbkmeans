@@ -27,7 +27,8 @@ Suggests:
     beachmat, 
     HDF5Array,
     Matrix,
-    Rhdf5lib
+    Rhdf5lib,
+    BiocStyle
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

@@ -52,8 +52,8 @@ setMethod(
 #' @importFrom SummarizedExperiment assays
 #' @importFrom SingleCellExperiment reducedDim reducedDimNames
 #' @param reduceMethod Name of dimensionality reduction results to use as input
-#'   to mini-batch k-means.
-#' @param whichAssay The assay to use as input to mini-batch k-means. If x is a SingleCellExperiment, this is ignored unless \code{reduceMethod = "none"}.
+#'   to mini-batch k-means. Set to NA to use the full matrix.
+#' @param whichAssay The assay to use as input to mini-batch k-means. If x is a SingleCellExperiment, this is ignored unless \code{reduceMethod = NA}.
 #' @examples
 #' library(SingleCellExperiment)
 #' sce <- SingleCellExperiment(matrix(rnorm(100), ncol=10))
@@ -64,7 +64,7 @@ setMethod(
   definition = function(x, reduceMethod = "PCA", whichAssay = 1, ...)
   {
 
-    if(reduceMethod=="none"){
+    if(is.na(reduceMethod)){
       if(NCOL(x)>10000)
         message("Note that you are running kmeans with more than 10,000 cells using all of the dimensions. You might consider running a dimensionality reduction step first.")
       fit <- mbkmeans(assay(x, whichAssay), ...)

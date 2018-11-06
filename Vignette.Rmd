@@ -8,7 +8,6 @@ output: html_document
 
 #1 Installation
 
-The package has been published in Github, the way of installation is as follows:
 
 ```{r}
 install_github("drisso/mbkmeans")

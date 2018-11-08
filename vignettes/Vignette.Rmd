@@ -1,7 +1,7 @@
 ---
 title: "An introduction to mbkmeans"
 author: "Yuwei Ni and Davide Risso"
-date: "Last modified: November 6, 2018; Compiled: `r format(Sys.time(), '%B %d, %Y')`"
+date: "Last modified: November 08, 2018; Compiled: `r format(Sys.time(), '%B %d, %Y')`"
 bibliography: biblio.bib
 output:
   BiocStyle::html_document:
@@ -10,6 +10,11 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+<!--
+%\VignetteEngine{knitr::rmarkdown}
+%\VignetteIndexEntry{mbkmeans vignette}
+-->
+
 # Installation
 
 To install the package, please use the following.
@@ -17,7 +22,6 @@ To install the package, please use the following.
 ```{r}
 devtools::install_github("drisso/mbkmeans")
 ```
-
 
 # Introduction
 
@@ -49,13 +53,17 @@ To illustrate a typical use case, we use the `pbmc4k` dataset of the `TENxPBMCDa
 
 Note that we do not aim at biologically meaningful clusters here (that would entail a more sophisticated normalization and dimensionality reduction), but we only aim to show how to run mini-batch k-means on a large HDF5-backed matrix.
 
-We normalize the data simply by scaling for the total number of counts using `scater` and select the 1,000 most variable genes and first 100 cells to speed-up computations.
+We normalize the data simply by scaling for the total number of counts using `scater` and select the 1,000 most variable genes and a random set of 100 cells to speed-up computations.
 
 ```{r}
 tenx_pbmc4k <- TENxPBMCData(dataset = "pbmc4k")
 
+set.seed(1034)
+idx <- sample(seq_len(NCOL(tenx_pbmc4k)), 100)
+sce <- tenx_pbmc4k[, idx]
+
 #normalization
-sce <- normalize(tenx_pbmc4k)
+sce <- normalize(sce)
 
 vars <- rowVars(logcounts(sce))
 names(vars) <- rownames(sce)
@@ -73,72 +81,52 @@ It takes any matrix-like object as input, such as `SummarizedExperiment`, `Singl
 In this example, the input is a `SingleCellExperiment` object.
 
 ```{r}
-res <- mbkmeans(sce1000, clusters = 5, 
+res <- mbkmeans(sce1000, clusters = 5,
                 reduceMethod = NA,
                 whichAssay = "logcounts")
 ```
 
+The number of clusters is set through the `clusters` option. In this case, we set it to 5 for no particular reason. For `SingleCellExperiment` objects, the function provides the `reduceMethod` and `whichAssay` arguments. The `reduceMethod` argument should specify the dimensionality reduction slot to use for the clustering, and the default is "PCA". Note that this *does not perform* PCA but only looks at a slot called "PCA" already stored in the object. Alternatively, one can specify `whichAssay` as the assay to use as input to mini-batch k-means. This is used only when `reduceMethod` option is `NA`. See `?mbkmeans` for more details.
 
-The number of clusters is set through clusters option. In this case, we set it to 5 for no particular reason. For SingleCellExperiment matrix object, the function provides reduceMethod and whichAssay option. The reduceMethod is the results for large data to reduce dimensionality, and the default is Principal Component Analysis(PCA) method. The whichAssay is the assay to use as inpit to mini-batch k-means, and it is used only when reduceMethod option is "none". See ?mbkmeans for more details.
+## Choice of parameters
 
+There are many parameters in `mbkmeans` function that make the function more flexible and suitable for more situations. 
 
-#3.1 parameters
+### Batch size
 
-
-There are many parameters for mbkmeans function which makes the function more flexible and suitable for more situations. 
-
-
-#3.1.1 batch size calculation
-
-
-The size of mini batches is set through batch_size parameter. The default value uses the blocksize funciton. The blocksize fucntion considers both the number of data column and the amount of RAM on the current matchine to calculate the batch size. The calculation uses get_ram funciton in benchmarkme package, and see benchmarkme vignette for more details.
-
+The size of the mini batches is set through the `batch_size` parameter. The default value uses the `blocksize()` funciton. The `blocksize` fucntion considers both the number of data column and the amount of RAM on the current matchine to calculate as big of a batch size as reasonable for the RAM available to the session. The calculation uses `get_ram` function in `benchmarkme` package. See the `benchmarkme` vignette for more details.
 
 ```{r}
 batchsize <- blocksize(sce1000)
+batchsize
 ```
 
+In this case, as the whole data fits in memory, the default batch size would be a single batch of size `r ncol(sce1000)`.
 
-#3.1.2 two different initializer ways
+### Initialization
 
+The preformance of mini-batch k-means greatly depends on the process of initialization. We implemented two different initialization methods: (i) random initialization, as in regular k-means; (ii) kmeans++, as proposed in [@arthur2007k]. The default is "kmeans++". 
 
-The preformance of mini-batch k-means greatly depends on the process of initialization. And there are two different initializer ways in mbkmeans: one is random initializer, the traditional method of initialization; the other is kmeans++. The default initializer way is "kmeans++". The percentage of data to use for the initialization centroids is set through init_fraction parameter, which should be larger than 0 and less than 1, and the default value is 0.25.
-
+The percentage of data to use for the initialization centroids is set through the `init_fraction` parameter, which should be larger than 0 and less than 1, with default value of 0.25.
 
 ```{r}
-res <- mbkmeans(sce1000, clusters = 5, 
-                            reduceMethod = "none",
-                            whichAssay = "logcounts",initializer = "random")
-
+res_random <- mbkmeans(sce1000, clusters = 5, 
+                reduceMethod = NA,
+                whichAssay = "logcounts",
+                initializer = "random")
+table(res$Clusters, res_random$Clusters)
 ```
 
+# Comparison with k-means
 
-#4 Speed
+Note that if we set `init_fraction=1`, `initializer = "random"`, and `batch_size=ncol(x)`, we recover the classic k-means algorithm.
+
 ```{r}
-mat <- HDF5Array("benchmarking/pbmc3k_rectangular.h5", name = "counts")
-data_hdf5 <- mat[1:1000,]
-data_inmem <- as.matrix(data_hdf5)
-
-data_sce <- SingleCellExperiment(assays = list(counts = data_hdf5))
-
-#kmeans++
-system.time(clusterR_res <- MiniBatchKmeans(t(data_inmem), clusters = 3, batch_size = 100, init_fraction = .1, max_iters = 10))
-
-system.time(mbk_res<-mbkmeans(data_inmem,clusters = 3, batch_size = 100, init_fraction = .1, max_iters = 10))
-
-system.time(mbk_res<-mbkmeans(data_hdf5,clusters = 3, batch_size = 100, init_fraction = .1, max_iters = 10))
-
-system.time(mbk_res<-mbkmeans(data_sce, reduceMethod = NA, clusters = 3, batch_size = 100, init_fraction = .1, max_iters = 10))
-
-#random
-system.time(clusterR_res <- MiniBatchKmeans(t(data_inmem), clusters = 3, batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random"))
-
-system.time(mbk_res<-mbkmeans(data_inmem,clusters = 3, batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random"))
-
-system.time(mbk_res<-mbkmeans(data_hdf5,clusters = 3, batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random"))
-
-system.time(mbk_res<-mbkmeans(data_sce, reduceMethod = NA, clusters = 3, batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random"))
+res_full <- mbkmeans(sce1000, clusters = 5,
+                     reduceMethod = NA,
+                     whichAssay = "logcounts",
+                     initializer = "random",
+                     batch_size = ncol(sce1000))
+res_classic <- kmeans(t(logcounts(sce1000)), centers = 5)
+table(res_full$Clusters, res_classic$cluster)
 ```
-
-
-

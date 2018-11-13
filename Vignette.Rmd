@@ -166,9 +166,24 @@ For memory, the transposition of data won't lead to any change. However, the use
 #Default values
 
 ```{r}
-#max_iters
+#max_iters (ClusterR=100,  mbkmeans = 10)
+
+time_max<-numeric(10)
+for(i in 1:10){
+    time_max[i]<-system.time(mbkmeans(hdf_matrix,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = i))[3]
+}
+
+plot(1:10,time_max,type = "b",xlab = "max_iters",ylab = "Time")
 
 
+#init_fraction (ClusterR -1, mbkmeans =0.25, suggestion =0.8)
+
+time_init<-numeric(10)
+for(i in 1:10){
+    time_init[i]<-system.time(mbkmeans(hdf_matrix,clusters = 3,batch_size = 100, init_fraction =i/10, max_iters = 10))[3]   
+}
+
+plot(seq(0.1,1,0.1),time_init,type = "b",xlab = "init_fraction",ylab = "Time")
 
 ```
 

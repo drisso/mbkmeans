@@ -98,22 +98,29 @@ res <- mbkmeans(sce1000, clusters = 5,
 
 #4 Speed compare
 ```{r}
+mat <- HDF5Array("benchmarking/pbmc3k_rectangular.h5", name = "counts")
+data_hdf5 <- mat[1:1000,]
+data_inmem <- as.matrix(data_hdf5)
 
-mat <- HDF5Array("benchmarking/pbmc3k_rectangular.h5", name = "counts")=
-data <- t(mat)[,1:1000]
-data2 <- as.matrix(data)
+data_sce <- SingleCellExperiment(assays = list(counts = data_hdf5))
 
 #kmeans++
-system.time(clusterR_res <- MiniBatchKmeans(data2, clusters = 3, batch_size = 100, init_fraction = .1, max_iters = 10))
+system.time(clusterR_res <- MiniBatchKmeans(t(data_inmem), clusters = 3, batch_size = 100, init_fraction = .1, max_iters = 10))
 
-system.time(mbk_res<-mbkmeans(data2,clusters = 3, batch_size = 100, init_fraction = .1, max_iters = 10))
+system.time(mbk_res<-mbkmeans(data_inmem,clusters = 3, batch_size = 100, init_fraction = .1, max_iters = 10))
+
+system.time(mbk_res<-mbkmeans(data_hdf5,clusters = 3, batch_size = 100, init_fraction = .1, max_iters = 10))
+
+system.time(mbk_res<-mbkmeans(data_sce, reduceMethod = NA, clusters = 3, batch_size = 100, init_fraction = .1, max_iters = 10))
 
 #random
-system.time(clusterR_res <- MiniBatchKmeans(data2, clusters = 3, batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random"))
+system.time(clusterR_res <- MiniBatchKmeans(t(data_inmem), clusters = 3, batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random"))
 
-system.time(mbk_res<-mbkmeans(data2,clusters = 3, batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random"))
+system.time(mbk_res<-mbkmeans(data_inmem,clusters = 3, batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random"))
 
+system.time(mbk_res<-mbkmeans(data_hdf5,clusters = 3, batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random"))
 
+system.time(mbk_res<-mbkmeans(data_sce, reduceMethod = NA, clusters = 3, batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random"))
 ```
 
 

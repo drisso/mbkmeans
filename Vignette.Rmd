@@ -96,7 +96,7 @@ res <- mbkmeans(sce1000, clusters = 5,
 ```
 
 
-#4 Speed
+#4 Speed compare
 ```{r}
 
 mat <- HDF5Array("benchmarking/pbmc3k_rectangular.h5", name = "counts")=
@@ -117,4 +117,51 @@ system.time(mbk_res<-mbkmeans(data2,clusters = 3, batch_size = 100, init_fractio
 ```
 
 
+
+#Transposition Burden
+
+```{r}
+sample_data<-mat[,1:1000]
+hdf_matrix<-as(sample_data,"HDF5Matrix")
+hdf_matrix_t<-as(t(sample_data),"HDF5Matrix")
+
+#mini_bathch function
+
+#system time
+system.time(mini_bat<-mini_batch(hdf_matrix_t,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10))
+
+system.time(mini_bat<-mini_batch(t(hdf_matrix),clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10))
+
+#memory
+gc(mini_bat<-mini_batch(hdf_matrix_t,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10))
+
+gc(mini_bat<-mini_batch(t(hdf_matrix),clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10))
+
+#mbkmeans function
+
+#system time
+system.time(mini_bat<-mbkmeans(hdf_matrix,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10))
+
+system.time(mini_bat<-mbkmeans(t(hdf_matrix_t),clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10))
+
+#memory
+gc(mini_bat<-mbkmeans(hdf_matrix,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10))
+
+gc(mini_bat<-mbkmeans(t(hdf_matrix_t),clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10))
+
+
+```
+
+
+For memory, the transposition of data won't lead to any change. However, the used time is different for different funciton. For mini_batch funtion, the time for two methods is almost same. However, for the mbkmeans function, the calculation of simple data spends less time compared with the calculation of transposition.
+
+
+#Default values
+
+```{r}
+#max_iters
+
+
+
+```
 

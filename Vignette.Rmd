@@ -10,6 +10,7 @@ output: html_document
 
 
 ```{r}
+library(devtools)
 install_github("drisso/mbkmeans")
 ```
 
@@ -57,7 +58,7 @@ mbkmeans package is an implementation of mini-batch k-means for large single cel
 
 ```{r}
 res <- mbkmeans(sce1000, clusters = 5, 
-                            reduceMethod = "none",
+                            reduceMethod = NA,
                             whichAssay = "logcounts")
 ```
 
@@ -90,100 +91,8 @@ The preformance of mini-batch k-means greatly depends on the process of initiali
 
 ```{r}
 res <- mbkmeans(sce1000, clusters = 5, 
-                            reduceMethod = "none",
+                            reduceMethod = NA,
                             whichAssay = "logcounts",initializer = "random")
-
-```
-
-
-#4 Speed compare
-```{r}
-mat <- HDF5Array("benchmarking/pbmc3k_rectangular.h5", name = "counts")
-data_hdf5 <- mat[1:1000,]
-data_inmem <- as.matrix(data_hdf5)
-
-data_sce <- SingleCellExperiment(assays = list(counts = data_hdf5))
-
-#kmeans++
-system.time(clusterR_res <- MiniBatchKmeans(t(data_inmem), clusters = 3, batch_size = 100, init_fraction = .1, max_iters = 10))
-
-system.time(mbk_res<-mbkmeans(data_inmem,clusters = 3, batch_size = 100, init_fraction = .1, max_iters = 10))
-
-system.time(mbk_res<-mbkmeans(data_hdf5,clusters = 3, batch_size = 100, init_fraction = .1, max_iters = 10))
-
-system.time(mbk_res<-mbkmeans(data_sce, reduceMethod = NA, clusters = 3, batch_size = 100, init_fraction = .1, max_iters = 10))
-
-#random
-system.time(clusterR_res <- MiniBatchKmeans(t(data_inmem), clusters = 3, batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random"))
-
-system.time(mbk_res<-mbkmeans(data_inmem,clusters = 3, batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random"))
-
-system.time(mbk_res<-mbkmeans(data_hdf5,clusters = 3, batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random"))
-
-system.time(mbk_res<-mbkmeans(data_sce, reduceMethod = NA, clusters = 3, batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random"))
-```
-
-
-
-#Transposition Burden
-
-```{r}
-sample_data<-mat[,1:1000]
-hdf_matrix<-as(sample_data,"HDF5Matrix")
-hdf_matrix_t<-as(t(sample_data),"HDF5Matrix")
-
-#mini_bathch function
-
-#system time
-system.time(mini_bat<-mini_batch(hdf_matrix_t,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10))
-
-system.time(mini_bat<-mini_batch(t(hdf_matrix),clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10))
-
-#memory
-gc(mini_bat<-mini_batch(hdf_matrix_t,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10))
-
-gc(mini_bat<-mini_batch(t(hdf_matrix),clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10))
-
-#mbkmeans function
-
-#system time
-system.time(mini_bat<-mbkmeans(hdf_matrix,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10))
-
-system.time(mini_bat<-mbkmeans(t(hdf_matrix_t),clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10))
-
-#memory
-gc(mini_bat<-mbkmeans(hdf_matrix,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10))
-
-gc(mini_bat<-mbkmeans(t(hdf_matrix_t),clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10))
-
-
-```
-
-
-For memory, the transposition of data won't lead to any change. However, the used time is different for different funciton. For mini_batch funtion, the time for two methods is almost same. However, for the mbkmeans function, the calculation of simple data spends less time compared with the calculation of transposition.
-
-
-#Default values
-
-```{r}
-#max_iters (ClusterR=100,  mbkmeans = 10)
-
-time_max<-numeric(10)
-for(i in 1:10){
-    time_max[i]<-system.time(mbkmeans(hdf_matrix,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = i))[3]
-}
-
-plot(1:10,time_max,type = "b",xlab = "max_iters",ylab = "Time")
-
-
-#init_fraction (ClusterR -1, mbkmeans =0.25, suggestion =0.8)
-
-time_init<-numeric(10)
-for(i in 1:10){
-    time_init[i]<-system.time(mbkmeans(hdf_matrix,clusters = 3,batch_size = 100, init_fraction =i/10, max_iters = 10))[3]   
-}
-
-plot(seq(0.1,1,0.1),time_init,type = "b",xlab = "init_fraction",ylab = "Time")
 
 ```
 

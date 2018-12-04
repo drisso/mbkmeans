@@ -1,8 +1,7 @@
-# beachball
+# mbkmeans
 
 ## Summary 
-Clustering and nearest neighbors for large single-cell datasets
+Mini-batch k-means clustering for single-cell RNA-seq
 
 ## Roadmap
-For details on tasks and timelines, take a look at the [Roadmap](ROADMAP.md).
-
+This is an initial implementation, under active development.

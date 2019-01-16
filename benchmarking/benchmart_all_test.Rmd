@@ -627,7 +627,7 @@ km_matrix_wcss2<-cluster_wcss(dat = subset_iris,centro =km_matrix$centers,label 
 
 km_matrix_wcss<-cluster_wcss(dat=subset_iris,centro =km_matrix$centers)
 km_matrix_2_wcss<-cluster_wcss(dat=subset_iris,centro =km_matrix_2$centers)
-mini_km_matrix_wcss<-cluster_wcss(dat=subset_iris,centro =mini_km_matrix$centroids)
+mini_km_matrix_wcss<-cluster_wcss(dat=subset_iris,centro =mini_km_matrix$centroids,label = mini_km_matrix$cluster)
 mini_km_hdf5_wcss<-cluster_wcss(dat=subset_iris,centro =mini_km_hdf5$centroids)
 cluR_km_wcss<-cluster_wcss(dat=subset_iris,centro =cluR_km$centroids)
 mini_kmplus_matrix_wcss<-cluster_wcss(dat=subset_iris,centro =mini_kmplus_matrix$centroids)

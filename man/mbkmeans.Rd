@@ -27,12 +27,12 @@ genes in the rows and samples in the columns.
 Specialized methods are defined for SummarizedExperiment and
 SingleCellExperiment.}
 
-\item{whichAssay}{The assay to use as input to mini-batch k-means. If x is a SingleCellExperiment, this is ignored unless \code{reduceMethod = "none"}.}
+\item{whichAssay}{The assay to use as input to mini-batch k-means. If x is a SingleCellExperiment, this is ignored unless \code{reduceMethod = NA}.}
 
 \item{...}{Arguments to pass to the matrix method.}
 
 \item{reduceMethod}{Name of dimensionality reduction results to use as input
-to mini-batch k-means.}
+to mini-batch k-means. Set to NA to use the full matrix.}
 
 \item{clusters}{the number of clusters}
 
@@ -103,7 +103,7 @@ se <- SummarizedExperiment(matrix(rnorm(100), ncol=10))
 mbkmeans(se, clusters = 2)
 library(SingleCellExperiment)
 sce <- SingleCellExperiment(matrix(rnorm(100), ncol=10))
-mbkmeans(sce, clusters = 2, reduceMethod = "none")
+mbkmeans(sce, clusters = 2, reduceMethod = NA)
 x<-matrix(rnorm(100), ncol=10)
 mbkmeans(x,clusters = 3)
 

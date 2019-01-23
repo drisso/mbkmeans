@@ -311,98 +311,66 @@ SEXP subset_matrix_random(const T1& data, int cluster){
 }
 
 
-
 //calculation right WCSS
 template<typename T1>
-arma::rowvec wcss_result(Rcpp::NumericVector clusters, arma::mat cent,const T1& data){
+Rcpp::NumericVector compute_wcss(Rcpp::NumericVector clusters, Rcpp::NumericMatrix cent, const T1& data){
 
-    int centers_row = cent.n_rows;
+    int nclusters = cent.nrow(); // number of clusters
+    int nobs = clusters.size(); // number of obs
+    Rcpp::NumericVector labels = Rcpp::sort_unique(clusters); // unique labels
 
-    int cluster_length = clusters.size();
-
-    Rcpp::NumericMatrix wcss_tmp(cluster_length,1);
-
-    arma::rowvec wcss_final(centers_row);
+    int data_n_cols = get_ncol(data);
+    Rcpp::NumericMatrix wcss_rowdata(1,data_n_cols);
+    Rcpp::NumericVector wcss_final(nclusters);
 
     auto matrix_type=beachmat::find_sexp_type(data);
+
 
     if(matrix_type == INTSXP){
 
         auto wcss_matrix=beachmat::create_integer_matrix(data);
-
-        int data_n_rows = get_nrow(data);
-
-        int data_n_cols = get_ncol(data);
-
         Rcpp::IntegerVector tmp(data_n_cols);
 
-        Rcpp::NumericMatrix wcss_rowdata(1,data_n_cols);
+        for(int i=0; i <nclusters;i++){
 
-        for(int i=0; i <centers_row;i++){
+            for(int j =0; j<nobs;j++){
 
-            for(int j =0; j<cluster_length;j++){
-
-               if(clusters[j] == i+1){
-
-                   wcss_matrix -> get_row(j,tmp.begin());
-
-                   wcss_rowdata.row(0) = tmp;
-
-                   Rcpp::NumericVector z  = pow((wcss_rowdata.row(0)-cent[i]),2);
-
-                   wcss_tmp.row(j)= z;
-               }else{
-
-                   Rcpp::NumericVector m;
-
-                   wcss_tmp.row(j) = m;
-               }
-
-            }
-            wcss_final[i] = sum(wcss_tmp);
-        }
-    }else if(matrix_type ==REALSXP){
-
-        auto wcss_matrix=beachmat::create_numeric_matrix(data);
-
-        int data_n_rows = get_nrow(data);
-
-        int data_n_cols = get_ncol(data);
-
-        Rcpp::NumericVector tmp(data_n_cols);
-
-        Rcpp::NumericMatrix wcss_rowdata(1,data_n_cols);
-
-        for(int i=0; i <centers_row;i++){
-
-            for(int j =0; j<cluster_length;j++){
-
-                if(clusters[j] == i+1){
+                if(clusters[j] == labels[i]){
 
                     wcss_matrix -> get_row(j,tmp.begin());
 
                     wcss_rowdata.row(0) = tmp;
 
-                    Rcpp::NumericVector z  = pow((wcss_rowdata.row(0)-cent[i]),2);
+                    Rcpp::NumericVector z  = pow((wcss_rowdata.row(0)-cent.row(i)),2);
 
-                    wcss_tmp.row(j)=z;
-
-                }else{
-
-                    Rcpp::NumericVector m;
-
-                    wcss_tmp.row(j) = m;
-
+                    wcss_final[i] += sum(z);
                 }
-
             }
-            wcss_final[i] = sum(wcss_tmp);
+        }
+    }else if(matrix_type ==REALSXP){
+
+        auto wcss_matrix=beachmat::create_numeric_matrix(data);
+        Rcpp::NumericVector tmp(data_n_cols);
+
+        for(int i=0; i <nclusters;i++){
+
+            for(int j =0; j<nobs;j++){
+
+                if(clusters[j] == labels[i]){
+
+                    wcss_matrix -> get_row(j,tmp.begin());
+
+                    wcss_rowdata.row(0) = tmp;
+
+                    Rcpp::NumericVector z  = pow((wcss_rowdata.row(0)-cent.row(i)),2);
+
+                    wcss_final[i] += sum(z);
+                }
+            }
         }
     }
 
-return wcss_final;
-
-
+    return wcss_final;
 }
 
 
@@ -442,7 +410,7 @@ return wcss_final;
 // [[Rcpp::export]]
 Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, int num_init = 1, double init_fraction = 1.0, std::string initializer = "kmeans++",
 
-                      int early_stop_iter = 10, bool verbose = false, Rcpp::Nullable<Rcpp::NumericMatrix> CENTROIDS = R_NilValue, double tol = 1e-4,  int seed = 1){
+                      bool wcss_show = false, int early_stop_iter = 10, bool verbose = false, Rcpp::Nullable<Rcpp::NumericMatrix> CENTROIDS = R_NilValue, double tol = 1e-4,  int seed = 1){
 
   ClustHeader clust_header;
 
@@ -695,11 +663,11 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
 
       if (tmp_norm < tol || i == max_iters - 1 || increment_early_stop == early_stop_iter - 1) {
 
-        // output_centroids = update_centroids;
+        output_centroids = update_centroids;
 
         // assign end-centroids and SSE when early_stop_iter == increment_early_stop [ repeated calculation of adjusted rand index shows slightly better results for the previous case ]
 
-        // output_SSE = total_SSE;
+         output_SSE = total_SSE;
 
         break;
       }
@@ -748,7 +716,9 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
 
   Rcpp::NumericVector clusterfinal = predict_mini_batch(data, Rcpp::wrap(centers_out));
 
-  arma::rowvec wcss_final = wcss_result(clusterfinal,centers_out,data);
+  Rcpp::NumericMatrix centrod = Rcpp::wrap(centers_out);
+
+  arma::rowvec wcss_final = compute_wcss(clusterfinal,centrod,data);
 
   //Rcpp::NumericMatrix wcss_final = wcss_result(clusterfinal,centers_out,data);
 
@@ -784,13 +754,24 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
 
   //CLUSTERS = predict_mini_batch(data,centers);
 
-  return Rcpp::List::create(Rcpp::Named("centroids") = centers_out,
-                            //Rcpp::Named("WCSS_per_cluster") = bst_WCSS,
-                            Rcpp::Named("WCSS_per_cluster") = wcss_final,
-                            Rcpp::Named("best_initialization") = end_init,
-                            Rcpp::Named("iters_per_initialization") = iter_before_stop,
-                            Rcpp::Named("Clusters") = clusterfinal_2);
+  if(wcss_show == true){
 
+      return Rcpp::List::create(Rcpp::Named("centroids") = centers_out,
+                                //Rcpp::Named("WCSS_per_cluster") = bst_WCSS,
+                                Rcpp::Named("WCSS_per_cluster") = wcss_final,
+                                Rcpp::Named("best_initialization") = end_init,
+                                Rcpp::Named("iters_per_initialization") = iter_before_stop,
+                                Rcpp::Named("Clusters") = clusterfinal_2);
+
+  }else{
+
+      return Rcpp::List::create(Rcpp::Named("centroids") = centers_out,
+                                //Rcpp::Named("WCSS_per_cluster") = bst_WCSS,
+                                //Rcpp::Named("WCSS_per_cluster") = wcss_final,
+                                Rcpp::Named("best_initialization") = end_init,
+                                Rcpp::Named("iters_per_initialization") = iter_before_stop,
+                                Rcpp::Named("Clusters") = clusterfinal_2);
+  }
 
 }
 

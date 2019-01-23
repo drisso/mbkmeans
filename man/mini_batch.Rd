@@ -5,8 +5,9 @@
 \title{Mini_batch}
 \usage{
 mini_batch(data, clusters, batch_size, max_iters, num_init = 1L,
-  init_fraction = 1, initializer = "kmeans++", early_stop_iter = 10L,
-  verbose = FALSE, CENTROIDS = NULL, tol = 1e-04, seed = 1L)
+  init_fraction = 1, initializer = "kmeans++", wcss_show = FALSE,
+  early_stop_iter = 10L, verbose = FALSE, CENTROIDS = NULL,
+  tol = 1e-04, seed = 1L)
 }
 \arguments{
 \item{data}{numeric matrix or integer matrix or HDF5Matrix}

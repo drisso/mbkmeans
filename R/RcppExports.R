@@ -73,7 +73,7 @@ predict_mini_batch <- function(data, CENTROIDS, fuzzy = FALSE, eps = 1.0e-6) {
 #'mini_batch(data, 2, 10, 10)
 #'
 #' @export
-mini_batch <- function(data, clusters, batch_size, max_iters, num_init = 1L, init_fraction = 1.0, initializer = "kmeans++", early_stop_iter = 10L, verbose = FALSE, CENTROIDS = NULL, tol = 1e-4, seed = 1L) {
-    .Call(`_mbkmeans_mini_batch`, data, clusters, batch_size, max_iters, num_init, init_fraction, initializer, early_stop_iter, verbose, CENTROIDS, tol, seed)
+mini_batch <- function(data, clusters, batch_size, max_iters, num_init = 1L, init_fraction = 1.0, initializer = "kmeans++", wcss_show = FALSE, early_stop_iter = 10L, verbose = FALSE, CENTROIDS = NULL, tol = 1e-4, seed = 1L) {
+    .Call(`_mbkmeans_mini_batch`, data, clusters, batch_size, max_iters, num_init, init_fraction, initializer, wcss_show, early_stop_iter, verbose, CENTROIDS, tol, seed)
 }
 

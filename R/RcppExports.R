@@ -40,6 +40,10 @@ predict_mini_batch <- function(data, CENTROIDS, fuzzy = FALSE, eps = 1.0e-6) {
     .Call(`_mbkmeans_predict_mini_batch`, data, CENTROIDS, fuzzy, eps)
 }
 
+wcss_result <- function(clusters, cent, data) {
+    .Call(`_mbkmeans_wcss_result`, clusters, cent, data)
+}
+
 #'
 #' Mini_batch
 #'

@@ -29,6 +29,6 @@ It returns a vector with the clusters
 Predict Mini-batch-k-means by block for both matrix and HDF5Matrix
 }
 \section{blocksize}{
- \code{\link[beachball]{blocksize}}
+ \code{\link[mbkmeans]{blocksize}}
 }
 

@@ -31,6 +31,8 @@ NULL
 #'   best_initialization, iters_per_initialization.
 #' @name mbkmeans
 #' @rdname mbkmeans
+#' @importFrom methods is
+#' @importFrom SummarizedExperiment assay
 #' @export
 #' @importClassesFrom SummarizedExperiment SummarizedExperiment
 #' @references Sculley. Web-Scale K-Means Clustering. WWW 2010, April 26–30, 2010, Raleigh, North Carolina, USA. ACM 978-1-60558-799-8/10/04.

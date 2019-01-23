@@ -13,9 +13,10 @@
 #' @return  It returns a vector with the clusters
 #'
 #' @section
-#' blocksize: \code{\link[beachball]{blocksize}}
+#' blocksize: \code{\link[mbkmeans]{blocksize}}
 #'
-#'@export
+#' @importFrom DelayedArray blockApply RegularArrayGrid
+#' @export
 
 predict_MB_blocksize<-function(data,block_size,clusters,batch_size,init_fraction,max_iters,initializer = "kmeans++"){
 

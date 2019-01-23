@@ -309,6 +309,103 @@ SEXP subset_matrix_random(const T1& data, int cluster){
   return submat;
 
 }
+
+
+
+//calculation right WCSS
+template<typename T1>
+arma::rowvec wcss_result(Rcpp::NumericVector clusters, arma::mat cent,const T1& data){
+
+    int centers_row = cent.n_rows;
+
+    int cluster_length = clusters.size();
+
+    Rcpp::NumericMatrix wcss_tmp(cluster_length,1);
+
+    arma::rowvec wcss_final(centers_row);
+
+    auto matrix_type=beachmat::find_sexp_type(data);
+
+    if(matrix_type == INTSXP){
+
+        auto wcss_matrix=beachmat::create_integer_matrix(data);
+
+        int data_n_rows = get_nrow(data);
+
+        int data_n_cols = get_ncol(data);
+
+        Rcpp::IntegerVector tmp(data_n_cols);
+
+        Rcpp::NumericMatrix wcss_rowdata(1,data_n_cols);
+
+        for(int i=0; i <centers_row;i++){
+
+            for(int j =0; j<cluster_length;j++){
+
+               if(clusters[j] == i+1){
+
+                   wcss_matrix -> get_row(j,tmp.begin());
+
+                   wcss_rowdata.row(0) = tmp;
+
+                   Rcpp::NumericVector z  = pow((wcss_rowdata.row(0)-cent[i]),2);
+
+                   wcss_tmp.row(j)= z;
+               }else{
+
+                   Rcpp::NumericVector m;
+
+                   wcss_tmp.row(j) = m;
+               }
+
+            }
+            wcss_final[i] = sum(wcss_tmp);
+        }
+    }else if(matrix_type ==REALSXP){
+
+        auto wcss_matrix=beachmat::create_numeric_matrix(data);
+
+        int data_n_rows = get_nrow(data);
+
+        int data_n_cols = get_ncol(data);
+
+        Rcpp::NumericVector tmp(data_n_cols);
+
+        Rcpp::NumericMatrix wcss_rowdata(1,data_n_cols);
+
+        for(int i=0; i <centers_row;i++){
+
+            for(int j =0; j<cluster_length;j++){
+
+                if(clusters[j] == i+1){
+
+                    wcss_matrix -> get_row(j,tmp.begin());
+
+                    wcss_rowdata.row(0) = tmp;
+
+                    Rcpp::NumericVector z  = pow((wcss_rowdata.row(0)-cent[i]),2);
+
+                    wcss_tmp.row(j)=z;
+
+                }else{
+
+                    Rcpp::NumericVector m;
+
+                    wcss_tmp.row(j) = m;
+
+                }
+
+            }
+            wcss_final[i] = sum(wcss_tmp);
+        }
+    }
+
+return wcss_final;
+
+
+}
+
+
 //'
 //' Mini_batch
 //'
@@ -651,6 +748,10 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
 
   Rcpp::NumericVector clusterfinal = predict_mini_batch(data, Rcpp::wrap(centers_out));
 
+  arma::rowvec wcss_final = wcss_result(clusterfinal,centers_out,data);
+
+  //Rcpp::NumericMatrix wcss_final = wcss_result(clusterfinal,centers_out,data);
+
   // bool wcss_tmp;
   //
   // int centers_row = centers_out.n_rows;
@@ -675,7 +776,7 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
   // }
   //
   //
-  // Rcpp::NumericVector clusterfinal_2 = predict_mini_batch(data, Rcpp::wrap(centers_out));
+  Rcpp::NumericVector clusterfinal_2 = predict_mini_batch(data, Rcpp::wrap(centers_out));
 
   //arma::rowvec CLUSTERS;
 
@@ -684,11 +785,11 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
   //CLUSTERS = predict_mini_batch(data,centers);
 
   return Rcpp::List::create(Rcpp::Named("centroids") = centers_out,
-                            Rcpp::Named("WCSS_per_cluster") = bst_WCSS,
-                            //Rcpp::Named("WCSS_per_cluster") = wcss_final,
+                            //Rcpp::Named("WCSS_per_cluster") = bst_WCSS,
+                            Rcpp::Named("WCSS_per_cluster") = wcss_final,
                             Rcpp::Named("best_initialization") = end_init,
                             Rcpp::Named("iters_per_initialization") = iter_before_stop,
-                            Rcpp::Named("Clusters") = clusterfinal);
+                            Rcpp::Named("Clusters") = clusterfinal_2);
 
 
 }

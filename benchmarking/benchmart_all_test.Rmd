@@ -425,8 +425,6 @@ subset_iris_hdf5<-as(subset_iris,"HDF5Matrix")
 cluster_wcss<-function(dat, centro,label){
     nd = nrow(dat)
     nc= nrow(centro)
-    
-    
 
     final = numeric(nc)
     
@@ -455,6 +453,8 @@ time2<-system.time(km_matrix_2<-kmeans(subset_iris,centers=3,nstart = 100))[3]
 
 #mini_batch_matrix
 time3<-system.time(mini_km_matrix<-mini_batch(subset_iris,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .1,initializer = "random"))[3]
+
+
 
 #mini_batch_hdf5
 time4<-system.time(mini_km_hdf5<-mini_batch(subset_iris_hdf5,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .1,initializer = "random"))[3]
@@ -627,7 +627,12 @@ km_matrix_wcss2<-cluster_wcss(dat = subset_iris,centro =km_matrix$centers,label 
 
 km_matrix_wcss<-cluster_wcss(dat=subset_iris,centro =km_matrix$centers)
 km_matrix_2_wcss<-cluster_wcss(dat=subset_iris,centro =km_matrix_2$centers)
-mini_km_matrix_wcss<-cluster_wcss(dat=subset_iris,centro =mini_km_matrix$centroids,label = mini_km_matrix$cluster)
+
+mini_km_matrix_wcss<-cluster_wcss(dat=subset_iris,centro =mini_km_matrix$centroids,label = mini_km_matrix$Clusters)
+
+debug(clusters =mini_km_matrix$Clusters,cent = mini_km_matrix$centroids,data = subset_iris)
+debug(clusters =km_matrix$cluster,cent = km_matrix$centers,data = subset_iris)
+
 mini_km_hdf5_wcss<-cluster_wcss(dat=subset_iris,centro =mini_km_hdf5$centroids)
 cluR_km_wcss<-cluster_wcss(dat=subset_iris,centro =cluR_km$centroids)
 mini_kmplus_matrix_wcss<-cluster_wcss(dat=subset_iris,centro =mini_kmplus_matrix$centroids)

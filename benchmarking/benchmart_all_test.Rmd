@@ -272,27 +272,32 @@ mbkmeans_memory<-function(data){
 
 #profvis
 
+sub_mini<-profvis({
+mini_bat_memory_1<-mini_batch(hdf_matrix_t,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
+gc()
+mini_bat_memory_1<-mini_batch(hdf_matrix_t,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
+gc()
+mini_bat_memory_1<-mini_batch(hdf_matrix_t,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
+gc()
+mini_bat_memory_1<-mini_batch(hdf_matrix_t,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
+gc()
+mini_bat_memory_1<-mini_batch(hdf_matrix_t,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
+gc()
+mini_bat_memory_1<-mini_batch(hdf_matrix_t,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
+gc()
+mini_bat_memory_1<-mini_batch(hdf_matrix_t,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
+gc()
+mini_bat_memory_1<-mini_batch(hdf_matrix_t,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
+gc()
+mini_bat_memory_1<-mini_batch(hdf_matrix_t,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
+gc()
+mini_bat_memory_1<-mini_batch(hdf_matrix_t,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
+gc()
+})
 
-mini_bat_memory_1<-mini_batch(hdf_matrix_t,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
-gc()
-mini_bat_memory_1<-mini_batch(hdf_matrix_t,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
-gc()
-mini_bat_memory_1<-mini_batch(hdf_matrix_t,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
-gc()
-mini_bat_memory_1<-mini_batch(hdf_matrix_t,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
-gc()
-mini_bat_memory_1<-mini_batch(hdf_matrix_t,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
-gc()
-mini_bat_memory_1<-mini_batch(hdf_matrix_t,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
-gc()
-mini_bat_memory_1<-mini_batch(hdf_matrix_t,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
-gc()
-mini_bat_memory_1<-mini_batch(hdf_matrix_t,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
-gc()
-mini_bat_memory_1<-mini_batch(hdf_matrix_t,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
-gc()
-mini_bat_memory_1<-mini_batch(hdf_matrix_t,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
-gc()
+
+htmlwidgets::saveWidget(sub_mini, "sub_mini.html")
+browseURL("sub_mini.html")
 ```
 
 
@@ -300,28 +305,32 @@ gc()
 #subset - mbkmeans funciton
 
 #profvis
+sub_mbk<-profvis({
+mbk_memory_1<-mbkmeans(hdf_matrix,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
+gc()
+mbk_memory_1<-mbkmeans(hdf_matrix,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
+gc()
+mbk_memory_1<-mbkmeans(hdf_matrix,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
+gc()
+mbk_memory_1<-mbkmeans(hdf_matrix,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
+gc()
+mbk_memory_1<-mbkmeans(hdf_matrix,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
+gc()
+mbk_memory_1<-mbkmeans(hdf_matrix,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
+gc()
+mbk_memory_1<-mbkmeans(hdf_matrix,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
+gc()
+mbk_memory_1<-mbkmeans(hdf_matrix,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
+gc()
+mbk_memory_1<-mbkmeans(hdf_matrix,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
+gc()
+mbk_memory_1<-mbkmeans(hdf_matrix,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
+gc()
+})
 
-mbk_memory_1<-mbkmeans(hdf_matrix,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
-gc()
-mbk_memory_1<-mbkmeans(hdf_matrix,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
-gc()
-mbk_memory_1<-mbkmeans(hdf_matrix,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
-gc()
-mbk_memory_1<-mbkmeans(hdf_matrix,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
-gc()
-mbk_memory_1<-mbkmeans(hdf_matrix,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
-gc()
-mbk_memory_1<-mbkmeans(hdf_matrix,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
-gc()
-mbk_memory_1<-mbkmeans(hdf_matrix,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
-gc()
-mbk_memory_1<-mbkmeans(hdf_matrix,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
-gc()
-mbk_memory_1<-mbkmeans(hdf_matrix,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
-gc()
-mbk_memory_1<-mbkmeans(hdf_matrix,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
-gc()
 
+htmlwidgets::saveWidget(sub_mbk, "sub_mbk.html")
+browseURL("sub_mbk.html")
 ```
 
 
@@ -331,6 +340,7 @@ gc()
 #total matrix - mini_batch function
 
 #profvis
+total_mini<-profvis({
 mini_bat_memory_1_whole<-mini_batch(mat_t,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
 gc()
 mini_bat_memory_1_whole<-mini_batch(mat_t,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
@@ -351,34 +361,42 @@ mini_bat_memory_1_whole<-mini_batch(mat_t,clusters = 3,batch_size = 100, init_fr
 gc()
 mini_bat_memory_1_whole<-mini_batch(mat_t,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
 gc()
+})
+
+htmlwidgets::saveWidget(total_mini, "total_mini.html")
+browseURL("total_mini.html")
 ```
 
 
 ```{r cache-mbk-total}
 
 #profvis
+total_mbk<-profvis({
+mbk_memory_1_whole<-mbkmeans(mat,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
+gc()
+mbk_memory_1_whole<-mbkmeans(mat,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
+gc()
+mbk_memory_1_whole<-mbkmeans(mat,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
+gc()
+mbk_memory_1_whole<-mbkmeans(mat,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
+gc()
+mbk_memory_1_whole<-mbkmeans(mat,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
+gc()
+mbk_memory_1_whole<-mbkmeans(mat,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
+gc()
+mbk_memory_1_whole<-mbkmeans(mat,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
+gc()
+mbk_memory_1_whole<-mbkmeans(mat,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
+gc()
+mbk_memory_1_whole<-mbkmeans(mat,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
+gc()
+mbk_memory_1_whole<-mbkmeans(mat,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
+gc()
+})
 
-mbk_memory_1_whole<-mbkmeans(mat,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
-gc()
-mbk_memory_1_whole<-mbkmeans(mat,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
-gc()
-mbk_memory_1_whole<-mbkmeans(mat,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
-gc()
-mbk_memory_1_whole<-mbkmeans(mat,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
-gc()
-mbk_memory_1_whole<-mbkmeans(mat,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
-gc()
-mbk_memory_1_whole<-mbkmeans(mat,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
-gc()
-mbk_memory_1_whole<-mbkmeans(mat,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
-gc()
-mbk_memory_1_whole<-mbkmeans(mat,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
-gc()
-mbk_memory_1_whole<-mbkmeans(mat,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
-gc()
-mbk_memory_1_whole<-mbkmeans(mat,clusters = 3,batch_size = 100, init_fraction = .1, max_iters = 10,initializer = "random")
-gc()
 
+htmlwidgets::saveWidget(total_mbk, "total_mbk.html")
+browseURL("total_mbk.html")
 ```
 
 
@@ -422,7 +440,7 @@ subset_iris_hdf5<-as(subset_iris,"HDF5Matrix")
 ```{r Accuracy-function}
 #function
 #label 1/2/3  calculate all 1 with centroids-three
-cluster_wcss<-function(dat, centro,label){
+cluster_wcss_calcu<-function(dat, centro,label){
     nd = nrow(dat)
     nc= nrow(centro)
 
@@ -438,6 +456,19 @@ cluster_wcss<-function(dat, centro,label){
     final
 }
 
+cluster_wcss<-function(dat,centro,label){
+    nr=nrow(centro)
+    wcss_final<-matrix(0,100,nr)
+    for(i in 1:100){
+        
+        wcss_final[i,]=cluster_wcss_calcu(dat,centro,label)
+    }
+    
+    fianl = colMeans(wcss_final)
+}
+
+
+
 ```
 
 
@@ -452,7 +483,7 @@ time1<-system.time(km_matrix<-kmeans(subset_iris,centers=3,nstart = 10))[3]
 time2<-system.time(km_matrix_2<-kmeans(subset_iris,centers=3,nstart = 100))[3]
 
 #mini_batch_matrix
-time3<-system.time(mini_km_matrix<-mini_batch(subset_iris,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .1,initializer = "random"))[3]
+time3<-system.time(mini_km_matrix<-mini_batch(subset_iris,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .1,initializer = "random",wcss_show=TRUE))[3]
 
 
 
@@ -480,6 +511,22 @@ time8<-system.time(cluR_kmplus_matrix<-predict_MBatchKMeans(subset_iris,CENTROID
 time9<-system.time(kmeans_plus<-KMeans_rcpp(subset_iris,clusters = 3,num_init = 10, max_iters =100,initializer = "kmeans++" ))[3]
 
 ```
+
+
+```{r ARI_function}
+
+ARI_cal<-function(data,cluster){
+    ari<-numeric(100)
+    for(i in 1:100){
+       ari[i]<-adjustedRandIndex(data,cluster)
+    }
+    
+    ari_final<-mean(ari[i])
+    
+}
+
+```
+
 
 
 ```{r init_fraction test}
@@ -510,12 +557,12 @@ clu_init_2<-predict_MBatchKMeans(subset_iris,CENTROIDS = cluR_km$centroids)
 
 
 
-mini_init_1_ARI<-adjustedRandIndex(iris$Species,mini_init_1$Clusters)
-mini_init_2_ARI<-adjustedRandIndex(iris$Species,mini_init_2$Clusters)
-mini_hdf5_init_1_ARI<-adjustedRandIndex(iris$Species,mini_hdf5_init_1$Clusters)
-mini_hdf5_init_2_ARI<-adjustedRandIndex(iris$Species,mini_hdf5_init_2$Clusters)
-clu_init_1_ARI<-adjustedRandIndex(iris$Species,clu_init_1)
-clu_init_2_ARI<-adjustedRandIndex(iris$Species,clu_init_2)
+mini_init_1_ARI<-ARI_cal(iris$Species,mini_init_1$Clusters)
+mini_init_2_ARI<-ARI_cal(iris$Species,mini_init_2$Clusters)
+mini_hdf5_init_1_ARI<-ARI_cal(iris$Species,mini_hdf5_init_1$Clusters)
+mini_hdf5_init_2_ARI<-ARI_cal(iris$Species,mini_hdf5_init_2$Clusters)
+clu_init_1_ARI<-ARI_cal(iris$Species,clu_init_1)
+clu_init_2_ARI<-ARI_cal(iris$Species,clu_init_2)
 
 table_init_km<-cbind(mini_init_1_ARI,mini_init_2_ARI,mini_hdf5_init_1_ARI,mini_hdf5_init_2_ARI,clu_init_1_ARI,clu_init_2_ARI)
 table_init_km
@@ -542,12 +589,12 @@ clu_init_2_plus<-predict_MBatchKMeans(subset_iris,CENTROIDS = cluR_km$centroids)
 
 
 
-mini_init_1_plus_ARI<-adjustedRandIndex(iris$Species,mini_init_1_plus$Clusters)
-mini_init_2_plus_ARI<-adjustedRandIndex(iris$Species,mini_init_2_plus$Clusters)
-mini_hdf5_init_1_plus_ARI<-adjustedRandIndex(iris$Species,mini_hdf5_init_1_plus$Clusters)
-mini_hdf5_init_2_plus_ARI<-adjustedRandIndex(iris$Species,mini_hdf5_init_2_plus$Clusters)
-clu_init_1_plus_ARI<-adjustedRandIndex(iris$Species,clu_init_1_plus)
-clu_init_2_plus_ARI<-adjustedRandIndex(iris$Species,clu_init_2_plus)
+mini_init_1_plus_ARI<-ARI_cal(iris$Species,mini_init_1_plus$Clusters)
+mini_init_2_plus_ARI<-ARI_cal(iris$Species,mini_init_2_plus$Clusters)
+mini_hdf5_init_1_plus_ARI<-ARI_cal(iris$Species,mini_hdf5_init_1_plus$Clusters)
+mini_hdf5_init_2_plus_ARI<-ARI_cal(iris$Species,mini_hdf5_init_2_plus$Clusters)
+clu_init_1_plus_ARI<-ARI_cal(iris$Species,clu_init_1_plus)
+clu_init_2_plus_ARI<-ARI_cal(iris$Species,clu_init_2_plus)
 
 table_init_plus<-cbind(mini_init_1_plus_ARI,mini_init_2_plus_ARI,mini_hdf5_init_1_plus_ARI,mini_hdf5_init_2_plus_ARI,clu_init_1_plus_ARI,clu_init_2_plus_ARI)
 table_init_plus
@@ -586,16 +633,16 @@ table_batch
 
 #AIR vs TIME
 #random
-ARI1<-adjustedRandIndex(iris$Species,km_matrix$cluster)
-ARI2<-adjustedRandIndex(iris$Species,km_matrix_2$cluster)
-ARI3<-adjustedRandIndex(iris$Species,mini_km_matrix$Clusters)
-ARI4<-adjustedRandIndex(iris$Species,mini_km_hdf5$Clusters)
-ARI5<-adjustedRandIndex(iris$Species,cluR_km_matrix)
+ARI1<-ARI_cal(iris$Species,km_matrix$cluster)
+ARI2<-ARI_cal(iris$Species,km_matrix_2$cluster)
+ARI3<-ARI_cal(iris$Species,mini_km_matrix$Clusters)
+ARI4<-ARI_cal(iris$Species,mini_km_hdf5$Clusters)
+ARI5<-ARI_cal(iris$Species,cluR_km_matrix)
 #kmeans++
-ARI6<-adjustedRandIndex(iris$Species,mini_kmplus_matrix$Clusters)
-ARI7<-adjustedRandIndex(iris$Species,mini_kmplus_hdf5$Clusters)
-ARI8<-adjustedRandIndex(iris$Species,cluR_kmplus_matrix)
-ARI9<-adjustedRandIndex(iris$Species,kmeans_plus$clusters)
+ARI6<-ARI_cal(iris$Species,mini_kmplus_matrix$Clusters)
+ARI7<-ARI_cal(iris$Species,mini_kmplus_hdf5$Clusters)
+ARI8<-ARI_cal(iris$Species,cluR_kmplus_matrix)
+ARI9<-ARI_cal(iris$Species,kmeans_plus$clusters)
 
 #ARI for kmeans
 total_km_ari<-rbind(ARI1,ARI2,ARI3,ARI4,ARI5,ARI6,ARI7,ARI8,ARI9)
@@ -607,6 +654,7 @@ ari_type<-rbind("km_matrix","km_matrix_2","mini_km_matrix","mini_km_hdf5","cluR_
 ari_total<-cbind(ari_time,ari_type)
 colnames(ari_total)<-c("ARI","Time","Type")
 ari_total<-data.frame(ari_total)
+ari_total$Time<-as.numeric(ari_total$Time)
 
 
 ggplot(ari_total, aes(x=Time, y=ARI,color = Type,label = Type)) + 
@@ -623,27 +671,22 @@ ggplotly(p1)
 
 
 #WCSS vs TIME
-km_matrix_wcss2<-cluster_wcss(dat = subset_iris,centro =km_matrix$centers,label = km_matrix$cluster)
-
-km_matrix_wcss<-cluster_wcss(dat=subset_iris,centro =km_matrix$centers)
-km_matrix_2_wcss<-cluster_wcss(dat=subset_iris,centro =km_matrix_2$centers)
+km_matrix_wcss<-cluster_wcss(dat=subset_iris,centro =km_matrix$centers,label =km_matrix$cluster )
+km_matrix_2_wcss<-cluster_wcss(dat=subset_iris,centro =km_matrix_2$centers,label = km_matrix_2$cluster)
 
 mini_km_matrix_wcss<-cluster_wcss(dat=subset_iris,centro =mini_km_matrix$centroids,label = mini_km_matrix$Clusters)
 
-debug(clusters =mini_km_matrix$Clusters,cent = mini_km_matrix$centroids,data = subset_iris)
-debug(clusters =km_matrix$cluster,cent = km_matrix$centers,data = subset_iris)
-
-mini_km_hdf5_wcss<-cluster_wcss(dat=subset_iris,centro =mini_km_hdf5$centroids)
-cluR_km_wcss<-cluster_wcss(dat=subset_iris,centro =cluR_km$centroids)
-mini_kmplus_matrix_wcss<-cluster_wcss(dat=subset_iris,centro =mini_kmplus_matrix$centroids)
-mini_kmplus_hdf5_wcss<-cluster_wcss(dat=subset_iris,centro =mini_kmplus_hdf5$centroids)
-cluR_kmplus_wcss<-cluster_wcss(dat=subset_iris,centro =cluR_kmplus$centroids)
-kmeans_plus_wcss<-cluster_wcss(dat=subset_iris,centro =kmeans_plus$centroids)
+mini_km_hdf5_wcss<-cluster_wcss(dat=subset_iris,centro =mini_km_hdf5$centroids,label=mini_km_hdf5$Clusters)
+cluR_km_wcss<-cluster_wcss(dat=subset_iris,centro =cluR_km$centroids,label = cluR_km_matrix)
+mini_kmplus_matrix_wcss<-cluster_wcss(dat=subset_iris,centro =mini_kmplus_matrix$centroids,label = mini_kmplus_matrix$Clusters)
+mini_kmplus_hdf5_wcss<-cluster_wcss(dat=subset_iris,centro =mini_kmplus_hdf5$centroids,label = mini_kmplus_hdf5$Clusters)
+cluR_kmplus_wcss<-cluster_wcss(dat=subset_iris,centro =cluR_kmplus$centroids,label = cluR_kmplus_matrix)
+kmeans_plus_wcss<-cluster_wcss(dat=subset_iris,centro =kmeans_plus$centroids,label =kmeans_plus$clusters )
 
 
 total_km_time<-rbind(time1,time2,time3,time4,time5,time6,time7,time8,time9)
 total_km_WCSS<-rbind(sum(km_matrix_wcss),sum(km_matrix_2_wcss),sum(mini_km_matrix_wcss),sum(mini_km_hdf5_wcss),sum(cluR_km_wcss),sum(mini_kmplus_matrix_wcss),sum(mini_kmplus_hdf5_wcss),sum(cluR_kmplus_wcss),sum(kmeans_plus_wcss))
-
+total_km_WCSS_2<-rbind(km_matrix_wcss,km_matrix_2_wcss,mini_km_matrix_wcss,mini_km_hdf5_wcss,cluR_km_wcss,mini_kmplus_matrix_wcss,mini_kmplus_hdf5_wcss,cluR_kmplus_wcss,kmeans_plus_wcss)
 
 
 
@@ -651,6 +694,7 @@ wcss_km<-cbind(total_km_WCSS,total_km_time)
 colnames(wcss_km)<-c("Total_WCSS","Time")
 wcss_km<-data.frame(wcss_km)
 wcss_km$Type<-c("km_matrix","km_matrix_2","mini_km_matrix","mini_km_hdf5","cluR_km_matrix","mini_kmplus_matrix","mini_kmplus_hdf5","cluR_kmplus_matrix","kmeans_plus")
+wcss_km$Time<-as.numeric(wcss_km$Time)
 
 ggplot(wcss_km,aes(x=Time, y =Total_WCSS,color = Type,label = Type)) +
     geom_point() +

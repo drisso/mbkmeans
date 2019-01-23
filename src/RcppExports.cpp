@@ -57,10 +57,13 @@ BEGIN_RCPP
 END_RCPP
 }
 
+RcppExport SEXP _mbkmeans_compute_wcss(SEXP, SEXP, SEXP);
+
 static const R_CallMethodDef CallEntries[] = {
     {"_mbkmeans_debug", (DL_FUNC) &_mbkmeans_debug, 3},
     {"_mbkmeans_predict_mini_batch", (DL_FUNC) &_mbkmeans_predict_mini_batch, 4},
     {"_mbkmeans_mini_batch", (DL_FUNC) &_mbkmeans_mini_batch, 13},
+    {"_mbkmeans_compute_wcss",       (DL_FUNC) &_mbkmeans_compute_wcss,        3},
     {NULL, NULL, 0}
 };
 

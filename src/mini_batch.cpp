@@ -373,7 +373,6 @@ Rcpp::NumericVector compute_wcss(Rcpp::NumericVector clusters, Rcpp::NumericMatr
     return wcss_final;
 }
 
-
 //'
 //' Mini_batch
 //'
@@ -716,9 +715,7 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
 
   Rcpp::NumericVector clusterfinal = predict_mini_batch(data, Rcpp::wrap(centers_out));
 
-  Rcpp::NumericMatrix centrod = Rcpp::wrap(centers_out);
-
-  arma::rowvec wcss_final = compute_wcss(clusterfinal,centrod,data);
+  Rcpp::NumericVector wcss_final = compute_wcss(clusterfinal,Rcpp::wrap(centers_out),data);
 
   //Rcpp::NumericMatrix wcss_final = wcss_result(clusterfinal,centers_out,data);
 

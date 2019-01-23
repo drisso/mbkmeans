@@ -309,6 +309,69 @@ SEXP subset_matrix_random(const T1& data, int cluster){
   return submat;
 
 }
+
+//calculation right WCSS
+// [[Rcpp::export]]
+Rcpp::NumericVector compute_wcss(Rcpp::NumericVector clusters, Rcpp::NumericMatrix cent, SEXP data){
+
+    int nclusters = cent.nrow(); // number of clusters
+    int nobs = clusters.size(); // number of obs
+    Rcpp::NumericVector labels = Rcpp::sort_unique(clusters); // unique labels
+
+    int data_n_cols = get_ncol(data);
+    Rcpp::NumericMatrix wcss_rowdata(1,data_n_cols);
+    Rcpp::NumericVector wcss_final(nclusters);
+
+    auto matrix_type=beachmat::find_sexp_type(data);
+
+
+    if(matrix_type == INTSXP){
+
+        auto wcss_matrix=beachmat::create_integer_matrix(data);
+        Rcpp::IntegerVector tmp(data_n_cols);
+
+        for(int i=0; i <nclusters;i++){
+
+            for(int j =0; j<nobs;j++){
+
+                if(clusters[j] == labels[i]){
+
+                    wcss_matrix -> get_row(j,tmp.begin());
+
+                    wcss_rowdata.row(0) = tmp;
+
+                    Rcpp::NumericVector z  = pow((wcss_rowdata.row(0)-cent.row(i)),2);
+
+                    wcss_final[i] += sum(z);
+                }
+            }
+        }
+    }else if(matrix_type ==REALSXP){
+
+        auto wcss_matrix=beachmat::create_numeric_matrix(data);
+        Rcpp::NumericVector tmp(data_n_cols);
+
+        for(int i=0; i <nclusters;i++){
+
+            for(int j =0; j<nobs;j++){
+
+                if(clusters[j] == labels[i]){
+
+                    wcss_matrix -> get_row(j,tmp.begin());
+
+                    wcss_rowdata.row(0) = tmp;
+
+                    Rcpp::NumericVector z  = pow((wcss_rowdata.row(0)-cent.row(i)),2);
+
+                    wcss_final[i] += sum(z);
+                }
+            }
+        }
+    }
+
+    return wcss_final;
+}
+
 //'
 //' Mini_batch
 //'
@@ -367,7 +430,7 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
 
     num_init = 1;
 
-    flag = true;
+    flag = true;                   // get centroids
   }
 
   arma::mat centers_out;
@@ -550,7 +613,7 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
 
         int tmp_idx = clust_header.MinMat(tmp_vec);                                                                              // returns the index of the tmp_vec with the lowest SSE
 
-        total_SSE(tmp_idx) += tmp_vec(tmp_idx);                                                                     // assigns to total_SSE the minimum cost
+        total_SSE(tmp_idx) += tmp_vec(tmp_idx);             //total WCSS                                                          // assigns to total_SSE the minimum cost
 
         CLUSTERS(j) = tmp_idx;
       }
@@ -572,7 +635,7 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
         update_centroids.row(idx) = tmp_row;
       }
 
-      double tmp_norm = clust_header.squared_norm(previous_centroids - update_centroids);
+      double tmp_norm = clust_header.squared_norm(previous_centroids - update_centroids);   //// early-stopping criterium
 
       double calc_cost = arma::accu(total_SSE);
 
@@ -582,7 +645,7 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
 
       if (calc_cost < previous_cost) {
 
-        previous_cost = calc_cost;
+        previous_cost = calc_cost;     //calc_cost is total WCSS
 
         increment_early_stop = 0;
 
@@ -598,15 +661,17 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
 
       if (tmp_norm < tol || i == max_iters - 1 || increment_early_stop == early_stop_iter - 1) {
 
-        // output_centroids = update_centroids;            // assign end-centroids and SSE when early_stop_iter == increment_early_stop [ repeated calculation of adjusted rand index shows slightly better results for the previous case ]
-        //
+        // output_centroids = update_centroids;
+
+        // assign end-centroids and SSE when early_stop_iter == increment_early_stop [ repeated calculation of adjusted rand index shows slightly better results for the previous case ]
+
         // output_SSE = total_SSE;
 
         break;
       }
     }
 
-    if (arma::accu(output_SSE) < arma::accu(bst_WCSS)) {
+    if (arma::accu(output_SSE) < arma::accu(bst_WCSS)) {   //output_SSE is total wcss, bst_WCSS is WCSS
 
       end_init = init + 1;
 
@@ -648,6 +713,37 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
   // clusterfinal= rfunction(data,centers_out);
 
   Rcpp::NumericVector clusterfinal = predict_mini_batch(data, Rcpp::wrap(centers_out));
+
+  Rcpp::NumericVector wcss_final = compute_wcss(clusterfinal,Rcpp::wrap(centers_out),data);
+
+  //Rcpp::NumericMatrix wcss_final = wcss_result(clusterfinal,centers_out,data);
+
+  // bool wcss_tmp;
+  //
+  // int centers_row = centers_out.n_rows;
+  //
+  // int cluster_length = clusterfinal.size();
+  //
+  // arma::rowvec wcss_final(centers_row);
+  //
+  // for(int i =0; i< centers_row; i++){
+  //
+  //     for(int j =0; j<cluster_length;j++){
+  //
+  //       wcss_tmp = (clusterfinal[j] = i);
+  //
+  //       if(wcss_tmp == 1){
+  //
+  //           wcss_final[i] = sum(pow(clusterfinal[j] - centers_out[i],2));
+  //
+  //       }
+  //
+  //     }
+  // }
+  //
+  //
+  Rcpp::NumericVector clusterfinal_2 = predict_mini_batch(data, Rcpp::wrap(centers_out));
+
   //arma::rowvec CLUSTERS;
 
   //Rcpp::NumericMatrix centers;
@@ -655,10 +751,11 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
   //CLUSTERS = predict_mini_batch(data,centers);
 
   return Rcpp::List::create(Rcpp::Named("centroids") = centers_out,
-                            Rcpp::Named("WCSS_per_cluster") = bst_WCSS,
+                            //Rcpp::Named("WCSS_per_cluster") = bst_WCSS,
+                            Rcpp::Named("WCSS_per_cluster") = wcss_final,
                             Rcpp::Named("best_initialization") = end_init,
                             Rcpp::Named("iters_per_initialization") = iter_before_stop,
-                            Rcpp::Named("Clusters") = clusterfinal);
+                            Rcpp::Named("Clusters") = clusterfinal_2);
 
 
 }

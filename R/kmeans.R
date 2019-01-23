@@ -57,7 +57,7 @@ setMethod(
 #' @examples
 #' library(SingleCellExperiment)
 #' sce <- SingleCellExperiment(matrix(rnorm(100), ncol=10))
-#' mbkmeans(sce, clusters = 2, reduceMethod = "none")
+#' mbkmeans(sce, clusters = 2, reduceMethod = NA)
 setMethod(
   f = "mbkmeans",
   signature = signature(x = "SingleCellExperiment"),

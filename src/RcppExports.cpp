@@ -6,6 +6,19 @@
 
 using namespace Rcpp;
 
+// debug
+arma::rowvec debug(Rcpp::NumericVector clusters, arma::mat cent, SEXP data);
+RcppExport SEXP _mbkmeans_debug(SEXP clustersSEXP, SEXP centSEXP, SEXP dataSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type clusters(clustersSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type cent(centSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type data(dataSEXP);
+    rcpp_result_gen = Rcpp::wrap(debug(clusters, cent, data));
+    return rcpp_result_gen;
+END_RCPP
+}
 // predict_mini_batch
 Rcpp::NumericVector predict_mini_batch(SEXP data, Rcpp::NumericMatrix CENTROIDS, bool fuzzy, double eps);
 RcppExport SEXP _mbkmeans_predict_mini_batch(SEXP dataSEXP, SEXP CENTROIDSSEXP, SEXP fuzzySEXP, SEXP epsSEXP) {
@@ -17,6 +30,19 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< bool >::type fuzzy(fuzzySEXP);
     Rcpp::traits::input_parameter< double >::type eps(epsSEXP);
     rcpp_result_gen = Rcpp::wrap(predict_mini_batch(data, CENTROIDS, fuzzy, eps));
+    return rcpp_result_gen;
+END_RCPP
+}
+// compute_wcss
+Rcpp::NumericVector compute_wcss(Rcpp::NumericVector clusters, Rcpp::NumericMatrix cent, SEXP data);
+RcppExport SEXP _mbkmeans_compute_wcss(SEXP clustersSEXP, SEXP centSEXP, SEXP dataSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type clusters(clustersSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type cent(centSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type data(dataSEXP);
+    rcpp_result_gen = Rcpp::wrap(compute_wcss(clusters, cent, data));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -44,7 +70,9 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_mbkmeans_debug", (DL_FUNC) &_mbkmeans_debug, 3},
     {"_mbkmeans_predict_mini_batch", (DL_FUNC) &_mbkmeans_predict_mini_batch, 4},
+    {"_mbkmeans_compute_wcss", (DL_FUNC) &_mbkmeans_compute_wcss, 3},
     {"_mbkmeans_mini_batch", (DL_FUNC) &_mbkmeans_mini_batch, 12},
     {NULL, NULL, 0}
 };

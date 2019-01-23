@@ -33,16 +33,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// wcss_result
-Rcpp::NumericVector wcss_result(Rcpp::NumericVector clusters, Rcpp::NumericMatrix cent, SEXP data);
-RcppExport SEXP _mbkmeans_wcss_result(SEXP clustersSEXP, SEXP centSEXP, SEXP dataSEXP) {
+// compute_wcss
+Rcpp::NumericVector compute_wcss(Rcpp::NumericVector clusters, Rcpp::NumericMatrix cent, SEXP data);
+RcppExport SEXP _mbkmeans_compute_wcss(SEXP clustersSEXP, SEXP centSEXP, SEXP dataSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type clusters(clustersSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type cent(centSEXP);
     Rcpp::traits::input_parameter< SEXP >::type data(dataSEXP);
-    rcpp_result_gen = Rcpp::wrap(wcss_result(clusters, cent, data));
+    rcpp_result_gen = Rcpp::wrap(compute_wcss(clusters, cent, data));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -72,7 +72,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_mbkmeans_debug", (DL_FUNC) &_mbkmeans_debug, 3},
     {"_mbkmeans_predict_mini_batch", (DL_FUNC) &_mbkmeans_predict_mini_batch, 4},
-    {"_mbkmeans_wcss_result", (DL_FUNC) &_mbkmeans_wcss_result, 3},
+    {"_mbkmeans_compute_wcss", (DL_FUNC) &_mbkmeans_compute_wcss, 3},
     {"_mbkmeans_mini_batch", (DL_FUNC) &_mbkmeans_mini_batch, 12},
     {NULL, NULL, 0}
 };

@@ -312,7 +312,7 @@ SEXP subset_matrix_random(const T1& data, int cluster){
 
 //calculation right WCSS
 // [[Rcpp::export]]
-Rcpp::NumericVector wcss_result(Rcpp::NumericVector clusters, Rcpp::NumericMatrix cent, SEXP data){
+Rcpp::NumericVector compute_wcss(Rcpp::NumericVector clusters, Rcpp::NumericMatrix cent, SEXP data){
 
     int nclusters = cent.nrow(); // number of clusters
     int nobs = clusters.size(); // number of obs
@@ -714,7 +714,7 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
 
   Rcpp::NumericVector clusterfinal = predict_mini_batch(data, Rcpp::wrap(centers_out));
 
-  Rcpp::NumericVector wcss_final = wcss_result(clusterfinal,Rcpp::wrap(centers_out),data);
+  Rcpp::NumericVector wcss_final = compute_wcss(clusterfinal,Rcpp::wrap(centers_out),data);
 
   //Rcpp::NumericMatrix wcss_final = wcss_result(clusterfinal,centers_out,data);
 

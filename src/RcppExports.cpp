@@ -7,16 +7,14 @@
 using namespace Rcpp;
 
 // predict_mini_batch
-Rcpp::NumericVector predict_mini_batch(SEXP data, Rcpp::NumericMatrix CENTROIDS, bool fuzzy, double eps);
-RcppExport SEXP _mbkmeans_predict_mini_batch(SEXP dataSEXP, SEXP CENTROIDSSEXP, SEXP fuzzySEXP, SEXP epsSEXP) {
+Rcpp::NumericVector predict_mini_batch(SEXP data, Rcpp::NumericMatrix CENTROIDS);
+RcppExport SEXP _mbkmeans_predict_mini_batch(SEXP dataSEXP, SEXP CENTROIDSSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type data(dataSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type CENTROIDS(CENTROIDSSEXP);
-    Rcpp::traits::input_parameter< bool >::type fuzzy(fuzzySEXP);
-    Rcpp::traits::input_parameter< double >::type eps(epsSEXP);
-    rcpp_result_gen = Rcpp::wrap(predict_mini_batch(data, CENTROIDS, fuzzy, eps));
+    rcpp_result_gen = Rcpp::wrap(predict_mini_batch(data, CENTROIDS));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -57,7 +55,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_mbkmeans_predict_mini_batch", (DL_FUNC) &_mbkmeans_predict_mini_batch, 4},
+    {"_mbkmeans_predict_mini_batch", (DL_FUNC) &_mbkmeans_predict_mini_batch, 2},
     {"_mbkmeans_compute_wcss", (DL_FUNC) &_mbkmeans_compute_wcss, 3},
     {"_mbkmeans_mini_batch", (DL_FUNC) &_mbkmeans_mini_batch, 12},
     {NULL, NULL, 0}

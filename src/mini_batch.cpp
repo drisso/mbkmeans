@@ -184,7 +184,7 @@ arma::rowvec clusters_WCSS(const T&data,Rcpp::NumericMatrix CENTROIDS){
 //'                              CENTROIDS = km$centroids)
 //' @export
 // [[Rcpp::export]]
-Rcpp::NumericVector predict_mini_batch(SEXP data, Rcpp::NumericMatrix CENTROIDS, bool fuzzy = false, double eps = 1.0e-6) {
+Rcpp::NumericVector predict_mini_batch(SEXP data, Rcpp::NumericMatrix CENTROIDS) {
 
 
     //arma::mat CENTROIDS1;
@@ -233,29 +233,15 @@ Rcpp::NumericVector predict_mini_batch(SEXP data, Rcpp::NumericMatrix CENTROIDS,
     //CLUSTERS(j) = tmp_idx+1;
     // }
 
-    if (fuzzy) {
 
-        //     arma::mat fuzzy_mat(soft_CLUSTERS.n_rows, soft_CLUSTERS.n_cols);
+    //return CLUSTERS;
 
-        //     for (unsigned int i = 0; i < soft_CLUSTERS.n_rows; i++) {
+    Rcpp::NumericVector final_cluster = Rcpp::wrap(CLUSTERS);
 
-        //       fuzzy_mat.row(i) = norm_fuzzy(arma::conv_to< arma::rowvec >::from(soft_CLUSTERS.row(i)), eps);
-        //     }
+    final_cluster.attr("dim") = R_NilValue;
 
-        //     return Rcpp::List::create(Rcpp::Named("clusters") = CLUSTERS, Rcpp::Named("fuzzy_clusters") = fuzzy_mat);
+    return final_cluster;
 
-        Rcpp::stop("fuzzy clustering is currently not implemented.");
-
-    }else {
-
-        //return CLUSTERS;
-
-        Rcpp::NumericVector final_cluster = Rcpp::wrap(CLUSTERS);
-
-        final_cluster.attr("dim") = R_NilValue;
-
-        return final_cluster;
-    }
 }
 
 //subset the matrix and select randomly rows(nrows = init_fraction*total)

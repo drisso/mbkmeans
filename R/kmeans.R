@@ -29,7 +29,6 @@ NULL
 #' @param ... Arguments to pass to the matrix method.
 #' @return A list with the following attributes: centroids, WCSS_per_cluster,
 #'   best_initialization, iters_per_initialization.
-#' @name mbkmeans
 #' @rdname mbkmeans
 #' @importFrom methods is
 #' @importFrom SummarizedExperiment assay

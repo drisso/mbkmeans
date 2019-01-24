@@ -4,7 +4,7 @@
 \alias{predict_mini_batch}
 \title{Predict_mini_batch}
 \usage{
-predict_mini_batch(data, CENTROIDS, fuzzy = FALSE, eps = 1e-06)
+predict_mini_batch(data, CENTROIDS)
 }
 \arguments{
 \item{data}{matrix, DelayedMatrix, or HDF5Matrix containing numeric or

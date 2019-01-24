@@ -31,8 +31,8 @@
 #'clusters = predict_mini_batch(as.matrix(iris[,1:4]),
 #'                              CENTROIDS = km$centroids)
 #' @export
-predict_mini_batch <- function(data, CENTROIDS, fuzzy = FALSE, eps = 1.0e-6) {
-    .Call(`_mbkmeans_predict_mini_batch`, data, CENTROIDS, fuzzy, eps)
+predict_mini_batch <- function(data, CENTROIDS) {
+    .Call(`_mbkmeans_predict_mini_batch`, data, CENTROIDS)
 }
 
 compute_wcss <- function(clusters, cent, data) {

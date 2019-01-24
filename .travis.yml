@@ -14,9 +14,9 @@ language: r
 cache: packages
 
 os:
-  - windows
   - linux
-  - osx
+#  - windows
+#  - osx
 
 # R versions to be tested on
 r:

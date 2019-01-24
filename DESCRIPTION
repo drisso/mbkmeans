@@ -24,7 +24,7 @@ Imports:
     ClusterR,
     benchmarkme
 Suggests:
-    beachmat, 
+    beachmat,
     HDF5Array,
     Matrix,
     Rhdf5lib,
@@ -32,7 +32,8 @@ Suggests:
     TENxPBMCData,
     scater,
     DelayedMatrixStats,
-    knitr
+    knitr,
+    testthat
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

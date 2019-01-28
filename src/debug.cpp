@@ -74,105 +74,73 @@ int get_ncol(const T& data){
 
 
 template<typename T1>
-arma::rowvec wcss_result(Rcpp::NumericVector clusters, arma::mat cent,const T1& data){
+Rcpp::NumericVector compute_wcss(Rcpp::NumericVector clusters, Rcpp::NumericMatrix cent, const T1& data){
 
+    int nclusters = cent.nrow(); // number of clusters
+    int nobs = clusters.size(); // number of obs
+    Rcpp::NumericVector labels = Rcpp::sort_unique(clusters); // unique labels
 
-    ClustHeader clust_header;
-
-    int centers_row = cent.n_rows;
-
-    //int cluster_length = clusters.size();
-
-    int data_row = get_nrow(data);
-
-    Rcpp::NumericMatrix wcss_tmp(data_row,1);
-
-    arma::rowvec wcss_final(centers_row);
+    int data_n_cols = get_ncol(data);
+    Rcpp::NumericMatrix wcss_rowdata(1,data_n_cols);
+    Rcpp::NumericVector wcss_final(nclusters);
 
     auto matrix_type=beachmat::find_sexp_type(data);
+
 
     if(matrix_type == INTSXP){
 
         auto wcss_matrix=beachmat::create_integer_matrix(data);
-
-        int data_n_rows = get_nrow(data);
-
-        int data_n_cols = get_ncol(data);
-
         Rcpp::IntegerVector tmp(data_n_cols);
 
-        Rcpp::IntegerMatrix wcss_rowdata(1,data_n_cols);
+        for(int i=0; i <nclusters;i++){
 
-        for(int i=0; i <centers_row;i++){
+            for(int j =0; j<nobs;j++){
 
-            for(int j =0; j<data_row;j++){
-
-                if(clusters[j] == i+1){
+                if(clusters[j] == labels[i]){
 
                     wcss_matrix -> get_row(j,tmp.begin());
 
                     wcss_rowdata.row(0) = tmp;
 
-                    Rcpp::NumericVector z  = pow(wcss_rowdata.row(0)-cent[i],2);
+                    Rcpp::NumericVector z  = pow((wcss_rowdata.row(0)-cent.row(i)),2);
 
-                    wcss_tmp.row(j)= z;
-
-                }else{
-
-                    wcss_tmp.row(j) ==0;
+                    wcss_final[i] += sum(z);
                 }
-
             }
-            wcss_final[i] = sum(wcss_tmp);
         }
     }else if(matrix_type ==REALSXP){
 
         auto wcss_matrix=beachmat::create_numeric_matrix(data);
-
-        int data_n_rows = get_nrow(data);
-
-        int data_n_cols = get_ncol(data);
-
         Rcpp::NumericVector tmp(data_n_cols);
 
-        Rcpp::NumericMatrix wcss_rowdata(1,data_n_cols);
+        for(int i=0; i <nclusters;i++){
 
-        for(int i=0; i <centers_row;i++){
+            for(int j =0; j<nobs;j++){
 
-            for(int j =0; j<data_row;j++){
-
-                if(clusters[j] == i+1){
+                if(clusters[j] == labels[i]){
 
                     wcss_matrix -> get_row(j,tmp.begin());
 
                     wcss_rowdata.row(0) = tmp;
 
-                    Rcpp::NumericVector z  = pow(wcss_rowdata.row(0)-cent[i],2);
+                    Rcpp::NumericVector z  = pow((wcss_rowdata.row(0)-cent.row(i)),2);
 
-                    wcss_tmp.row(j)= z;
-                }else{
-
-                    wcss_tmp.row(j) == 0;
-
+                    wcss_final[i] += sum(z);
                 }
-
             }
-            wcss_final[i] = sum(wcss_tmp);
         }
     }
 
     return wcss_final;
-
-
 }
 
 
 
 //' @export
 // [[Rcpp::export]]
-arma::rowvec debug(Rcpp::NumericVector clusters, arma::mat cent,SEXP data){
+Rcpp::NumericVector debug(Rcpp::NumericVector clusters, arma::mat cent,SEXP data){
 
-    arma::rowvec z = wcss_result(clusters,cent,data);
+    Rcpp::NumericVector z = compute_wcss(clusters,Rcpp::wrap(cent),data);
 
     return z;
 }

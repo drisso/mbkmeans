@@ -7,7 +7,7 @@
 using namespace Rcpp;
 
 // debug
-arma::rowvec debug(Rcpp::NumericVector clusters, arma::mat cent, SEXP data);
+Rcpp::NumericVector debug(Rcpp::NumericVector clusters, arma::mat cent, SEXP data);
 RcppExport SEXP _mbkmeans_debug(SEXP clustersSEXP, SEXP centSEXP, SEXP dataSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -57,13 +57,10 @@ BEGIN_RCPP
 END_RCPP
 }
 
-RcppExport SEXP _mbkmeans_compute_wcss(SEXP, SEXP, SEXP);
-
 static const R_CallMethodDef CallEntries[] = {
     {"_mbkmeans_debug", (DL_FUNC) &_mbkmeans_debug, 3},
     {"_mbkmeans_predict_mini_batch", (DL_FUNC) &_mbkmeans_predict_mini_batch, 4},
     {"_mbkmeans_mini_batch", (DL_FUNC) &_mbkmeans_mini_batch, 13},
-    {"_mbkmeans_compute_wcss",       (DL_FUNC) &_mbkmeans_compute_wcss,        3},
     {NULL, NULL, 0}
 };
 

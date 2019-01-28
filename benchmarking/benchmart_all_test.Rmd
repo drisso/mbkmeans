@@ -472,47 +472,6 @@ cluster_wcss<-function(dat,centro,label){
 ```
 
 
-
-```{r Accuracy-random}
-#K-means
-
-#10 calculate the mean of ARI
-
-#traditional k-means
-time1<-system.time(km_matrix<-kmeans(subset_iris,centers=3,nstart = 10))[3]
-time2<-system.time(km_matrix_2<-kmeans(subset_iris,centers=3,nstart = 100))[3]
-
-#mini_batch_matrix
-time3<-system.time(mini_km_matrix<-mini_batch(subset_iris,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .1,initializer = "random",wcss_show=TRUE))[3]
-
-
-
-#mini_batch_hdf5
-time4<-system.time(mini_km_hdf5<-mini_batch(subset_iris_hdf5,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .1,initializer = "random"))[3]
-
-#ClusterR
-cluR_km<-MiniBatchKmeans(subset_iris,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .1,initializer = "random")
-time5<-system.time(cluR_km_matrix<-predict_MBatchKMeans(subset_iris,CENTROIDS = cluR_km$centroids))[3]
-
-#kmeans++
-
-#mini_batch_matrix
-time6<-system.time(mini_kmplus_matrix<-mini_batch(subset_iris,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .1,initializer = "kmeans++"))[3]
-
-#mini_batch_hdf5
-time7<-system.time(mini_kmplus_hdf5<-mini_batch(subset_iris_hdf5,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .1,initializer = "kmeans++"))[3]
-
-#clusterR_matrix
-cluR_kmplus<-MiniBatchKmeans(subset_iris,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .1,initializer = "kmeans++")
-time8<-system.time(cluR_kmplus_matrix<-predict_MBatchKMeans(subset_iris,CENTROIDS = cluR_kmplus$centroids))[3]
-
-
-#KMeans_rcpp() num_init=10 
-time9<-system.time(kmeans_plus<-KMeans_rcpp(subset_iris,clusters = 3,num_init = 10, max_iters =100,initializer = "kmeans++" ))[3]
-
-```
-
-
 ```{r ARI_function}
 
 ARI_cal<-function(data,cluster){
@@ -529,6 +488,45 @@ ARI_cal<-function(data,cluster){
 
 
 
+```{r Accuracy-random}
+#K-means
+
+#10 calculate the mean of ARI
+
+#traditional k-means
+time1<-system.time(km_matrix<-kmeans(subset_iris,centers=3,nstart = 10))[3]
+time2<-system.time(km_matrix_2<-kmeans(subset_iris,centers=3,nstart = 100))[3]
+
+#mini_batch_matrix
+time3<-system.time(mini_km_matrix<-mini_batch(subset_iris,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .1,initializer = "random",wcss_show=TRUE))[3]
+
+
+#mini_batch_hdf5
+time4<-system.time(mini_km_hdf5<-mini_batch(subset_iris_hdf5,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .1,initializer = "random",wcss_show=TRUE))[3]
+
+#ClusterR
+cluR_km<-MiniBatchKmeans(subset_iris,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .1,initializer = "random")
+time5<-system.time(cluR_km_matrix<-predict_MBatchKMeans(subset_iris,CENTROIDS = cluR_km$centroids))[3]
+
+#kmeans++
+
+#mini_batch_matrix
+time6<-system.time(mini_kmplus_matrix<-mini_batch(subset_iris,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .1,initializer = "kmeans++",wcss_show=TRUE))[3]
+
+#mini_batch_hdf5
+time7<-system.time(mini_kmplus_hdf5<-mini_batch(subset_iris_hdf5,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .1,initializer = "kmeans++",wcss_show=TRUE))[3]
+
+#clusterR_matrix
+cluR_kmplus<-MiniBatchKmeans(subset_iris,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .1,initializer = "kmeans++")
+time8<-system.time(cluR_kmplus_matrix<-predict_MBatchKMeans(subset_iris,CENTROIDS = cluR_kmplus$centroids))[3]
+
+
+#KMeans_rcpp() num_init=10 
+time9<-system.time(kmeans_plus<-KMeans_rcpp(subset_iris,clusters = 3,num_init = 10, max_iters =100,initializer = "kmeans++" ))[3]
+
+```
+
+
 ```{r init_fraction test}
 #init_fraction =0.1 /0.2
 
@@ -543,10 +541,22 @@ mini_init_1<-mini_batch(subset_iris,clusters = 3,batch_size = 10, num_init = 10,
 
 mini_init_2<-mini_batch(subset_iris,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .2,initializer = "random")
 
+mini_init_3<-mini_batch(subset_iris,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .3,initializer = "random")
+
+mini_init_4<-mini_batch(subset_iris,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .4,initializer = "random")
+
+mini_init_5<-mini_batch(subset_iris,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .5,initializer = "random")
+
 #mini_batch_hdf5
 mini_hdf5_init_1<-mini_batch(subset_iris_hdf5,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .1,initializer = "random")
 
 mini_hdf5_init_2<-mini_batch(subset_iris_hdf5,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .2,initializer = "random")
+
+mini_hdf5_init_3<-mini_batch(subset_iris_hdf5,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .3,initializer = "random")
+
+mini_hdf5_init_4<-mini_batch(subset_iris_hdf5,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .4,initializer = "random")
+
+mini_hdf5_init_5<-mini_batch(subset_iris_hdf5,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .5,initializer = "random")
 
 #ClusterR
 cluR_km<-MiniBatchKmeans(subset_iris,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .1,initializer = "random")
@@ -555,18 +565,40 @@ clu_init_1<-predict_MBatchKMeans(subset_iris,CENTROIDS = cluR_km$centroids)
 cluR_km<-MiniBatchKmeans(subset_iris,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .2,initializer = "random")
 clu_init_2<-predict_MBatchKMeans(subset_iris,CENTROIDS = cluR_km$centroids)
 
+cluR_km<-MiniBatchKmeans(subset_iris,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .3,initializer = "random")
+clu_init_3<-predict_MBatchKMeans(subset_iris,CENTROIDS = cluR_km$centroids)
+
+cluR_km<-MiniBatchKmeans(subset_iris,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .4,initializer = "random")
+clu_init_4<-predict_MBatchKMeans(subset_iris,CENTROIDS = cluR_km$centroids)
+
+cluR_km<-MiniBatchKmeans(subset_iris,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .5,initializer = "random")
+clu_init_5<-predict_MBatchKMeans(subset_iris,CENTROIDS = cluR_km$centroids)
+
 
 
 mini_init_1_ARI<-ARI_cal(iris$Species,mini_init_1$Clusters)
 mini_init_2_ARI<-ARI_cal(iris$Species,mini_init_2$Clusters)
+mini_init_3_ARI<-ARI_cal(iris$Species,mini_init_3$Clusters)
+mini_init_4_ARI<-ARI_cal(iris$Species,mini_init_4$Clusters)
+mini_init_5_ARI<-ARI_cal(iris$Species,mini_init_5$Clusters)
+
 mini_hdf5_init_1_ARI<-ARI_cal(iris$Species,mini_hdf5_init_1$Clusters)
 mini_hdf5_init_2_ARI<-ARI_cal(iris$Species,mini_hdf5_init_2$Clusters)
+mini_hdf5_init_3_ARI<-ARI_cal(iris$Species,mini_hdf5_init_3$Clusters)
+mini_hdf5_init_4_ARI<-ARI_cal(iris$Species,mini_hdf5_init_4$Clusters)
+mini_hdf5_init_5_ARI<-ARI_cal(iris$Species,mini_hdf5_init_5$Clusters)
+
 clu_init_1_ARI<-ARI_cal(iris$Species,clu_init_1)
 clu_init_2_ARI<-ARI_cal(iris$Species,clu_init_2)
+clu_init_3_ARI<-ARI_cal(iris$Species,clu_init_3)
+clu_init_4_ARI<-ARI_cal(iris$Species,clu_init_4)
+clu_init_5_ARI<-ARI_cal(iris$Species,clu_init_5)
 
-table_init_km<-cbind(mini_init_1_ARI,mini_init_2_ARI,mini_hdf5_init_1_ARI,mini_hdf5_init_2_ARI,clu_init_1_ARI,clu_init_2_ARI)
+table_init_km<-cbind(mini_init_1_ARI,mini_init_2_ARI,mini_init_3_ARI,mini_init_4_ARI,mini_init_5_ARI,mini_hdf5_init_1_ARI,mini_hdf5_init_2_ARI,mini_hdf5_init_3_ARI,mini_hdf5_init_4_ARI,mini_hdf5_init_5_ARI,clu_init_1_ARI,clu_init_2_ARI,clu_init_3_ARI,clu_init_4_ARI,clu_init_5_ARI)
 table_init_km
+```
 
+```{r init_fraction test-2}
 #kmeans++
 
 #mini_batch_matrix
@@ -574,11 +606,22 @@ mini_init_1_plus<-mini_batch(subset_iris,clusters = 3,batch_size = 10, num_init 
 
 mini_init_2_plus<-mini_batch(subset_iris,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .2,initializer = "kmeans++")
 
+mini_init_3_plus<-mini_batch(subset_iris,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .3,initializer = "kmeans++")
+
+mini_init_4_plus<-mini_batch(subset_iris,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .4,initializer = "kmeans++")
+
+mini_init_5_plus<-mini_batch(subset_iris,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .5,initializer = "kmeans++")
 
 #mini_batch_hdf5
 mini_hdf5_init_1_plus<-mini_batch(subset_iris_hdf5,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .1,initializer = "kmeans++")
 
 mini_hdf5_init_2_plus<-mini_batch(subset_iris_hdf5,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .2,initializer = "kmeans++")
+
+mini_hdf5_init_3_plus<-mini_batch(subset_iris_hdf5,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .3,initializer = "kmeans++")
+
+mini_hdf5_init_4_plus<-mini_batch(subset_iris_hdf5,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .4,initializer = "kmeans++")
+
+mini_hdf5_init_5_plus<-mini_batch(subset_iris_hdf5,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .5,initializer = "kmeans++")
 
 #ClusterR
 cluR_km<-MiniBatchKmeans(subset_iris,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .1,initializer = "kmeans++")
@@ -588,15 +631,38 @@ cluR_km<-MiniBatchKmeans(subset_iris,clusters = 3,batch_size = 10, num_init = 10
 clu_init_2_plus<-predict_MBatchKMeans(subset_iris,CENTROIDS = cluR_km$centroids)
 
 
+cluR_km<-MiniBatchKmeans(subset_iris,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .3,initializer = "kmeans++")
+clu_init_3_plus<-predict_MBatchKMeans(subset_iris,CENTROIDS = cluR_km$centroids)
+
+
+cluR_km<-MiniBatchKmeans(subset_iris,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .4,initializer = "kmeans++")
+clu_init_4_plus<-predict_MBatchKMeans(subset_iris,CENTROIDS = cluR_km$centroids)
+
+
+cluR_km<-MiniBatchKmeans(subset_iris,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .5,initializer = "kmeans++")
+clu_init_5_plus<-predict_MBatchKMeans(subset_iris,CENTROIDS = cluR_km$centroids)
+
+
 
 mini_init_1_plus_ARI<-ARI_cal(iris$Species,mini_init_1_plus$Clusters)
 mini_init_2_plus_ARI<-ARI_cal(iris$Species,mini_init_2_plus$Clusters)
+mini_init_3_plus_ARI<-ARI_cal(iris$Species,mini_init_3_plus$Clusters)
+mini_init_4_plus_ARI<-ARI_cal(iris$Species,mini_init_4_plus$Clusters)
+mini_init_5_plus_ARI<-ARI_cal(iris$Species,mini_init_5_plus$Clusters)
+
 mini_hdf5_init_1_plus_ARI<-ARI_cal(iris$Species,mini_hdf5_init_1_plus$Clusters)
 mini_hdf5_init_2_plus_ARI<-ARI_cal(iris$Species,mini_hdf5_init_2_plus$Clusters)
+mini_hdf5_init_3_plus_ARI<-ARI_cal(iris$Species,mini_hdf5_init_3_plus$Clusters)
+mini_hdf5_init_4_plus_ARI<-ARI_cal(iris$Species,mini_hdf5_init_4_plus$Clusters)
+mini_hdf5_init_5_plus_ARI<-ARI_cal(iris$Species,mini_hdf5_init_5_plus$Clusters)
+
 clu_init_1_plus_ARI<-ARI_cal(iris$Species,clu_init_1_plus)
 clu_init_2_plus_ARI<-ARI_cal(iris$Species,clu_init_2_plus)
+clu_init_3_plus_ARI<-ARI_cal(iris$Species,clu_init_3_plus)
+clu_init_4_plus_ARI<-ARI_cal(iris$Species,clu_init_4_plus)
+clu_init_5_plus_ARI<-ARI_cal(iris$Species,clu_init_5_plus)
 
-table_init_plus<-cbind(mini_init_1_plus_ARI,mini_init_2_plus_ARI,mini_hdf5_init_1_plus_ARI,mini_hdf5_init_2_plus_ARI,clu_init_1_plus_ARI,clu_init_2_plus_ARI)
+table_init_plus<-cbind(mini_init_1_plus_ARI,mini_init_2_plus_ARI,mini_init_3_plus_ARI,mini_init_4_plus_ARI,mini_init_5_plus_ARI,mini_hdf5_init_1_plus_ARI,mini_hdf5_init_2_plus_ARI,mini_hdf5_init_3_plus_ARI,mini_hdf5_init_4_plus_ARI,mini_hdf5_init_5_plus_ARI,clu_init_1_plus_ARI,clu_init_2_plus_ARI,clu_init_3_plus_ARI,clu_init_4_plus_ARI,clu_init_5_plus_ARI)
 table_init_plus
 ```
 
@@ -616,10 +682,10 @@ bat20<-mini_batch(subset_iris,clusters = 3,batch_size = 20, num_init = 10,max_it
 
 bat25<-mini_batch(subset_iris,clusters = 3,batch_size = 25, num_init = 10,max_iters = 100,init_fraction = .1,initializer = "random")
 
-ARI10<-adjustedRandIndex(iris$Species,bat10$Clusters)
-ARI15<-adjustedRandIndex(iris$Species,bat15$Clusters)
-ARI20<-adjustedRandIndex(iris$Species,bat20$Clusters)
-ARI25<-adjustedRandIndex(iris$Species,bat25$Clusters)
+ARI10<-ARI_cal(iris$Species,bat10$Clusters)
+ARI15<-ARI_cal(iris$Species,bat15$Clusters)
+ARI20<-ARI_cal(iris$Species,bat20$Clusters)
+ARI25<-ARI_cal(iris$Species,bat25$Clusters)
 
 table_batch<-cbind(ARI10,ARI15,ARI20,ARI25)
 table_batch
@@ -675,7 +741,6 @@ km_matrix_wcss<-cluster_wcss(dat=subset_iris,centro =km_matrix$centers,label =km
 km_matrix_2_wcss<-cluster_wcss(dat=subset_iris,centro =km_matrix_2$centers,label = km_matrix_2$cluster)
 
 mini_km_matrix_wcss<-cluster_wcss(dat=subset_iris,centro =mini_km_matrix$centroids,label = mini_km_matrix$Clusters)
-
 mini_km_hdf5_wcss<-cluster_wcss(dat=subset_iris,centro =mini_km_hdf5$centroids,label=mini_km_hdf5$Clusters)
 cluR_km_wcss<-cluster_wcss(dat=subset_iris,centro =cluR_km$centroids,label = cluR_km_matrix)
 mini_kmplus_matrix_wcss<-cluster_wcss(dat=subset_iris,centro =mini_kmplus_matrix$centroids,label = mini_kmplus_matrix$Clusters)
@@ -686,6 +751,7 @@ kmeans_plus_wcss<-cluster_wcss(dat=subset_iris,centro =kmeans_plus$centroids,lab
 
 total_km_time<-rbind(time1,time2,time3,time4,time5,time6,time7,time8,time9)
 total_km_WCSS<-rbind(sum(km_matrix_wcss),sum(km_matrix_2_wcss),sum(mini_km_matrix_wcss),sum(mini_km_hdf5_wcss),sum(cluR_km_wcss),sum(mini_kmplus_matrix_wcss),sum(mini_kmplus_hdf5_wcss),sum(cluR_kmplus_wcss),sum(kmeans_plus_wcss))
+
 total_km_WCSS_2<-rbind(km_matrix_wcss,km_matrix_2_wcss,mini_km_matrix_wcss,mini_km_hdf5_wcss,cluR_km_wcss,mini_kmplus_matrix_wcss,mini_kmplus_hdf5_wcss,cluR_kmplus_wcss,kmeans_plus_wcss)
 
 

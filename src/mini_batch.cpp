@@ -589,15 +589,11 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
 
          batch_data_choose =  subset_matrix_random(final_matrix,batch_size);
 
-       // return batch_data_choose;
-
       }else if(matrix_type ==REALSXP){
 
         auto final_matrix=beachmat::create_numeric_matrix(data);
 
          batch_data_choose = subset_matrix_random(final_matrix,batch_size);
-
-        //return batch_data_choose;
 
       }else{
 
@@ -607,10 +603,6 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
 
 
       arma::mat batch_data = Rcpp::as<arma::mat>(batch_data_choose);
-
-      //arma::uvec batch_idx = arma::conv_to< arma::uvec >::from(sample_vec(batch_size, 0, data.n_rows - 1, false));
-
-      //arma::mat batch_data = data.rows(batch_idx);
 
       arma::rowvec total_SSE(clusters, arma::fill::zeros);
 

@@ -668,7 +668,7 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
 
          output_SSE = total_SSE;
 
-         std::string message = "iterations failed to converge" + std::to_string(i);
+         std::string message = "iterations failed to converge, and the number of iterations is" + std::to_string(i);
 
          Rcpp::warning(message);
 

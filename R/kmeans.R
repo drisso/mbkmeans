@@ -115,6 +115,8 @@ setMethod(
 #'  \emph{random}. See details for more information
 #'@param early_stop_iter continue that many iterations after calculation of the
 #'  best within-cluster-sum-of-squared-error
+#'@param wcss_show either TRUE or FALSE, indicating whether the result of WCSS
+#'  is shown
 #'@param verbose either TRUE or FALSE, indicating whether progress is printed
 #'  during clustering
 #'@param CENTROIDS a matrix of initial cluster centroids. The rows of the
@@ -146,7 +148,7 @@ setMethod(
   definition = function(x, clusters, batch_size = blocksize(x),
                         max_iters =10, num_init = 1,
                         init_fraction = .25, initializer = "kmeans++",
-                        early_stop_iter = 10, verbose = FALSE,
+                        wcss_show = FALSE,early_stop_iter = 10, verbose = FALSE,
                         CENTROIDS = NULL, tol = 1e-4, seed = 1)
   {
 

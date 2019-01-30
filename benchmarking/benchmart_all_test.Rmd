@@ -436,53 +436,54 @@ subset_iris<-as.matrix(subset_iris)
 subset_iris_hdf5<-as(subset_iris,"HDF5Matrix")
 ```
 
-
-```{r Accuracy-function}
-#function
-#label 1/2/3  calculate all 1 with centroids-three
-cluster_wcss_calcu<-function(dat, centro,label){
-    nd = nrow(dat)
-    nc= nrow(centro)
-
-    final = numeric(nc)
-    
-    for(j in 1:nc){
-        
-        vec_tmp<-(label ==j)
-        
-            final[j] = sum((sweep(dat[vec_tmp,],2,centro[j,],FUN = "-"))^2)
-      
-    }
-    final
-}
-
-cluster_wcss<-function(dat,centro,label){
-    nr=nrow(centro)
-    wcss_final<-matrix(0,100,nr)
-    for(i in 1:100){
-        
-        wcss_final[i,]=cluster_wcss_calcu(dat,centro,label)
-    }
-    
-    fianl = colMeans(wcss_final)
-}
-
-
-
-```
-
-
 ```{r ARI_function}
-
 ARI_cal<-function(data,cluster){
+    
     ari<-numeric(100)
+    
     for(i in 1:100){
-       ari[i]<-adjustedRandIndex(data,cluster)
+        
+        mat1<-mini_batch(data,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .1,initializer = "random",wcss_show=TRUE,seed = NULL)
+        
+       ari[i]<-adjustedRandIndex(cluster,mat1$Clusters)
     }
     
     ari_final<-mean(ari[i])
     
 }
+```
+
+```{r Accuracy-function}
+#function
+#label 1/2/3  calculate all 1 with centroids-three
+cluster_wcss<-function(dat, centro,label){
+   
+     nd = nrow(dat)
+     nc= nrow(centro)
+     final = numeric(nc)
+     
+     for(j in 1:nc){
+         vec_tmp<-(label ==j)
+         final[j] = sum((sweep(dat[vec_tmp,],2,centro[j,],FUN = "-"))^2)
+          }
+     
+     final
+}
+
+```
+
+
+```{r seed-check}
+
+out_seed<-mini_batch(subset_iris,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .1,initializer = "random",wcss_show=TRUE,seed = NULL)
+
+in_seed<-mini_batch(subset_iris,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .1,initializer = "random",wcss_show=TRUE)
+
+out_1_ari<-adjustedRandIndex(out_seed$Clusters,iris$Species)
+in_1_ari<-adjustedRandIndex(in_seed$Clusters,iris$Species)
+
+out_ari<-ARI_cal(subset_iris,iris$Species)
+in_ari<-ARI_cal(subset_iris,iris$Species)
 
 ```
 

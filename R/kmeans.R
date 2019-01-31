@@ -82,7 +82,7 @@ setMethod(
              reducedDimNames() to see what names are in this object.")
 
       }
-      fit <- mbkmeans(reducedDim(x, reduceMethod), ...)
+      fit <- mbkmeans(t(reducedDim(x, reduceMethod)), ...)
 
       }
 
@@ -98,7 +98,7 @@ setMethod(
   signature = signature(x = "LinearEmbeddingMatrix"),
   definition = function(x, ...)
   {
-    mbkmeans(sampleFactors(x), ...)
+    mbkmeans(t(sampleFactors(x)), ...)
   })
 
 #'@rdname mbkmeans

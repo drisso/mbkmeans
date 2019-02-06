@@ -390,7 +390,6 @@ Rcpp::NumericVector compute_wcss(Rcpp::NumericVector clusters, Rcpp::NumericMatr
 //'@param verbose either TRUE or FALSE, indicating whether progress is printed during clustering
 //'@param CENTROIDS a matrix of initial cluster centroids. The rows of the CENTROIDS matrix should be equal to the number of clusters and the columns should be equal to the columns of the data
 //'@param tol a float number. If, in case of an iteration (iteration > 1 and iteration < max_iters) 'tol' is greater than the squared norm of the centroids, then kmeans has converged
-//'@param seed integer value for random number generator (RNG)
 //'@return a list with the following attributes: centroids, WCSS_per_cluster, best_initialization, iters_per_initialization
 //'@details
 //'This function performs k-means clustering using mini batches.
@@ -410,18 +409,17 @@ Rcpp::NumericVector compute_wcss(Rcpp::NumericVector clusters, Rcpp::NumericMatr
 // [[Rcpp::export]]
 Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, int num_init = 1, double init_fraction = 1.0, std::string initializer = "kmeans++",
 
-                      bool wcss_show = false, int early_stop_iter = 10, bool verbose = false, Rcpp::Nullable<Rcpp::NumericMatrix> CENTROIDS = R_NilValue, double tol = 1e-4,Rcpp::Nullable<int> seed = 1){
-    //,Rcpp::Nullable<int> seed = 1
+                      bool calc_wcss = false, int early_stop_iter = 10, bool verbose = false, Rcpp::Nullable<Rcpp::NumericMatrix> CENTROIDS = R_NilValue, double tol = 1e-4){
 
   ClustHeader clust_header;
 
   //clust_header.set_seed(seed);             // R's RNG
 
-  Rcpp::Environment base_env("package:base");
+  // Rcpp::Environment base_env("package:base");
 
-  Rcpp::Function set_seed_r = base_env["set.seed"];
+  // Rcpp::Function set_seed_r = base_env["set.seed"];
 
-  set_seed_r(seed);
+  // set_seed_r(seed);
 
   int dat_n_rows = get_nrow(data);    // use the template function in this file
 
@@ -713,7 +711,7 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
 
   Rcpp::NumericVector clusterfinal = predict_mini_batch(data, Rcpp::wrap(centers_out));
 
-  if(wcss_show == TRUE){
+  if(calc_wcss == TRUE){
 
       Rcpp::NumericVector wcss_final = compute_wcss(clusterfinal,Rcpp::wrap(centers_out),data);
 

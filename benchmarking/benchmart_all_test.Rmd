@@ -475,9 +475,12 @@ cluster_wcss<-function(dat, centro,label){
 
 ```{r seed-check}
 
-out_seed<-mini_batch(subset_iris,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .1,initializer = "random",wcss_show=TRUE,seed = NULL)
 
-in_seed<-mini_batch(subset_iris,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .1,initializer = "random",wcss_show=TRUE)
+in_seed<-mini_batch(subset_iris,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .1,initializer = "random",calculate_wcss =TRUE)
+
+setseed(1)
+set.seed(1)
+out_seed<-mini_batch(subset_iris,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .1,initializer = "random",calculate_wcss=TRUE)
 
 out_1_ari<-adjustedRandIndex(out_seed$Clusters,iris$Species)
 in_1_ari<-adjustedRandIndex(in_seed$Clusters,iris$Species)

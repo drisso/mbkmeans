@@ -18,7 +18,7 @@
 \S4method{mbkmeans}{ANY}(x, clusters, batch_size = blocksize(x),
   max_iters = 10, num_init = 1, init_fraction = 0.25,
   initializer = "kmeans++", wcss_show = FALSE, early_stop_iter = 10,
-  verbose = FALSE, CENTROIDS = NULL, tol = 1e-04, seed = 1)
+  verbose = FALSE, CENTROIDS = NULL, tol = 1e-04)
 }
 \arguments{
 \item{x}{The object on which to run mini-batch k-means. It can be a
@@ -66,8 +66,6 @@ should be equal to the columns of the data}
 \item{tol}{a float number. If, in case of an iteration (iteration > 1 and
 iteration < max_iters) 'tol' is greater than the squared norm of the
 centroids, then kmeans has converged}
-
-\item{seed}{integer value for random number generator (RNG)}
 }
 \value{
 A list with the following attributes: centroids, WCSS_per_cluster,

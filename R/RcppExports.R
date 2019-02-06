@@ -51,7 +51,6 @@ predict_mini_batch <- function(data, CENTROIDS, fuzzy = FALSE, eps = 1.0e-6) {
 #'@param verbose either TRUE or FALSE, indicating whether progress is printed during clustering
 #'@param CENTROIDS a matrix of initial cluster centroids. The rows of the CENTROIDS matrix should be equal to the number of clusters and the columns should be equal to the columns of the data
 #'@param tol a float number. If, in case of an iteration (iteration > 1 and iteration < max_iters) 'tol' is greater than the squared norm of the centroids, then kmeans has converged
-#'@param seed integer value for random number generator (RNG)
 #'@return a list with the following attributes: centroids, WCSS_per_cluster, best_initialization, iters_per_initialization
 #'@details
 #'This function performs k-means clustering using mini batches.
@@ -68,7 +67,7 @@ predict_mini_batch <- function(data, CENTROIDS, fuzzy = FALSE, eps = 1.0e-6) {
 #'mini_batch(data, 2, 10, 10)
 #'
 #' @export
-mini_batch <- function(data, clusters, batch_size, max_iters, num_init = 1L, init_fraction = 1.0, initializer = "kmeans++", wcss_show = FALSE, early_stop_iter = 10L, verbose = FALSE, CENTROIDS = NULL, tol = 1e-4, seed = 1L) {
-    .Call(`_mbkmeans_mini_batch`, data, clusters, batch_size, max_iters, num_init, init_fraction, initializer, wcss_show, early_stop_iter, verbose, CENTROIDS, tol, seed)
+mini_batch <- function(data, clusters, batch_size, max_iters, num_init = 1L, init_fraction = 1.0, initializer = "kmeans++", calc_wcss = FALSE, early_stop_iter = 10L, verbose = FALSE, CENTROIDS = NULL, tol = 1e-4) {
+    .Call(`_mbkmeans_mini_batch`, data, clusters, batch_size, max_iters, num_init, init_fraction, initializer, calc_wcss, early_stop_iter, verbose, CENTROIDS, tol)
 }
 

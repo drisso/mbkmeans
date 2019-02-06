@@ -125,7 +125,6 @@ setMethod(
 #'@param tol a float number. If, in case of an iteration (iteration > 1 and
 #'  iteration < max_iters) 'tol' is greater than the squared norm of the
 #'  centroids, then kmeans has converged
-#'@param seed integer value for random number generator (RNG)
 #'@return a list with the following attributes: centroids, WCSS_per_cluster,
 #'  best_initialization, iters_per_initialization
 #'@details This function performs k-means clustering using mini batches.
@@ -149,7 +148,7 @@ setMethod(
                         max_iters =10, num_init = 1,
                         init_fraction = .25, initializer = "kmeans++",
                         wcss_show = FALSE,early_stop_iter = 10, verbose = FALSE,
-                        CENTROIDS = NULL, tol = 1e-4, seed = 1)
+                        CENTROIDS = NULL, tol = 1e-4)
   {
 
     if(!is(x, "matrix") & !is(x, "Matrix") & !is(x, "HDF5Matrix") &
@@ -161,7 +160,7 @@ setMethod(
 
       fit <- mini_batch(t(x), clusters, batch_size, max_iters, num_init,
                         init_fraction, initializer, early_stop_iter,
-                        verbose, CENTROIDS, tol, seed)
+                        verbose, CENTROIDS, tol)
 
     }
 

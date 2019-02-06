@@ -386,6 +386,7 @@ Rcpp::NumericVector compute_wcss(Rcpp::NumericVector clusters, Rcpp::NumericMatr
 //'@param max_iters the maximum number of clustering iterations
 //'@param init_fraction percentage of data to use for the initialization centroids (applies if initializer is \emph{kmeans++} ). Should be a float number between 0.0 and 1.0.
 //'@param initializer the method of initialization. One of \emph{kmeans++} and \emph{random}. See details for more information
+//'@param calc_wcss either TRUE or False, indicating whether the results of WCSS should be shown. False is the default
 //'@param early_stop_iter continue that many iterations after calculation of the best within-cluster-sum-of-squared-error
 //'@param verbose either TRUE or FALSE, indicating whether progress is printed during clustering
 //'@param CENTROIDS a matrix of initial cluster centroids. The rows of the CENTROIDS matrix should be equal to the number of clusters and the columns should be equal to the columns of the data
@@ -573,6 +574,8 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
 
     int count = 0;
 
+    int itera =0;
+
     for (int i = 0; i < max_iters; i++) {
 
       //select the batch_data
@@ -658,7 +661,7 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
         increment_early_stop += 1;
       }
 
-      if (tmp_norm < tol || i == max_iters - 1 || increment_early_stop == early_stop_iter - 1) {
+      if (tmp_norm < tol || increment_early_stop == early_stop_iter - 1) {
 
         output_centroids = update_centroids;
 
@@ -666,13 +669,31 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
 
          output_SSE = total_SSE;
 
-         std::string message = "iterations failed to converge, and the number of iterations is" + std::to_string(i);
-
-         Rcpp::warning(message);
-
          break;
       }
+
+      if(i == max_iters -1){
+
+          output_centroids = update_centroids;
+
+          // assign end-centroids and SSE when early_stop_iter == increment_early_stop [ repeated calculation of adjusted rand index shows slightly better results for the previous case ]
+
+          output_SSE = total_SSE;
+
+          itera = i+1;
+
+          break;
+      }
     }
+
+    if(itera -1 == max_iters -1){
+
+        std::string message = "iterations failed to converge, and the number of iterations is" + std::to_string(itera);
+
+        Rcpp::warning(message);
+    }
+
+
 
     if (arma::accu(output_SSE) < arma::accu(bst_WCSS)) {   //output_SSE is total wcss, bst_WCSS is WCSS
 

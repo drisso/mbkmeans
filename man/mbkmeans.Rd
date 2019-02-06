@@ -17,7 +17,7 @@
 
 \S4method{mbkmeans}{ANY}(x, clusters, batch_size = blocksize(x),
   max_iters = 10, num_init = 1, init_fraction = 0.25,
-  initializer = "kmeans++", wcss_show = FALSE, early_stop_iter = 10,
+  initializer = "kmeans++", calc_wcss = FALSE, early_stop_iter = 10,
   verbose = FALSE, CENTROIDS = NULL, tol = 1e-04)
 }
 \arguments{
@@ -50,8 +50,8 @@ number between 0.0 and 1.0.}
 \item{initializer}{the method of initialization. One of \emph{kmeans++} and
 \emph{random}. See details for more information}
 
-\item{wcss_show}{either TRUE or FALSE, indicating whether the result of WCSS
-is shown}
+\item{calc_wcss}{either TRUE or FALSE, indicating whether the result of WCSS
+is shown. FALSE is default}
 
 \item{early_stop_iter}{continue that many iterations after calculation of the
 best within-cluster-sum-of-squared-error}

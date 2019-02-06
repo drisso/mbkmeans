@@ -24,6 +24,8 @@ mini_batch(data, clusters, batch_size, max_iters, num_init = 1L,
 
 \item{initializer}{the method of initialization. One of \emph{kmeans++} and \emph{random}. See details for more information}
 
+\item{calc_wcss}{either TRUE or False, indicating whether the results of WCSS should be shown. False is the default}
+
 \item{early_stop_iter}{continue that many iterations after calculation of the best within-cluster-sum-of-squared-error}
 
 \item{verbose}{either TRUE or FALSE, indicating whether progress is printed during clustering}

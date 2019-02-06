@@ -502,11 +502,11 @@ time1<-system.time(km_matrix<-kmeans(subset_iris,centers=3,nstart = 10))[3]
 time2<-system.time(km_matrix_2<-kmeans(subset_iris,centers=3,nstart = 100))[3]
 
 #mini_batch_matrix
-time3<-system.time(mini_km_matrix<-mini_batch(subset_iris,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .1,initializer = "random",wcss_show=TRUE))[3]
+time3<-system.time(mini_km_matrix<-mini_batch(subset_iris,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .1,initializer = "random",calc_wcss = TRUE))[3]
 
 
 #mini_batch_hdf5
-time4<-system.time(mini_km_hdf5<-mini_batch(subset_iris_hdf5,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .1,initializer = "random",wcss_show=TRUE))[3]
+time4<-system.time(mini_km_hdf5<-mini_batch(subset_iris_hdf5,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .1,initializer = "random",calc_wcss=TRUE))[3]
 
 #ClusterR
 cluR_km<-MiniBatchKmeans(subset_iris,clusters = 3,batch_size = 10, num_init = 10,max_iters = 100,init_fraction = .1,initializer = "random")

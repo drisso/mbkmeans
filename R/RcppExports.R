@@ -47,6 +47,7 @@ predict_mini_batch <- function(data, CENTROIDS, fuzzy = FALSE, eps = 1.0e-6) {
 #'@param max_iters the maximum number of clustering iterations
 #'@param init_fraction percentage of data to use for the initialization centroids (applies if initializer is \emph{kmeans++} ). Should be a float number between 0.0 and 1.0.
 #'@param initializer the method of initialization. One of \emph{kmeans++} and \emph{random}. See details for more information
+#'@param calc_wcss either TRUE or False, indicating whether the results of WCSS should be shown. False is the default
 #'@param early_stop_iter continue that many iterations after calculation of the best within-cluster-sum-of-squared-error
 #'@param verbose either TRUE or FALSE, indicating whether progress is printed during clustering
 #'@param CENTROIDS a matrix of initial cluster centroids. The rows of the CENTROIDS matrix should be equal to the number of clusters and the columns should be equal to the columns of the data

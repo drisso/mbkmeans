@@ -5,8 +5,9 @@
 \title{Mini_batch}
 \usage{
 mini_batch(data, clusters, batch_size, max_iters, num_init = 1L,
-  init_fraction = 1, initializer = "kmeans++", early_stop_iter = 10L,
-  verbose = FALSE, CENTROIDS = NULL, tol = 1e-04, seed = 1L)
+  init_fraction = 1, initializer = "kmeans++", calc_wcss = FALSE,
+  early_stop_iter = 10L, verbose = FALSE, CENTROIDS = NULL,
+  tol = 1e-04)
 }
 \arguments{
 \item{data}{numeric matrix or integer matrix or HDF5Matrix}
@@ -23,6 +24,8 @@ mini_batch(data, clusters, batch_size, max_iters, num_init = 1L,
 
 \item{initializer}{the method of initialization. One of \emph{kmeans++} and \emph{random}. See details for more information}
 
+\item{calc_wcss}{either TRUE or False, indicating whether the results of WCSS should be shown. False is the default}
+
 \item{early_stop_iter}{continue that many iterations after calculation of the best within-cluster-sum-of-squared-error}
 
 \item{verbose}{either TRUE or FALSE, indicating whether progress is printed during clustering}
@@ -30,8 +33,6 @@ mini_batch(data, clusters, batch_size, max_iters, num_init = 1L,
 \item{CENTROIDS}{a matrix of initial cluster centroids. The rows of the CENTROIDS matrix should be equal to the number of clusters and the columns should be equal to the columns of the data}
 
 \item{tol}{a float number. If, in case of an iteration (iteration > 1 and iteration < max_iters) 'tol' is greater than the squared norm of the centroids, then kmeans has converged}
-
-\item{seed}{integer value for random number generator (RNG)}
 }
 \value{
 a list with the following attributes: centroids, WCSS_per_cluster, best_initialization, iters_per_initialization

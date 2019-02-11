@@ -116,6 +116,8 @@ setMethod(
 #'  \emph{random}. See details for more information
 #'@param early_stop_iter continue that many iterations after calculation of the
 #'  best within-cluster-sum-of-squared-error
+#'@param calc_wcss either TRUE or FALSE, indicating whether the result of WCSS
+#'  is shown. FALSE is default
 #'@param verbose either TRUE or FALSE, indicating whether progress is printed
 #'  during clustering
 #'@param CENTROIDS a matrix of initial cluster centroids. The rows of the
@@ -124,7 +126,6 @@ setMethod(
 #'@param tol a float number. If, in case of an iteration (iteration > 1 and
 #'  iteration < max_iters) 'tol' is greater than the squared norm of the
 #'  centroids, then kmeans has converged
-#'@param seed integer value for random number generator (RNG)
 #'@return a list with the following attributes: centroids, WCSS_per_cluster,
 #'  best_initialization, iters_per_initialization
 #'@details This function performs k-means clustering using mini batches.
@@ -147,8 +148,8 @@ setMethod(
   definition = function(x, clusters, batch_size = blocksize(x),
                         max_iters =10, num_init = 1,
                         init_fraction = .25, initializer = "kmeans++",
-                        early_stop_iter = 10, verbose = FALSE,
-                        CENTROIDS = NULL, tol = 1e-4, seed = 1)
+                        calc_wcss = FALSE,early_stop_iter = 10, verbose = FALSE,
+                        CENTROIDS = NULL, tol = 1e-4)
   {
 
     if(!is(x, "matrix") & !is(x, "Matrix") & !is(x, "HDF5Matrix") &
@@ -159,8 +160,8 @@ setMethod(
     } else {
 
       fit <- mini_batch(t(x), clusters, batch_size, max_iters, num_init,
-                        init_fraction, initializer, early_stop_iter,
-                        verbose, CENTROIDS, tol, seed)
+                        init_fraction, initializer, calc_wcss, early_stop_iter,
+                        verbose, CENTROIDS, tol)
 
     }
 

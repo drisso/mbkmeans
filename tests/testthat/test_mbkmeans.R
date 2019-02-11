@@ -9,11 +9,13 @@ test_that("all mbkmeans methods give same result", {
 
     sce <- as(se, "SingleCellExperiment")
 
-    ## for now the seed is set internally; remember to set the seed for each run if
-    ## removing the internal seed
+    set.seed(1)
     m_se <- mbkmeans(se, clusters=3)
+    set.seed(1)
     m_sce <-  mbkmeans(sce, reduceMethod = NA, clusters=3)
+    set.seed(1)
     m_m <- mbkmeans(assay(sce), clusters=3)
+    set.seed(1)
     mb <- mini_batch(t(assay(sce)), clusters=3, batch_size = blocksize(se),
                      max_iters = 10, init_fraction = 0.25)
 

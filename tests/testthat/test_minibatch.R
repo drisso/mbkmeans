@@ -21,8 +21,7 @@ test_that("mini_batch gives the same results on the iris data", {
                                    3, 1, 1, 1, 1, 3, 1, 3, 1, 3, 1, 1, 3, 3, 1, 1, 1, 1, 1,
                                    3, 3, 1, 1, 1, 3, 1, 1, 1, 3, 1, 1, 1, 3, 1, 1, 3))
 
-    ## for now the seed is set internally; remember to set the seed for each run if
-    ## removing the internal seed
+    set.seed(1)
     mb <- mini_batch(irismat, clusters=3, batch_size = 10,
                      max_iters = 10, init_fraction = 0.25)
 

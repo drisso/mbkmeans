@@ -589,7 +589,6 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
       double calc_cost = arma::accu(total_SSE);
 
       if (verbose) { Rcpp::Rcout << "iteration: " << i + 1 << "  --> total WCSS: " << calc_cost << "  -->  squared norm: " << tmp_norm << std::endl; }
-//      if (verbose) { Rcpp::Rcout << "iteration: " << i + 1 << "  --> previous centroids: " << previous_centroids << "  -->  current centroids: " << update_centroids << std::endl; }
 
       count = i;
 

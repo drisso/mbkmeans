@@ -42,3 +42,18 @@ test_that("WCSS calculation is correct", {
     km <- kmeans(irismat, 3)
     expect_equal(compute_wcss(km$cluster, km$centers, irismat), km$withinss)
 })
+
+test_that("clustering is accurate", {
+    data(iris)
+    irismat <- as.matrix(iris[,1:4])
+
+    ## when starting from kmeans solution it should not move
+
+    km <- kmeans(irismat, 3)
+
+    mb <- mini_batch(irismat, clusters=3, batch_size = nrow(irismat),
+                     max_iters = 100, init_fraction = 0.25,
+                     CENTROIDS = km$centers)
+    expect_equal(mb$Clusters, km$cluster)
+
+})

@@ -3,11 +3,11 @@
 
 #' Predict_mini_batch
 #'
-#' Prediction function for Mini-batch-k-means for in-memory, delayed, and on-disk matrices
+#' Prediction function for mini-batch k-means applied to matrix-like objects.
 #'
 #'
-#'@param data matrix, DelayedMatrix, or HDF5Matrix containing numeric or
-#'  integer data (obseravtions in rows, variables in columns)
+#'@param data matrix-like objectcontaining numeric or
+#'  integer data (obseravtions in rows, variables in columns).
 #'@param CENTROIDS a matrix of initial cluster centroids. The rows of the
 #'  CENTROIDS matrix should be equal to the number of clusters and the columns
 #'  should equal the columns of the data.
@@ -19,10 +19,11 @@
 #'
 #'This implementation relies very heavily on the
 #'\code{\link[ClusterR]{MiniBatchKmeans}} implementation. We provide the
-#'ability to work with DelayedMatrix and HDF5Matrix through the \code{beachmat}
+#'ability to work with other matrix-like objects other than base matrices (e.g,
+#'DelayedMatrix and HDF5Matrix) through the \code{beachmat}
 #'library.
 #'
-#'@author Lampros Mouselimis and Yuwei Ni
+#'@author Yuwei Ni
 #'
 #'@examples
 #'data(iris)
@@ -57,30 +58,46 @@ compute_wcss <- function(clusters, cent, data) {
 
 #' Mini_batch
 #'
-#' Mini-batch-k-means for both matrix and HDF5Matrix
+#' Mini-batch-k-means for matrix-like objects
 #'
-#'@param data numeric matrix or integer matrix or HDF5Matrix
-#'@param clusters the number of clusters
-#'@param batch_size the size of the mini batches
-#'@param num_init number of times the algorithm will be run with different centroid seeds
-#'@param max_iters the maximum number of clustering iterations
+#'@param data numeric or integer matrix-like object.
+#'@param clusters the number of clusters.
+#'@param batch_size the size of the mini batches.
+#'@param num_init number of times the algorithm will be run with different centroid seeds.
+#'@param max_iters the maximum number of clustering iterations.
 #'@param init_fraction percentage of data to use for the initialization centroids (applies if initializer is \emph{kmeans++} ). Should be a float number between 0.0 and 1.0.
-#'@param initializer the method of initialization. One of \emph{kmeans++} and \emph{random}. See details for more information
-#'@param calc_wcss either TRUE or False, indicating whether the results of WCSS should be shown. False is the default
-#'@param early_stop_iter continue that many iterations after calculation of the best within-cluster-sum-of-squared-error
-#'@param verbose either TRUE or FALSE, indicating whether progress is printed during clustering
-#'@param CENTROIDS a matrix of initial cluster centroids. The rows of the CENTROIDS matrix should be equal to the number of clusters and the columns should be equal to the columns of the data
-#'@param tol a float number. If, in case of an iteration (iteration > 1 and iteration < max_iters) 'tol' is greater than the squared norm of the centroids, then kmeans has converged
-#'@return a list with the following attributes: centroids, WCSS_per_cluster, best_initialization, iters_per_initialization
+#'@param initializer the method of initialization. One of \emph{kmeans++} and \emph{random}. See details for more information.
+#'@param calc_wcss logical indicating whether the within-cluster sum of squares should be computed and returned.
+#'@param early_stop_iter continue that many iterations after calculation of the best within-cluster-sum-of-squared-error.
+#'@param verbose logical indicating whether progress is printed on screen.
+#'@param CENTROIDS an optional matrix of initial cluster centroids. The rows of the CENTROIDS matrix should be equal to the number of clusters and the columns should be equal to the columns of the data.
+#'@param tol convergence tolerance.
+#'@return
+#'a list with the following attributes:
+#'
+#'centroids: the final centroids;
+#'
+#'WCSS_per_cluster: within-cluster sum of squares;
+#'
+#'best_initialization: which initialization value led to the best WCSS solution;
+#'
+#'iters_per_initialization: number of iterations per each initialization.
+#'
 #'@details
-#'This function performs k-means clustering using mini batches.
+#'This function performs k-means clustering using mini batches. It was inspired by the implementation in https://github.com/mlampros/ClusterR.
 #'
-#'\strong{kmeans++}: kmeans++ initialization. Reference : http://theory.stanford.edu/~sergei/papers/kMeansPP-soda.pdf AND http://stackoverflow.com/questions/5466323/how-exactly-does-k-means-work
+#'The input matrix can be in any format supported by the `DelayedArray` / `beachmat` framework, including the matrix classes defined in the `Matrix` package and the `HDFMatrix` class.
 #'
-#'\strong{random}: random selection of data rows as initial centroids
+#'There are two possible initializations.
+#'
+#'\strong{kmeans++}: kmeans++ initialization.
+#'
+#'\strong{random}: random selection of data rows as initial centroids.
 #'
 #'@references
-#'https://github.com/mlampros/ClusterR
+#'Sculley, D., 2010, April. Web-scale k-means clustering. In Proceedings of the 19th international conference on World wide web (pp. 1177-1178). ACM.
+#'
+#'Arthur, D. and Vassilvitskii, S., 2007, January. k-means++: The advantages of careful seeding. In Proceedings of the eighteenth annual ACM-SIAM symposium on Discrete algorithms (pp. 1027-1035). Society for Industrial and Applied Mathematics.
 #'
 #'@examples
 #'data = matrix(1:30,nrow = 10)

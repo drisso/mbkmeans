@@ -7,8 +7,8 @@
 predict_mini_batch(data, CENTROIDS)
 }
 \arguments{
-\item{data}{matrix, DelayedMatrix, or HDF5Matrix containing numeric or
-integer data (obseravtions in rows, variables in columns)}
+\item{data}{matrix-like objectcontaining numeric or
+integer data (obseravtions in rows, variables in columns).}
 
 \item{CENTROIDS}{a matrix of initial cluster centroids. The rows of the
 CENTROIDS matrix should be equal to the number of clusters and the columns
@@ -18,7 +18,7 @@ should equal the columns of the data.}
 it returns a vector with the clusters.
 }
 \description{
-Prediction function for Mini-batch-k-means for in-memory, delayed, and on-disk matrices
+Prediction function for mini-batch k-means applied to matrix-like objects.
 }
 \details{
 This function takes the data and the output centroids and returns the
@@ -26,7 +26,8 @@ clusters.
 
 This implementation relies very heavily on the
 \code{\link[ClusterR]{MiniBatchKmeans}} implementation. We provide the
-ability to work with DelayedMatrix and HDF5Matrix through the \code{beachmat}
+ability to work with other matrix-like objects other than base matrices (e.g,
+DelayedMatrix and HDF5Matrix) through the \code{beachmat}
 library.
 }
 \examples{
@@ -37,5 +38,5 @@ clusters = predict_mini_batch(as.matrix(iris[,1:4]),
                              CENTROIDS = km$centroids)
 }
 \author{
-Lampros Mouselimis and Yuwei Ni
+Yuwei Ni
 }

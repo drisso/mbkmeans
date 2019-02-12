@@ -30,3 +30,15 @@ test_that("mini_batch gives the same results on the iris data", {
     expect_equal(mb$best_initialization, irisres$best_initialization)
     expect_equal(mb$iters_per_initialization, irisres$iters_per_initialization)
 })
+
+test_that("WCSS calculation is correct", {
+    data(iris)
+    irismat <- as.matrix(iris[,1:4])
+
+    mb <- mini_batch(irismat, clusters=3, batch_size = 10,
+                     max_iters = 100, init_fraction = 0.25, calc_wcss = TRUE)
+    expect_equal(compute_wcss(mb$Clusters, mb$centroids, irismat), mb$WCSS_per_cluster)
+
+    km <- kmeans(irismat, 3)
+    expect_equal(compute_wcss(km$cluster, km$centers, irismat), km$withinss)
+})

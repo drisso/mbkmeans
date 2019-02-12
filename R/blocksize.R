@@ -1,16 +1,17 @@
 #' blocksize
 #'
-#' Return the maximum number of rows to use based on the amount of ram memory
+#' Return the maximum number of rows to use based on the amount of ram memory.
 #'
-#' @param data   numeric matrix or integer matrix or HDF5Matrix
+#' @param data matrix-like object.
+#' @param ram the max amount of ram (in bytes) to use.
 #'
 #' @importFrom benchmarkme get_ram
 #'
-#' @return  It returns a value of the maximum number of rows
+#' @return  Numeric value of the maximum number of rows.
 #'
 #'@export
 #'
-blocksize<-function(data){
-  result<-min(floor(as.numeric(get_ram())/(2*8*nrow(data))), ncol(data))
+blocksize<-function(data, ram = get_ram()){
+  result<-min(floor(as.numeric(ram)/(2*8*nrow(data))), ncol(data))
   result
 }

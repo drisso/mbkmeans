@@ -4,14 +4,16 @@
 \alias{blocksize}
 \title{blocksize}
 \usage{
-blocksize(data)
+blocksize(data, ram = get_ram())
 }
 \arguments{
-\item{data}{numeric matrix or integer matrix or HDF5Matrix}
+\item{data}{matrix-like object.}
+
+\item{ram}{the max amount of ram (in bytes) to use.}
 }
 \value{
-It returns a value of the maximum number of rows
+Numeric value of the maximum number of rows.
 }
 \description{
-Return the maximum number of rows to use based on the amount of ram memory
+Return the maximum number of rows to use based on the amount of ram memory.
 }

@@ -35,7 +35,26 @@ predict_mini_batch <- function(data, CENTROIDS) {
     .Call(`_mbkmeans_predict_mini_batch`, data, CENTROIDS)
 }
 
+#' Compute Whithin-Cluster Sum of Squares
 #'
+#' Given a vector of cluster labels, a matrix of centroids, and a dataset, it
+#' computes the WCSS.
+#'
+#'@param clusters numeric vector with the cluster assignments.
+#'@param cent numeric matrix with the centroids (clusters in rows, variables
+#'  in columns).
+#'@param data matrix-like object containing the data (numeric or integer).
+#'
+#'@examples
+#'data = matrix(1:30,nrow = 10)
+#'cl <- mini_batch(data, 2, 10, 10)
+#'compute_wcss(cl$Clusters, cl$centroids, data)
+#'
+#' @export
+compute_wcss <- function(clusters, cent, data) {
+    .Call(`_mbkmeans_compute_wcss`, clusters, cent, data)
+}
+
 #' Mini_batch
 #'
 #' Mini-batch-k-means for both matrix and HDF5Matrix

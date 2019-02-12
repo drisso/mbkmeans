@@ -187,55 +187,11 @@ arma::rowvec clusters_WCSS(const T& data,Rcpp::NumericMatrix CENTROIDS){
 // [[Rcpp::export]]
 Rcpp::NumericVector predict_mini_batch(SEXP data, Rcpp::NumericMatrix CENTROIDS) {
 
-
-    //arma::mat CENTROIDS1;
-
-
-    //if (CENTROIDS.isNotNull()) {
-
-    // CENTROIDS1 = Rcpp::as<arma::mat>(CENTROIDS);
-
-    //}
-
-    //SEXP trans_data = transfer_data(data);
-
-    // arma::mat dat_final = Rcpp::as<arma::mat>(trans_data);
-
     int data_n_rows = get_nrow(data);
-
-   // int data_n_cols = get_ncol(data);
 
     arma::rowvec CLUSTERS(data_n_rows);
 
-    //arma::mat soft_CLUSTERS(data_n_rows, CENTROIDS1.n_rows);
-
     CLUSTERS = clusters_WCSS(data,CENTROIDS);
-
-    //for (unsigned int j = 0; j < data_n_rows; j++) {
-
-    //Rcpp::NumericVector tmp(data_n_cols);
-
-    //auto final_matrix=beachmat::create_numeric_matrix(data);
-
-    //final_matrix->get_row(j, tmp.begin());
-
-    //dat_final.row(j) = tmp;
-
-    //arma::mat data_final = Rcpp::as<arma::mat>(dat_final);
-
-    //arma::vec tmp_vec = WCSS(arma::conv_to< arma::rowvec >::from(data_final.row(j)), CENTROIDS1);
-
-    //arma::vec tmp_vec = WCSS(arma::conv_to< arma::rowvec >::from(dat_final.row(j)), CENTROIDS1);                 // returns a rowvec with the SSE for each cluster
-
-    //soft_CLUSTERS.row(j) = arma::conv_to< arma::rowvec >::from(tmp_vec);
-
-    //int tmp_idx = MinMat(tmp_vec);                                                                        // returns the index of the tmp_vec with the lowest SSE
-
-    //CLUSTERS(j) = tmp_idx+1;
-    // }
-
-
-    //return CLUSTERS;
 
     Rcpp::NumericVector final_cluster = Rcpp::wrap(CLUSTERS);
 
@@ -297,10 +253,25 @@ SEXP subset_matrix_random(const T1& data, int cluster){
 
 }
 
-
 //calculation right WCSS
-template<typename T1>
-Rcpp::NumericVector compute_wcss(Rcpp::NumericVector clusters, Rcpp::NumericMatrix cent, const T1& data){
+//' Compute Whithin-Cluster Sum of Squares
+//'
+//' Given a vector of cluster labels, a matrix of centroids, and a dataset, it
+//' computes the WCSS.
+//'
+//'@param clusters numeric vector with the cluster assignments.
+//'@param cent numeric matrix with the centroids (clusters in rows, variables
+//'  in columns).
+//'@param data matrix-like object containing the data (numeric or integer).
+//'
+//'@examples
+//'data = matrix(1:30,nrow = 10)
+//'cl <- mini_batch(data, 2, 10, 10)
+//'compute_wcss(cl$Clusters, cl$centroids, data)
+//'
+//' @export
+// [[Rcpp::export]]
+Rcpp::NumericVector compute_wcss(Rcpp::NumericVector clusters, Rcpp::NumericMatrix cent, SEXP data){
 
     int nclusters = cent.nrow(); // number of clusters
     int nobs = clusters.size(); // number of obs
@@ -360,7 +331,6 @@ Rcpp::NumericVector compute_wcss(Rcpp::NumericVector clusters, Rcpp::NumericMatr
     return wcss_final;
 }
 
-//'
 //' Mini_batch
 //'
 //' Mini-batch-k-means for both matrix and HDF5Matrix
@@ -661,7 +631,7 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, in
   Rcpp::NumericVector clusterfinal = predict_mini_batch(data, Rcpp::wrap(centers_out));
   Rcpp::NumericVector wcss_final;
 
-  if(calc_wcss == TRUE){
+  if(calc_wcss){
       wcss_final = compute_wcss(clusterfinal,Rcpp::wrap(centers_out),data);
   }
 

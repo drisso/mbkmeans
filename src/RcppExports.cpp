@@ -18,6 +18,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// compute_wcss
+Rcpp::NumericVector compute_wcss(Rcpp::NumericVector clusters, Rcpp::NumericMatrix cent, SEXP data);
+RcppExport SEXP _mbkmeans_compute_wcss(SEXP clustersSEXP, SEXP centSEXP, SEXP dataSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type clusters(clustersSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type cent(centSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type data(dataSEXP);
+    rcpp_result_gen = Rcpp::wrap(compute_wcss(clusters, cent, data));
+    return rcpp_result_gen;
+END_RCPP
+}
 // mini_batch
 Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, int num_init, double init_fraction, std::string initializer, bool calc_wcss, int early_stop_iter, bool verbose, Rcpp::Nullable<Rcpp::NumericMatrix> CENTROIDS, double tol);
 RcppExport SEXP _mbkmeans_mini_batch(SEXP dataSEXP, SEXP clustersSEXP, SEXP batch_sizeSEXP, SEXP max_itersSEXP, SEXP num_initSEXP, SEXP init_fractionSEXP, SEXP initializerSEXP, SEXP calc_wcssSEXP, SEXP early_stop_iterSEXP, SEXP verboseSEXP, SEXP CENTROIDSSEXP, SEXP tolSEXP) {
@@ -43,6 +56,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_mbkmeans_predict_mini_batch", (DL_FUNC) &_mbkmeans_predict_mini_batch, 2},
+    {"_mbkmeans_compute_wcss", (DL_FUNC) &_mbkmeans_compute_wcss, 3},
     {"_mbkmeans_mini_batch", (DL_FUNC) &_mbkmeans_mini_batch, 12},
     {NULL, NULL, 0}
 };

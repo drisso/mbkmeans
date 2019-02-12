@@ -1,9 +1,11 @@
 Package: mbkmeans
 Type: Package
 Title: Clustering Large Single-Cell Datasets
-Version: 0.1.0
+Version: 0.2.0
 Authors@R:
-    c(person("Davide", "Risso", role = c("aut", "cre", "cph"),
+    c(person("Yuwei", "Ni", role = c("aut", "cph"),
+             email = "risso.davide@gmail.com"),
+      person("Davide", "Risso", role = c("aut", "cre", "cph"),
              email = "risso.davide@gmail.com"),
       person("Stephanie", "Hicks", role = c("aut", "cph"),
              email = "shicks19@jhu.edu"),

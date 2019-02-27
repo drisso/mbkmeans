@@ -1,30 +1,24 @@
 ---
 title: "default_test"
 author: "Yuwei Ni"
-date: "2/18/2019"
+date: "2/16/2019"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, warning=FALSE}
 # package
-library(SingleCellExperiment)
 library(mbkmeans)
-library(DelayedMatrixStats)
-library(ClusterR)
 library(rhdf5)
-library(TENxPBMCData)
 library(scater)
-library(ggplot2)
 library(profvis)
 library(mclust)
-library(plotly)
 library(dplyr)
 library(cowplot)
 library(parallel)
-?simulate_gauss_mix
+
 ```
 
-```{r}
+```{r data}
 #data
 simulate_gauss_mix <- function(n_cells, n_genes,
                                k = 3, x_mus = c(0,5,5), 
@@ -68,9 +62,150 @@ sim_data <- simulate_gauss_mix(n_cells=nC, n_genes=nG)
 
 ```
 
-```{r}
+```{r data_trans}
 #data transfer
 data_matrix<-as.matrix(sim_data$obs_data)
 data_hdf5<-as(data_matrix,"HDF5Matrix")
+```
+
+```{r calculation,warning=FALSE}
+#kmeans
+km1<-kmeans(data_matrix,centers = 3,iter.max = 10,nstart=1)
+
+#tradition
+km_matrix<-mbkmeans::mini_batch(data_matrix,clusters = 3,batch_size = 250,max_iters=10, num_init = 1,init_fraction = 0.25,initializer = "random")
+
+km_hdf5<-mbkmeans::mini_batch(data_hdf5,clusters = 3,batch_size = 250,max_iters=10, num_init = 1,init_fraction = 0.25,initializer = "random")
+
+#kmeans++
+kmplus_matrix<-mbkmeans::mini_batch(data_matrix,clusters = 3,batch_size = 250,max_iters=10, num_init = 1,init_fraction = 0.25,initializer = "kmeans++")
+
+kmplus_hdf5<-mbkmeans::mini_batch(data_hdf5,clusters = 3,batch_size = 250,max_iters=10, num_init = 1,init_fraction = 0.25,initializer = "kmeans++")
+
+```
+
+```{r time,warning=FALSE}
+#system_time
+
+#km
+km_time<-numeric(50)
+for(i in 1:50){
+km_time[i] = system.time(kmeans(data_matrix,centers = 3,iter.max = 10,nstart=1))[3]
+}
+km_time <- mean(km_time)
+
+#random
+km_matrix_time <- numeric(50)
+for(i in 1:50){
+km_matrix_time[i] = system.time(mbkmeans::mini_batch(data_matrix,clusters = 3,batch_size = 250,max_iters=10, num_init = 1,init_fraction = 0.25,initializer = "random"))[3]
+}
+km_matrix_time <- mean(km_matrix_time)
+
+
+
+km_hdf5_time <- numeric(50)
+for(i in 1:50){
+km_hdf5_time[i] = system.time(mbkmeans::mini_batch(data_hdf5,clusters = 3,batch_size = 250,max_iters=10, num_init = 1,init_fraction = 0.25,initializer = "random"))[3]
+}
+km_hdf5_time <- mean(km_hdf5_time)
+
+
+#kmeans++
+kmplus_matrix_time <- numeric(50)
+for(i in 1:50){
+kmplus_matrix_time[i] = system.time(mbkmeans::mini_batch(data_matrix,clusters = 3,batch_size = 250,max_iters=10, num_init = 1,init_fraction = 0.25,initializer = "kmeans++"))[3]
+}
+kmplus_matrix_time <- mean(kmplus_matrix_time)
+
+
+
+kmplus_hdf5_time <- numeric(50)
+for(i in 1:50){
+kmplus_hdf5_time[i] = system.time(mbkmeans::mini_batch(data_hdf5,clusters = 3,batch_size = 250,max_iters=10, num_init = 1,init_fraction = 0.25,initializer = "kmeans++"))[3]
+}
+kmplus_hdf5_time <- mean(kmplus_hdf5_time)
+
+rbind(km_time,km_matrix_time,km_hdf5_time,kmplus_matrix_time,kmplus_hdf5_time)
+
+```
+
+```{r accuracy,warning=FALSE}
+#accuracy
+#km
+
+km_ari<-numeric(50)
+for(i in 1:50){
+    
+km_cluster<-kmeans(data_matrix,centers = 3,iter.max = 10,nstart=1)
+
+km_ari[i] = adjustedRandIndex(km_cluster$cluster,sim_data$true_cluster_id)
+}
+km_ari<-mean(km_ari)
+
+#random
+
+km_matrix_ari<-numeric(50)
+for(i in 1:50){
+    
+km_matrix_cluster<-mbkmeans::mini_batch(data_matrix,clusters = 3,batch_size = 250,max_iters=10, num_init = 1,init_fraction = 0.25,initializer = "random")
+
+km_matrix_ari[i] = adjustedRandIndex(km_matrix_cluster$Clusters,sim_data$true_cluster_id)
+}
+km_matrix_ari<-mean(km_matrix_ari)
+
+
+km_hdf5_ari <-numeric(50)
+for(i in 1:50){
+    
+km_hdf5_cluster<-mbkmeans::mini_batch(data_hdf5,clusters = 3,batch_size = 250,max_iters=10, num_init = 1,init_fraction = 0.25,initializer = "random")
+
+km_hdf5_ari[i] = adjustedRandIndex(km_hdf5_cluster$Clusters,sim_data$true_cluster_id)
+}
+km_hdf5_ari<-mean(km_hdf5_ari)
+
+
+#kmeans++
+kmplus_matrix_ari <-numeric(50)
+for(i in 1:50){
+    
+kmplus_matrix_cluster<-mbkmeans::mini_batch(data_matrix,clusters = 3,batch_size = 250,max_iters=10, num_init = 1,init_fraction = 0.25,initializer = "kmeans++")
+
+kmplus_matrix_ari[i] = adjustedRandIndex(kmplus_matrix_cluster$Clusters,sim_data$true_cluster_id)
+}
+kmplus_matrix_ari<-mean(kmplus_matrix_ari)
+
+
+kmplus_hdf5_ari <-numeric(50)
+for(i in 1:50){
+
+kmplus_hdf5_cluster<-mbkmeans::mini_batch(data_hdf5,clusters = 3,batch_size = 250,max_iters=10, num_init = 1,init_fraction = 0.25,initializer = "kmeans++")
+
+kmplus_hdf5_ari[i] = adjustedRandIndex(kmplus_hdf5_cluster$Clusters,sim_data$true_cluster_id)
+}
+kmplus_hdf5_ari<-mean(kmplus_hdf5_ari)
+
+rbind(km_ari,km_matrix_ari,km_hdf5_ari,kmplus_matrix_ari,kmplus_hdf5_ari)
+```
+
+
+```{r memory,warning=FALSE}
+#memory
+memory_compare<-profvis({
+        
+   km1<-kmeans(data_matrix,centers = 3,iter.max = 10,nstart=1)
+    
+   km_matrix<-mbkmeans::mini_batch(data_matrix,clusters = 3,batch_size = 250,max_iters=10, num_init = 1,init_fraction = 0.25,initializer = "random")
+   
+   km_hdf5<-mbkmeans::mini_batch(data_hdf5,clusters = 3,batch_size = 250,max_iters=10, num_init = 1,init_fraction = 0.25,initializer = "random")
+
+#kmeans++
+   kmplus_matrix<-mbkmeans::mini_batch(data_matrix,clusters = 3,batch_size = 250,max_iters=10, num_init = 1,init_fraction = 0.25,initializer = "kmeans++")
+   
+   kmplus_hdf5<-mbkmeans::mini_batch(data_hdf5,clusters = 3,batch_size = 250,max_iters=10, num_init = 1,init_fraction = 0.25,initializer = "kmeans++")
+    
+})
+
+htmlwidgets::saveWidget(memory_compare, "memory_compare.html")
+browseURL("memory_compare.html")
 ```
 

@@ -41,5 +41,11 @@ This uses `Rprof`, but nicer feed back and pairs it up with your code. It requir
 
 # profmem (Henrick)
 
+(From the package) The profmem() function uses the utils::Rprofmem() function for logging memory allocation events to a temporary file. The logged events are parsed and returned as an in-memory R object in a format that is convenient to work with. All memory allocations that are done via the native allocVector3() part of R's native API are logged, which means that nearly all memory allocations are logged. Any objects allocated this way are automatically deallocated by R's garbage collector at some point. Garbage collection events are not logged by profmem(). Allocations not logged are those done by non-R native libraries or R packages that use native code Calloc() / Free() for internal objects. Such objects are not handled by the R garbage collector.
+
+In order for profmem() to work, R must have been built with memory profiling enabled. If not, profmem() will produce an error with an informative message.
+
+`profmem` takes as an argument an expression. Seems a lighter version of `lineprof`. It does not line up the results with the code (so presumably not require source the expression), but does give the calls that correspond to the memory usage. 
+
 # proftools (Tierney)
 

@@ -1,8 +1,13 @@
 # Summary of Memory profiling options
 
-## Outside of R (useful for Parallel computing).
+Note for memory profiling, we have to remember that the memory may not scale naturally with the size of the data due to caching. Small datasets may be able to cache large portions of the data for small datasets, even if they are in hd5 files and not loaded into memory in R ((http://htmlpreview.github.io/?https://github.com/berkeley-scf/tutorial-efficient-R/blob/master/efficient-R.html).
 
-From Chris: 
+>> In addition to main memory (what we usually mean when we talk about RAM), computers also have memory caches, which are small amounts of fast memory that can be accessed very quickly by the processor. For example your computer might have L1, L2, and L3 caches, with L1 the smallest and fastest and L3 the largest and slowest. The idea is to try to have the data that is most used by the processor in the cache.
+>> If the next piece of data needed for computation is available in the cache, this is a cache hit and the data can be accessed very quickly. However, if the data is not available in the cache, this is a cache miss and the speed of access will be a lot slower. Cache-aware programming involves writing your code to minimize cache misses. Generally when data is read from memory it will be read in chunks, so values that are contiguous will be read together.
+
+## Memory usage Outside of R (useful for Parallel computing).
+
+From Chris (email): 
 >> One thing that might complicate matters is that mclapply forks the master process, and it turns out that unless an object is changed by the worker process, the worker process 'copy' of the object is just a pointer to the original object. This can confuse things  because although top and gc() will probably report memory being used by the worker, it's not really extra memory above-and-beyond that used by the master process. 
 
 Chris recommended adding a one-line entry to my shell script using `free` to record the memory usage of the machine every x minutes. I wrote a little helper function (`readMemoryLog.R`) that is part of the gitrepos for `clusterExperiment` to read that log and give a summary. Here's an example of shell script where I did that every 15 seconds (this was a long-running code).
@@ -43,6 +48,10 @@ Rprof(NULL)
 pd <- readProfileData(profout)
 unlink(profout)
 ```
+
+From Chris' tutorials (http://htmlpreview.github.io/?https://github.com/berkeley-scf/tutorial-efficient-R/blob/master/efficient-R.html): 
+>> Warning: Rprof conflicts with threaded linear algebra, so you may need to set OMP_NUM_THREADS to 1 to disable threaded linear algebra if you profile code that involves linear algebra
+
 - `summaryRprof` Summarise the output of the `Rprof` function to show the amount of time used by different R functions.
 
 - `tracemem` This function marks an object so that a message is printed whenever the internal code copies the object (interacts poorly with knitr). For interactive use (difficult to program with it). `untracemem` undoes it.

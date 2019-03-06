@@ -1,7 +1,33 @@
 # Summary of Memory profiling options
 
+## Outside of R (useful for Parallel computing).
+
+From Chris: 
+>> One thing that might complicate matters is that mclapply forks the master process, and it turns out that unless an object is changed by the worker process, the worker process 'copy' of the object is just a pointer to the original object. This can confuse things  because although top and gc() will probably report memory being used by the worker, it's not really extra memory above-and-beyond that used by the master process. 
+
+Chris recommended adding a one-line entry to my shell script using `free` to record the memory usage of the machine every x minutes. I wrote a little helper function (`readMemoryLog.R`) that is part of the gitrepos for `clusterExperiment` to read that log and give a summary. Here's an example of shell script where I did that every 15 seconds (this was a long-running code).
+
+```
+#!/bin/bash
+#SBATCH --job-name=oeData
+#SBATCH --cpus-per-task 1
+CURRDATE="$(date +'%Y_%m_%d_%R')"
+FILE="OEAnalysisV3"
+TAG="OnlyPlots"
+BASEFILE="${FILE}_${TAG}_${CURRDATE}"
+MEMORYFILE="${BASEFILE}_memoryLogger.txt"
+MEMORYSUMMARY="${BASEFILE}_memorySummary.txt"
+RFILE="${FILE}.R"
+ROUT="${BASEFILE}.Rout"
+
+while true; do free -h >> $MEMORYFILE; sleep 15; done &
+R-3.5.0 CMD BATCH --vanilla $RFILE $ROUT
+Rscript ../../clusterExperiment/tests/checkClusterMany/readMemoryLog.R $MEMORYFILE > $MEMORYSUMMARY
+```
+
 ## Built-in R (base/utils package)
 
+- `print(gc())` at the end of the R code, you should be able to see the maximum memory use by the R session (and the current memory use at the top gc() is called).
 - Object size: `object.size` tells you the size of a single object. 
 - `Rprof(memory.profiling = TRUE)` captures memory usage frequently (Hadley: "profiling can, at best, capture memory usage every 1 ms"). Running `gctorture` forces gc after every memory allocation, which can help to slow down a program. It can capture different aspects (you have to turn on the memory profiling). From help of `summaryRprof`: 
 

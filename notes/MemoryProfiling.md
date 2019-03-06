@@ -106,6 +106,6 @@ Tools for having easier interface with `Rprof`, including a lot of graphical dis
 
 In order for profmem() to work, R must have been built with memory profiling enabled. If not, profmem() will produce an error with an informative message.
 
-`profmem` takes as an argument an expression. Seems a lighter version of `lineprof`, except it uses `Rprofmem` and not `Rprof`; seems many others use `Rprof` (by looking at differences in time); this seems to argue `Rprofmem` better for profiling, but if so not clear why others don't also use it. It does not line up the results with the code (so presumably not require source the expression), but does give the calls that correspond to the memory usage. 
+`profmem` takes as an argument an expression. Seems a lighter version of `lineprof`, except it uses `Rprofmem` and not `Rprof`; seems many others use `Rprof` (by looking at differences in time); this seems to argue `Rprofmem` better for profiling, but if so not clear why others don't also use it. It may be because `Rprof` also profiles time usage, so that you can get it all in one profiling even if not as precise on the memory. (for our purpose we want total memory anyway, so `Rprofmem` isn't relevant). It does not line up the results with the code (so presumably not require source the expression), but does give the calls that correspond to the memory usage. 
 
-
+## profvis

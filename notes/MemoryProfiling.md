@@ -1,4 +1,6 @@
-# Built-in R (base/utils package)
+# Summary of Memory profiling options
+
+## Built-in R (base/utils package)
 
 - Object size: `object.size` tells you the size of a single object. 
 - `Rprof(memory.profiling = TRUE)` captures memory usage frequently (Hadley: "profiling can, at best, capture memory usage every 1 ms"). Running `gctorture` forces gc after every memory allocation, which can help to slow down a program. It can capture different aspects (you have to turn on the memory profiling). From help of `summaryRprof`: 
@@ -27,7 +29,7 @@ Comparison to `Rprof`  (from package `profmem` man pages):
 
 
 
-# pryr
+## pryr
 
 - `mem_used()` tells total size of all objects in memory. From Advanced R: 
 
@@ -46,7 +48,7 @@ Comparison to `Rprof`  (from package `profmem` man pages):
 Seems like in many cases ref could be 2 even without copying, since non-primitive functions with increment count.
 
 
-# lineprof (Hadley)
+## lineprof (Hadley)
 
 This uses `Rprof`, but nicer feed back and pairs it up with your code. It requires that you use source to load the code, however. (http://adv-r.had.co.nz/memory.html#memory-profiling). 
 
@@ -59,14 +61,16 @@ This uses `Rprof`, but nicer feed back and pairs it up with your code. It requir
 >>  * d, the number of vector duplications that occurred. A vector duplication occurs when R copies a vector as a result of its copy on modify semantics.
 >> You can hover over any of the bars to get the exact numbers. In this example, looking at the allocations tells us most of the story:
 
-# profmem (Henrick)
+## proftools (Tierney)
+
+Tools for having easier interface with `Rprof`, including a lot of graphical displays. Seems more advanced version of `lineprof`. 
+
+## profmem (Henrick)
 
 (From the package) The profmem() function uses the utils::Rprofmem() function for logging memory allocation events to a temporary file. The logged events are parsed and returned as an in-memory R object in a format that is convenient to work with. All memory allocations that are done via the native allocVector3() part of R's native API are logged, which means that nearly all memory allocations are logged. Any objects allocated this way are automatically deallocated by R's garbage collector at some point. Garbage collection events are not logged by profmem(). Allocations not logged are those done by non-R native libraries or R packages that use native code Calloc() / Free() for internal objects. Such objects are not handled by the R garbage collector.
 
 In order for profmem() to work, R must have been built with memory profiling enabled. If not, profmem() will produce an error with an informative message.
 
-`profmem` takes as an argument an expression. Seems a lighter version of `lineprof`, except it uses `Rprofmem` and not `Rprof`, so unclear. It does not line up the results with the code (so presumably not require source the expression), but does give the calls that correspond to the memory usage. 
+`profmem` takes as an argument an expression. Seems a lighter version of `lineprof`, except it uses `Rprofmem` and not `Rprof`; seems many others use `Rprof` (by looking at differences in time); this seems to argue `Rprofmem` better for profiling, but if so not clear why others don't also use it. It does not line up the results with the code (so presumably not require source the expression), but does give the calls that correspond to the memory usage. 
 
-# proftools (Tierney)
 
-Tools for having easier interface with `Rprof`, including a lot of graphical displays. Seems more advanced version of `lineprof`. 

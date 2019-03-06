@@ -1,11 +1,31 @@
 # Built-in R (base/utils package)
 
 - Object size: `object.size` tells you the size of a single object. 
-- `Rprof` captures usage frequently (Hadley: "profiling can, at best, capture memory usage every 1 ms"). Running `gctorture` forces gc after every memory allocation, which can help to slow down a program. 
+- `Rprof(memory.profiling = TRUE)` captures memory usage frequently (Hadley: "profiling can, at best, capture memory usage every 1 ms"). Running `gctorture` forces gc after every memory allocation, which can help to slow down a program. It can capture different aspects (you have to turn on the memory profiling). From help of `summaryRprof`: 
+
+>> When called with memory.profiling = TRUE, the profiler writes information on three aspects of memory use: vector memory in small blocks on the R heap, vector memory in large blocks (from malloc), memory in nodes on the R heap. It also records the number of calls to the internal function duplicate in the time interval. duplicate is called by C code when arguments need to be copied. Note that the profiler does not track which function actually allocated the memory.
+>> If the code being run has source reference information retained (via keep.source = TRUE in source or KeepSource = TRUE in a package ‘DESCRIPTION’ file or some other way), then information about the origin of lines is recorded during profiling. By default this is not displayed, but the lines parameter can enable the display.
+
+`Rprof`, you need to set up a file for saving the output of the profile, start it before running commands, then end it and read the output. Example of usage of `Rprof` (from `proftools`)
+```
+profout <- tempfile()
+Rprof(file = profout, gc.profiling = TRUE, line.profiling = TRUE)
+source(srcfile)
+Rprof(NULL)
+pd <- readProfileData(profout)
+unlink(profout)
+```
+- `summaryRprof` Summarise the output of the `Rprof` function to show the amount of time used by different R functions.
+
 - `tracemem` This function marks an object so that a message is printed whenever the internal code copies the object (interacts poorly with knitr). For interactive use (difficult to program with it). `untracemem` undoes it.
-- `Rprofmem` & `Rprof`. From package `profmem` man pages:
+- `Rprofmem` Profiling writes the call stack to the specified file every time malloc is called to allocate a large vector object or to allocate a page of memory for small objects. The size of a page of memory and the size above which malloc is used for vectors are compile-time constants, by default 2000 and 128 bytes respectively. Similar usage as `Rprof`. 
+
+Comparison to `Rprof`  (from package `profmem` man pages):
 
 >> In addition to utils::Rprofmem(), R also provides utils::Rprof(memory.profiling = TRUE). Despite the close similarity of their names, they use completely different approaches for profiling the memory usage. As explained above, the former logs all individual (allocVector3()) memory allocation whereas the latter probes the total memory usage of R at regular time intervals. If memory is allocated and deallocated between two such probing time points, utils::Rprof(memory.profiling = TRUE) will not log that memory whereas utils::Rprofmem() will pick it up. On the other hand, with utils::Rprofmem() it is not possible to quantify the total memory usage at a given time because it only logs allocations and does therefore not reflect deallocations done by the garbage collector.
+
+
+
 
 # pryr
 
@@ -45,7 +65,8 @@ This uses `Rprof`, but nicer feed back and pairs it up with your code. It requir
 
 In order for profmem() to work, R must have been built with memory profiling enabled. If not, profmem() will produce an error with an informative message.
 
-`profmem` takes as an argument an expression. Seems a lighter version of `lineprof`. It does not line up the results with the code (so presumably not require source the expression), but does give the calls that correspond to the memory usage. 
+`profmem` takes as an argument an expression. Seems a lighter version of `lineprof`, except it uses `Rprofmem` and not `Rprof`, so unclear. It does not line up the results with the code (so presumably not require source the expression), but does give the calls that correspond to the memory usage. 
 
 # proftools (Tierney)
 
+Tools for having easier interface with `Rprof`, including a lot of graphical displays. Seems more advanced version of `lineprof`. 

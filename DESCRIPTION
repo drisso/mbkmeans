@@ -48,3 +48,12 @@ LinkingTo:
     ClusterR
 SystemRequirements: C++11
 VignetteBuilder: knitr
+biocViews:
+  Clustering,
+  GeneExpression,
+  RNASeq,
+  Software,
+  Transcriptomics,
+  Sequencing,
+  SingleCell
+BugReports: https://github.com/drisso/mbkmeans/issues

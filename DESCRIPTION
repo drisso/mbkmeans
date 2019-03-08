@@ -1,6 +1,6 @@
 Package: mbkmeans
 Type: Package
-Title: Clustering Large Single-Cell Datasets
+Title: Mini-batch K-means Clustering for Single-Cell RNA-seq
 Version: 0.2.0
 Authors@R:
     c(person("Yuwei", "Ni", role = c("aut", "cph"),

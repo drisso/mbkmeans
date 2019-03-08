@@ -17,3 +17,7 @@ Numeric value of the maximum number of rows.
 \description{
 Return the maximum number of rows to use based on the amount of ram memory.
 }
+\examples{
+data <- matrix(NA, nrow = 100, ncol=1000)
+blocksize(data, ram=1e6)
+}

@@ -9,8 +9,10 @@
 #'
 #' @return  Numeric value of the maximum number of rows.
 #'
-#'@export
-#'
+#' @examples
+#' data <- matrix(NA, nrow = 100, ncol=1000)
+#' blocksize(data, ram=1e6)
+#' @export
 blocksize<-function(data, ram = get_ram()){
   result<-min(floor(as.numeric(ram)/(2*8*nrow(data))), ncol(data))
   result

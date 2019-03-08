@@ -14,6 +14,9 @@ in columns).}
 
 \item{data}{matrix-like object containing the data (numeric or integer).}
 }
+\value{
+A numeric vector with the value of WCSS per cluster.
+}
 \description{
 Given a vector of cluster labels, a matrix of centroids, and a dataset, it
 computes the WCSS.

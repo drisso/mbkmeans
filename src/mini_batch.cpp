@@ -265,6 +265,8 @@ SEXP subset_matrix_random(const T1& data, int cluster){
 //'  in columns).
 //'@param data matrix-like object containing the data (numeric or integer).
 //'
+//'@return A numeric vector with the value of WCSS per cluster.
+//'
 //'@examples
 //'data = matrix(1:30,nrow = 10)
 //'cl <- mini_batch(data, 2, 10, 10)

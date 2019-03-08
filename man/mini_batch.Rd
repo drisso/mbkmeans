@@ -18,19 +18,27 @@ mini_batch(data, clusters, batch_size, max_iters, num_init = 1L,
 
 \item{max_iters}{the maximum number of clustering iterations.}
 
-\item{num_init}{number of times the algorithm will be run with different centroid seeds.}
+\item{num_init}{number of times the algorithm will be run with different
+centroid seeds.}
 
-\item{init_fraction}{percentage of data to use for the initialization centroids (applies if initializer is \emph{kmeans++} ). Should be a float number between 0.0 and 1.0.}
+\item{init_fraction}{percentage of data to use for the initialization
+centroids (applies if initializer is \emph{kmeans++} ). Should be a float
+number between 0.0 and 1.0.}
 
-\item{initializer}{the method of initialization. One of \emph{kmeans++} and \emph{random}. See details for more information.}
+\item{initializer}{the method of initialization. One of \emph{kmeans++} and
+\emph{random}. See details for more information.}
 
-\item{calc_wcss}{logical indicating whether the within-cluster sum of squares should be computed and returned.}
+\item{calc_wcss}{logical indicating whether the within-cluster sum of squares
+should be computed and returned.}
 
-\item{early_stop_iter}{continue that many iterations after calculation of the best within-cluster-sum-of-squared-error.}
+\item{early_stop_iter}{continue that many iterations after calculation of the
+best within-cluster-sum-of-squared-error.}
 
 \item{verbose}{logical indicating whether progress is printed on screen.}
 
-\item{CENTROIDS}{an optional matrix of initial cluster centroids. The rows of the CENTROIDS matrix should be equal to the number of clusters and the columns should be equal to the columns of the data.}
+\item{CENTROIDS}{an optional matrix of initial cluster centroids. The rows of
+the CENTROIDS matrix should be equal to the number of clusters and the
+columns should be equal to the columns of the data.}
 
 \item{tol}{convergence tolerance.}
 }
@@ -41,7 +49,8 @@ centroids: the final centroids;
 
 WCSS_per_cluster: within-cluster sum of squares;
 
-best_initialization: which initialization value led to the best WCSS solution;
+best_initialization: which initialization value led to the best WCSS
+solution;
 
 iters_per_initialization: number of iterations per each initialization.
 }
@@ -49,9 +58,12 @@ iters_per_initialization: number of iterations per each initialization.
 Mini-batch-k-means for matrix-like objects
 }
 \details{
-This function performs k-means clustering using mini batches. It was inspired by the implementation in https://github.com/mlampros/ClusterR.
+This function performs k-means clustering using mini batches. It was
+inspired by the implementation in https://github.com/mlampros/ClusterR.
 
-The input matrix can be in any format supported by the `DelayedArray` / `beachmat` framework, including the matrix classes defined in the `Matrix` package and the `HDFMatrix` class.
+The input matrix can be in any format supported by the `DelayedArray` /
+`beachmat` framework, including the matrix classes defined in the `Matrix`
+package and the `HDFMatrix` class.
 
 There are two possible initializations.
 
@@ -65,7 +77,12 @@ mini_batch(data, 2, 10, 10)
 
 }
 \references{
-Sculley, D., 2010, April. Web-scale k-means clustering. In Proceedings of the 19th international conference on World wide web (pp. 1177-1178). ACM.
+Sculley, D., 2010, April. Web-scale k-means clustering. In
+Proceedings of the 19th international conference on World wide web (pp.
+1177-1178). ACM.
 
-Arthur, D. and Vassilvitskii, S., 2007, January. k-means++: The advantages of careful seeding. In Proceedings of the eighteenth annual ACM-SIAM symposium on Discrete algorithms (pp. 1027-1035). Society for Industrial and Applied Mathematics.
+Arthur, D. and Vassilvitskii, S., 2007, January. k-means++: The advantages of
+careful seeding. In Proceedings of the eighteenth annual ACM-SIAM symposium
+on Discrete algorithms (pp. 1027-1035). Society for Industrial and Applied
+Mathematics.
 }

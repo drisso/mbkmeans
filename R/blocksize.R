@@ -14,6 +14,6 @@
 #' blocksize(data, ram=1e6)
 #' @export
 blocksize<-function(data, ram = get_ram()){
-  result<-min(floor(as.numeric(ram)/(2*8*nrow(data))), ncol(data))
-  result
+    result<-min(floor(as.numeric(ram)/(2*8*nrow(data))), ncol(data))
+    result
 }

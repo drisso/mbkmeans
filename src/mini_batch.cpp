@@ -100,15 +100,11 @@ arma::rowvec clusters_WCSS(const T& data,Rcpp::NumericMatrix CENTROIDS){
             final_matrix->get_row(j, tmp.begin());
             dat_final.row(0) = tmp;
 
-
-            //arma::mat data_final = Rcpp::as<arma::mat>(dat_final);
-            //arma::vec tmp_vec = clust_header.WCSS(arma::conv_to< arma::rowvec >::from(data_final.row(0)), CENTROIDS);                 // returns a rowvec with the SSE for each cluster
             for(unsigned int i =0; i<centrod_n_row;i++){
 
                 tmp_vec(i)= Rcpp::sum(Rcpp::pow(dat_final.row(0) - CENTROIDS.row(i),2));
 
             }
-            //soft_CLUSTERS.row(j) = arma::conv_to< arma::rowvec >::from(tmp_vec);
 
             int tmp_idx = clust_header.MinMat(tmp_vec);                                                                        // returns the index of the tmp_vec with the lowest SSE
             CLUSTERS(j) = tmp_idx+1;
@@ -127,23 +123,16 @@ arma::rowvec clusters_WCSS(const T& data,Rcpp::NumericMatrix CENTROIDS){
 
         arma::vec tmp_vec(centrod_n_row);
 
-        //arma::vec tmp_vec2(centrod_n_row);
-
         for (unsigned int j = 0; j < data_n_rows; j++) {
 
             final_matrix->get_row(j, tmp.begin());
             dat_final.row(0) = tmp;
-
-            //arma::mat data_final = Rcpp::as<arma::mat>(dat_final);
-            //arma::vec tmp_vec = clust_header.WCSS(arma::conv_to< arma::rowvec >::from(data_final.row(0)), CENTROIDS);                 // returns a rowvec with the SSE for each cluster
 
             for(unsigned int i =0; i<centrod_n_row;i++){
 
                 tmp_vec(i)= Rcpp::sum(Rcpp::pow(dat_final.row(0) - CENTROIDS.row(i),2));
 
             }
-
-            //soft_CLUSTERS.row(j) = arma::conv_to< arma::rowvec >::from(tmp_vec);
 
             int tmp_idx = clust_header.MinMat(tmp_vec);                                                                        // returns the index of the tmp_vec with the lowest SSE
             CLUSTERS(j) = tmp_idx+1;
@@ -341,14 +330,22 @@ Rcpp::NumericVector compute_wcss(Rcpp::NumericVector clusters, Rcpp::NumericMatr
 //'@param data numeric or integer matrix-like object.
 //'@param clusters the number of clusters.
 //'@param batch_size the size of the mini batches.
-//'@param num_init number of times the algorithm will be run with different centroid seeds.
+//'@param num_init number of times the algorithm will be run with different
+//'  centroid seeds.
 //'@param max_iters the maximum number of clustering iterations.
-//'@param init_fraction percentage of data to use for the initialization centroids (applies if initializer is \emph{kmeans++} ). Should be a float number between 0.0 and 1.0.
-//'@param initializer the method of initialization. One of \emph{kmeans++} and \emph{random}. See details for more information.
-//'@param calc_wcss logical indicating whether the within-cluster sum of squares should be computed and returned.
-//'@param early_stop_iter continue that many iterations after calculation of the best within-cluster-sum-of-squared-error.
+//'@param init_fraction percentage of data to use for the initialization
+//'  centroids (applies if initializer is \emph{kmeans++} ). Should be a float
+//'  number between 0.0 and 1.0.
+//'@param initializer the method of initialization. One of \emph{kmeans++} and
+//'  \emph{random}. See details for more information.
+//'@param calc_wcss logical indicating whether the within-cluster sum of squares
+//'  should be computed and returned.
+//'@param early_stop_iter continue that many iterations after calculation of the
+//'  best within-cluster-sum-of-squared-error.
 //'@param verbose logical indicating whether progress is printed on screen.
-//'@param CENTROIDS an optional matrix of initial cluster centroids. The rows of the CENTROIDS matrix should be equal to the number of clusters and the columns should be equal to the columns of the data.
+//'@param CENTROIDS an optional matrix of initial cluster centroids. The rows of
+//'  the CENTROIDS matrix should be equal to the number of clusters and the
+//'  columns should be equal to the columns of the data.
 //'@param tol convergence tolerance.
 //'@return
 //'a list with the following attributes:
@@ -357,14 +354,17 @@ Rcpp::NumericVector compute_wcss(Rcpp::NumericVector clusters, Rcpp::NumericMatr
 //'
 //'WCSS_per_cluster: within-cluster sum of squares;
 //'
-//'best_initialization: which initialization value led to the best WCSS solution;
+//'best_initialization: which initialization value led to the best WCSS
+//'solution;
 //'
 //'iters_per_initialization: number of iterations per each initialization.
 //'
-//'@details
-//'This function performs k-means clustering using mini batches. It was inspired by the implementation in https://github.com/mlampros/ClusterR.
+//'@details This function performs k-means clustering using mini batches. It was
+//'inspired by the implementation in https://github.com/mlampros/ClusterR.
 //'
-//'The input matrix can be in any format supported by the `DelayedArray` / `beachmat` framework, including the matrix classes defined in the `Matrix` package and the `HDFMatrix` class.
+//'The input matrix can be in any format supported by the `DelayedArray` /
+//'`beachmat` framework, including the matrix classes defined in the `Matrix`
+//'package and the `HDFMatrix` class.
 //'
 //'There are two possible initializations.
 //'
@@ -372,10 +372,14 @@ Rcpp::NumericVector compute_wcss(Rcpp::NumericVector clusters, Rcpp::NumericMatr
 //'
 //'\strong{random}: random selection of data rows as initial centroids.
 //'
-//'@references
-//'Sculley, D., 2010, April. Web-scale k-means clustering. In Proceedings of the 19th international conference on World wide web (pp. 1177-1178). ACM.
+//'@references Sculley, D., 2010, April. Web-scale k-means clustering. In
+//'Proceedings of the 19th international conference on World wide web (pp.
+//'1177-1178). ACM.
 //'
-//'Arthur, D. and Vassilvitskii, S., 2007, January. k-means++: The advantages of careful seeding. In Proceedings of the eighteenth annual ACM-SIAM symposium on Discrete algorithms (pp. 1027-1035). Society for Industrial and Applied Mathematics.
+//'Arthur, D. and Vassilvitskii, S., 2007, January. k-means++: The advantages of
+//'careful seeding. In Proceedings of the eighteenth annual ACM-SIAM symposium
+//'on Discrete algorithms (pp. 1027-1035). Society for Industrial and Applied
+//'Mathematics.
 //'
 //'@examples
 //'data = matrix(1:30,nrow = 10)

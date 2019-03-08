@@ -65,14 +65,22 @@ compute_wcss <- function(clusters, cent, data) {
 #'@param data numeric or integer matrix-like object.
 #'@param clusters the number of clusters.
 #'@param batch_size the size of the mini batches.
-#'@param num_init number of times the algorithm will be run with different centroid seeds.
+#'@param num_init number of times the algorithm will be run with different
+#'  centroid seeds.
 #'@param max_iters the maximum number of clustering iterations.
-#'@param init_fraction percentage of data to use for the initialization centroids (applies if initializer is \emph{kmeans++} ). Should be a float number between 0.0 and 1.0.
-#'@param initializer the method of initialization. One of \emph{kmeans++} and \emph{random}. See details for more information.
-#'@param calc_wcss logical indicating whether the within-cluster sum of squares should be computed and returned.
-#'@param early_stop_iter continue that many iterations after calculation of the best within-cluster-sum-of-squared-error.
+#'@param init_fraction percentage of data to use for the initialization
+#'  centroids (applies if initializer is \emph{kmeans++} ). Should be a float
+#'  number between 0.0 and 1.0.
+#'@param initializer the method of initialization. One of \emph{kmeans++} and
+#'  \emph{random}. See details for more information.
+#'@param calc_wcss logical indicating whether the within-cluster sum of squares
+#'  should be computed and returned.
+#'@param early_stop_iter continue that many iterations after calculation of the
+#'  best within-cluster-sum-of-squared-error.
 #'@param verbose logical indicating whether progress is printed on screen.
-#'@param CENTROIDS an optional matrix of initial cluster centroids. The rows of the CENTROIDS matrix should be equal to the number of clusters and the columns should be equal to the columns of the data.
+#'@param CENTROIDS an optional matrix of initial cluster centroids. The rows of
+#'  the CENTROIDS matrix should be equal to the number of clusters and the
+#'  columns should be equal to the columns of the data.
 #'@param tol convergence tolerance.
 #'@return
 #'a list with the following attributes:
@@ -81,14 +89,17 @@ compute_wcss <- function(clusters, cent, data) {
 #'
 #'WCSS_per_cluster: within-cluster sum of squares;
 #'
-#'best_initialization: which initialization value led to the best WCSS solution;
+#'best_initialization: which initialization value led to the best WCSS
+#'solution;
 #'
 #'iters_per_initialization: number of iterations per each initialization.
 #'
-#'@details
-#'This function performs k-means clustering using mini batches. It was inspired by the implementation in https://github.com/mlampros/ClusterR.
+#'@details This function performs k-means clustering using mini batches. It was
+#'inspired by the implementation in https://github.com/mlampros/ClusterR.
 #'
-#'The input matrix can be in any format supported by the `DelayedArray` / `beachmat` framework, including the matrix classes defined in the `Matrix` package and the `HDFMatrix` class.
+#'The input matrix can be in any format supported by the `DelayedArray` /
+#'`beachmat` framework, including the matrix classes defined in the `Matrix`
+#'package and the `HDFMatrix` class.
 #'
 #'There are two possible initializations.
 #'
@@ -96,10 +107,14 @@ compute_wcss <- function(clusters, cent, data) {
 #'
 #'\strong{random}: random selection of data rows as initial centroids.
 #'
-#'@references
-#'Sculley, D., 2010, April. Web-scale k-means clustering. In Proceedings of the 19th international conference on World wide web (pp. 1177-1178). ACM.
+#'@references Sculley, D., 2010, April. Web-scale k-means clustering. In
+#'Proceedings of the 19th international conference on World wide web (pp.
+#'1177-1178). ACM.
 #'
-#'Arthur, D. and Vassilvitskii, S., 2007, January. k-means++: The advantages of careful seeding. In Proceedings of the eighteenth annual ACM-SIAM symposium on Discrete algorithms (pp. 1027-1035). Society for Industrial and Applied Mathematics.
+#'Arthur, D. and Vassilvitskii, S., 2007, January. k-means++: The advantages of
+#'careful seeding. In Proceedings of the eighteenth annual ACM-SIAM symposium
+#'on Discrete algorithms (pp. 1027-1035). Society for Industrial and Applied
+#'Mathematics.
 #'
 #'@examples
 #'data = matrix(1:30,nrow = 10)

@@ -26,13 +26,13 @@ mbkmeans(x, ...)
 \arguments{
 \item{x}{The object on which to run mini-batch k-means. It can be a
 matrix-like object (e.g., matrix, Matrix, DelayedMatrix, HDF5Matrix) with
-genes in the rows and samples in the columns.
-Specialized methods are defined for SummarizedExperiment and
-SingleCellExperiment.}
+genes in the rows and samples in the columns. Specialized methods are
+defined for SummarizedExperiment and SingleCellExperiment.}
 
 \item{...}{Arguments to pass to the matrix method.}
 
-\item{whichAssay}{The assay to use as input to mini-batch k-means. If x is a SingleCellExperiment, this is ignored unless \code{reduceMethod = NA}.}
+\item{whichAssay}{The assay to use as input to mini-batch k-means. If x is a
+SingleCellExperiment, this is ignored unless \code{reduceMethod = NA}.}
 
 \item{reduceMethod}{Name of dimensionality reduction results to use as input
 to mini-batch k-means. Set to NA to use the full matrix.}
@@ -88,10 +88,9 @@ The implementation is largely based on the
   package. The contribution of this package is to provide support for on-disk
   data representations such as HDF5, through the use of \code{DelayedMatrix}
   and \code{HDF5Matrix} objects, as well as for sparse data representation
-  through the classes of the \code{Matrix} package.
-  We also provide high-level methods for objects of class
-  \code{SummarizedExperiment}, \code{SingleCellExperiment}, and
-  \code{LinearEmbeddingMatrix}.
+  through the classes of the \code{Matrix} package. We also provide
+  high-level methods for objects of class \code{SummarizedExperiment},
+  \code{SingleCellExperiment}, and \code{LinearEmbeddingMatrix}.
 
 This function performs k-means clustering using mini batches.
 
@@ -113,7 +112,8 @@ mbkmeans(x,clusters = 3)
 
 }
 \references{
-Sculley. Web-Scale K-Means Clustering. WWW 2010, April 26–30, 2010, Raleigh, North Carolina, USA. ACM 978-1-60558-799-8/10/04.
+Sculley. Web-Scale K-Means Clustering. WWW 2010, April 26–30,
+  2010, Raleigh, North Carolina, USA. ACM 978-1-60558-799-8/10/04.
 
 https://github.com/mlampros/ClusterR
 }

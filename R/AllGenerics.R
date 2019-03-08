@@ -1,7 +1,7 @@
 #' @rdname mbkmeans
 setGeneric(
-  name = "mbkmeans",
-  def = function(x, ...) {
-    standardGeneric("mbkmeans")
-  }
+    name = "mbkmeans",
+    def = function(x, ...) {
+        standardGeneric("mbkmeans")
+    }
 )

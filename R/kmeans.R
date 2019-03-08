@@ -16,16 +16,14 @@ NULL
 #'   package. The contribution of this package is to provide support for on-disk
 #'   data representations such as HDF5, through the use of \code{DelayedMatrix}
 #'   and \code{HDF5Matrix} objects, as well as for sparse data representation
-#'   through the classes of the \code{Matrix} package.
-#'   We also provide high-level methods for objects of class
-#'   \code{SummarizedExperiment}, \code{SingleCellExperiment}, and
-#'   \code{LinearEmbeddingMatrix}.
+#'   through the classes of the \code{Matrix} package. We also provide
+#'   high-level methods for objects of class \code{SummarizedExperiment},
+#'   \code{SingleCellExperiment}, and \code{LinearEmbeddingMatrix}.
 #'
 #' @param x The object on which to run mini-batch k-means. It can be a
 #'   matrix-like object (e.g., matrix, Matrix, DelayedMatrix, HDF5Matrix) with
-#'   genes in the rows and samples in the columns.
-#'   Specialized methods are defined for SummarizedExperiment and
-#'   SingleCellExperiment.
+#'   genes in the rows and samples in the columns. Specialized methods are
+#'   defined for SummarizedExperiment and SingleCellExperiment.
 #' @param ... Arguments to pass to the matrix method.
 #' @return A list with the following attributes: centroids, WCSS_per_cluster,
 #'   best_initialization, iters_per_initialization.
@@ -34,18 +32,19 @@ NULL
 #' @importFrom SummarizedExperiment assay
 #' @export
 #' @importClassesFrom SummarizedExperiment SummarizedExperiment
-#' @references Sculley. Web-Scale K-Means Clustering. WWW 2010, April 26–30, 2010, Raleigh, North Carolina, USA. ACM 978-1-60558-799-8/10/04.
+#' @references Sculley. Web-Scale K-Means Clustering. WWW 2010, April 26–30,
+#'   2010, Raleigh, North Carolina, USA. ACM 978-1-60558-799-8/10/04.
 #' @author Lampros Mouselimis and Yuwei Ni
 #' @examples
 #' library(SummarizedExperiment)
 #' se <- SummarizedExperiment(matrix(rnorm(100), ncol=10))
 #' mbkmeans(se, clusters = 2)
 setMethod(
-  f = "mbkmeans",
-  signature = signature(x = "SummarizedExperiment"),
-  definition = function(x, whichAssay = 1, ...){
-     mbkmeans(assay(x, whichAssay), ...)
-  })
+    f = "mbkmeans",
+    signature = signature(x = "SummarizedExperiment"),
+    definition = function(x, whichAssay = 1, ...){
+        mbkmeans(assay(x, whichAssay), ...)
+})
 
 #' @rdname mbkmeans
 #' @export
@@ -54,39 +53,42 @@ setMethod(
 #' @importFrom SingleCellExperiment reducedDim reducedDimNames
 #' @param reduceMethod Name of dimensionality reduction results to use as input
 #'   to mini-batch k-means. Set to NA to use the full matrix.
-#' @param whichAssay The assay to use as input to mini-batch k-means. If x is a SingleCellExperiment, this is ignored unless \code{reduceMethod = NA}.
+#' @param whichAssay The assay to use as input to mini-batch k-means. If x is a
+#'   SingleCellExperiment, this is ignored unless \code{reduceMethod = NA}.
 #' @examples
 #' library(SingleCellExperiment)
 #' sce <- SingleCellExperiment(matrix(rnorm(100), ncol=10))
 #' mbkmeans(sce, clusters = 2, reduceMethod = NA)
 setMethod(
-  f = "mbkmeans",
-  signature = signature(x = "SingleCellExperiment"),
-  definition = function(x, reduceMethod = "PCA", whichAssay = 1, ...)
-  {
+    f = "mbkmeans",
+    signature = signature(x = "SingleCellExperiment"),
+    definition = function(x, reduceMethod = "PCA", whichAssay = 1, ...)
+    {
 
-    if(is.na(reduceMethod)){
-      if(NCOL(x)>10000)
-        message("Note that you are running kmeans with more than 10,000 cells using all of the dimensions. You might consider running a dimensionality reduction step first.")
-      fit <- mbkmeans(assay(x, whichAssay), ...)
-    }
-    else{
-      if(is.null(reducedDimNames(x))){
-        stop("There are no dimensionality reduction results
-             stored in this object. Use reduceDims() to store
-             dimensionality reduction results.")
-      }
-      if(!(reduceMethod %in% reducedDimNames(x))){
-        stop("The argument reduceMethod does not match one
-             of the reducedDimNames() in this object. Use
-             reducedDimNames() to see what names are in this object.")
+        if(is.na(reduceMethod)){
+            if(NCOL(x)>10000)
+                message("Note that you are running kmeans with more than",
+                        "10,000 cells using all of the dimensions.", "\n",
+                        "You might consider running a",
+                        "dimensionality reduction step first.")
+            fit <- mbkmeans(assay(x, whichAssay), ...)
+        }
+        else{
+            if(is.null(reducedDimNames(x))){
+                stop("There are no dimensionality reduction results",
+                "stored in this object. Use reduceDims() to store",
+                "dimensionality reduction results.")
+            }
+            if(!(reduceMethod %in% reducedDimNames(x))){
+                stop("The argument reduceMethod does not match one",
+                "of the reducedDimNames() in this object. Use",
+                "reducedDimNames() to see what names are in this object.")
+            }
+            fit <- mbkmeans(t(reducedDim(x, reduceMethod)), ...)
 
-      }
-      fit <- mbkmeans(t(reducedDim(x, reduceMethod)), ...)
+        }
 
-      }
-
-    return(fit)
+        return(fit)
     })
 
 #' @rdname mbkmeans
@@ -94,12 +96,12 @@ setMethod(
 #' @importClassesFrom SingleCellExperiment LinearEmbeddingMatrix
 #' @importFrom SingleCellExperiment sampleFactors
 setMethod(
-  f = "mbkmeans",
-  signature = signature(x = "LinearEmbeddingMatrix"),
-  definition = function(x, ...)
-  {
-    mbkmeans(t(sampleFactors(x)), ...)
-  })
+    f = "mbkmeans",
+    signature = signature(x = "LinearEmbeddingMatrix"),
+    definition = function(x, ...)
+    {
+        mbkmeans(t(sampleFactors(x)), ...)
+})
 
 #'@rdname mbkmeans
 #'@export
@@ -143,28 +145,29 @@ setMethod(
 #'mbkmeans(x,clusters = 3)
 #'
 setMethod(
-  f = "mbkmeans",
-  signature = signature(x ="ANY"),
-  definition = function(x, clusters, batch_size = blocksize(x),
-                        max_iters =10, num_init = 1,
-                        init_fraction = .25, initializer = "kmeans++",
-                        calc_wcss = FALSE,early_stop_iter = 10, verbose = FALSE,
-                        CENTROIDS = NULL, tol = 1e-4)
-  {
+    f = "mbkmeans",
+    signature = signature(x ="ANY"),
+    definition = function(x, clusters, batch_size = blocksize(x),
+                            max_iters =10, num_init = 1,
+                            init_fraction = .25, initializer = "kmeans++",
+                            calc_wcss = FALSE,early_stop_iter = 10,
+                            verbose = FALSE,
+                            CENTROIDS = NULL, tol = 1e-4)
+    {
 
-    if(!is(x, "matrix") & !is(x, "Matrix") & !is(x, "HDF5Matrix") &
-       !is(x, "DelayedMatrix")) {
+        if(!is(x, "matrix") & !is(x, "Matrix") & !is(x, "HDF5Matrix") &
+            !is(x, "DelayedMatrix")) {
 
-      stop("x is not of a supported type")
+            stop("x is not of a supported type")
 
-    } else {
+        } else {
 
-      fit <- mini_batch(t(x), clusters, batch_size, max_iters, num_init,
-                        init_fraction, initializer, calc_wcss, early_stop_iter,
-                        verbose, CENTROIDS, tol)
+            fit <- mini_batch(t(x), clusters, batch_size, max_iters, num_init,
+                            init_fraction, initializer, calc_wcss,
+                            early_stop_iter, verbose, CENTROIDS, tol)
 
-    }
+        }
 
-    return(fit)
+        return(fit)
 })
 

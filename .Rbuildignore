@@ -5,3 +5,4 @@
 \.md$
 benchmarking
 notes
+^.git

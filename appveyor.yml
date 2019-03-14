@@ -32,9 +32,6 @@ environment:
   - R_VERSION: 3.5
     R_ARCH: x64
 
-  - R_VERSION: 3.5
-    R_ARCH: i386
-
 artifacts:
   - path: '*.Rcheck\**\*.log'
     name: Logs

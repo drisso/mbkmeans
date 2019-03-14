@@ -29,11 +29,6 @@ Suggests:
     HDF5Array,
     Matrix,
     Rhdf5lib,
-    BiocStyle,
-    TENxPBMCData,
-    scater,
-    DelayedMatrixStats,
-    knitr,
     testthat
 License: MIT + file LICENSE
 Encoding: UTF-8
@@ -46,7 +41,6 @@ LinkingTo:
     beachmat,
     ClusterR
 SystemRequirements: C++11
-VignetteBuilder: knitr
 biocViews:
   Clustering,
   GeneExpression,

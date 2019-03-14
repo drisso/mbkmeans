@@ -29,10 +29,10 @@ on_failure:
 environment:
 
   matrix:
-  - R_VERSION: devel
+  - R_VERSION: 3.5
     R_ARCH: x64
 
-  - R_VERSION: devel
+  - R_VERSION: 3.5
     R_ARCH: i386
 
 artifacts:

@@ -15,7 +15,7 @@ Description:
     Implements the mini-batch k-means algorithm for large
     datasets, including support for on-disk data representation.
 Depends:
-    R (>= 3.6)
+    R (>= 3.5)
 Imports:
 	methods,
 	DelayedArray,

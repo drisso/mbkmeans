@@ -107,13 +107,15 @@ setMethod(
 #'@export
 #'@importClassesFrom DelayedArray DelayedMatrix
 #'@param clusters the number of clusters
-#'@param batch_size the size of the mini batches
+#'@param batch_size the size of the mini batches, by default 5 percent of
+#'  observations.
 #'@param num_init number of times the algorithm will be run with different
 #'  centroid seeds
 #'@param max_iters the maximum number of clustering iterations
 #'@param init_fraction percentage of data to use for the initialization
 #'  centroids (applies if initializer is \emph{kmeans++} ). Should be a float
-#'  number between 0.0 and 1.0.
+#'  number between 0.0 and 1.0. By default, it uses all the data if there are
+#'  less than 1000 cells and 25 percent of the data otherwise.
 #'@param initializer the method of initialization. One of \emph{kmeans++} and
 #'  \emph{random}. See details for more information
 #'@param early_stop_iter continue that many iterations after calculation of the
@@ -147,10 +149,11 @@ setMethod(
 setMethod(
     f = "mbkmeans",
     signature = signature(x ="ANY"),
-    definition = function(x, clusters, batch_size = blocksize(x),
-                            max_iters =10, num_init = 1,
-                            init_fraction = .25, initializer = "kmeans++",
-                            calc_wcss = FALSE,early_stop_iter = 10,
+    definition = function(x, clusters, batch_size = ceiling(ncol(x)*.05),
+                            max_iters =100, num_init = 1,
+                            init_fraction = ifelse(ncol(x)>1000, .25, 1),
+                            initializer = "kmeans++",
+                            calc_wcss = FALSE, early_stop_iter = 10,
                             verbose = FALSE,
                             CENTROIDS = NULL, tol = 1e-4)
     {
@@ -162,9 +165,14 @@ setMethod(
 
         } else {
 
-            fit <- mini_batch(t(x), clusters, batch_size, max_iters, num_init,
-                            init_fraction, initializer, calc_wcss,
-                            early_stop_iter, verbose, CENTROIDS, tol)
+            fit <- mini_batch(data = t(x), clusters = clusters,
+                            batch_size = batch_size, max_iters = max_iters,
+                            num_init = num_init,
+                            init_fraction = init_fraction,
+                            initializer = initializer, calc_wcss = calc_wcss,
+                            early_stop_iter = early_stop_iter,
+                            verbose = verbose,
+                            CENTROIDS = CENTROIDS, tol = tol)
 
         }
 

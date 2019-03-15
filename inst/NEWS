@@ -2,3 +2,6 @@ Version 0.99.0 (2019-03-08)
 =====================================
 
 - This is the pre-submission version.
+- Change default in mbkmeans to use a batch size equal to 5% of the data.
+- Change default in mbkmeans to max 100 iterations.
+- Fix blocksize() to work if impossible to calculate available ram.

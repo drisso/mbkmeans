@@ -17,10 +17,17 @@ cache:
 
 build_script:
   - travis-tool.sh install_deps
-  - travis-tool.sh install_bioc_deps
 
 test_script:
   - travis-tool.sh run_tests
+
+environment:
+  matrix:
+  - R_VERSION: devel
+    R_ARCH: x64
+
+  - R_VERSION: devel
+    R_ARCH: i386
 
 on_failure:
   - 7z a failure.zip *.Rcheck\*

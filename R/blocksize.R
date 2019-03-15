@@ -14,6 +14,10 @@
 #' blocksize(data, ram=1e6)
 #' @export
 blocksize<-function(data, ram = get_ram()){
+    if(is.na(ram)) {
+        warning("Unable to determine available RAM. Setting it to 1GB.")
+        ram <- 1e9
+    }
     result<-min(floor(as.numeric(ram)/(2*8*nrow(data))), ncol(data))
     result
 }

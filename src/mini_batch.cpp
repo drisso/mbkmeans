@@ -387,8 +387,13 @@ Rcpp::NumericVector compute_wcss(Rcpp::NumericVector clusters, Rcpp::NumericMatr
 //'
 //' @export
 // [[Rcpp::export]]
-Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters, int num_init = 1, double init_fraction = 1.0, std::string initializer = "kmeans++",
-                      bool calc_wcss = false, int early_stop_iter = 10, bool verbose = false, Rcpp::Nullable<Rcpp::NumericMatrix> CENTROIDS = R_NilValue, double tol = 1e-4){
+Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters,
+                    int num_init = 1, double init_fraction = 1.0,
+                    std::string initializer = "kmeans++",
+                    bool calc_wcss = false, int early_stop_iter = 10,
+                    bool verbose = false,
+                    Rcpp::Nullable<Rcpp::NumericMatrix> CENTROIDS = R_NilValue,
+                    double tol = 1e-4){
 
   ClustHeader clust_header;
 

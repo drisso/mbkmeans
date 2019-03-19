@@ -95,12 +95,12 @@ arma::rowvec clusters_WCSS(const T& data,Rcpp::NumericMatrix CENTROIDS){
 
         arma::vec tmp_vec(centrod_n_row);
 
-        for (unsigned int j = 0; j < data_n_rows; j++) {
+        for (int j = 0; j < data_n_rows; j++) {
 
             final_matrix->get_row(j, tmp.begin());
             dat_final.row(0) = tmp;
 
-            for(unsigned int i =0; i<centrod_n_row;i++){
+            for(int i =0; i<centrod_n_row;i++){
 
                 tmp_vec(i)= Rcpp::sum(Rcpp::pow(dat_final.row(0) - CENTROIDS.row(i),2));
 
@@ -123,12 +123,12 @@ arma::rowvec clusters_WCSS(const T& data,Rcpp::NumericMatrix CENTROIDS){
 
         arma::vec tmp_vec(centrod_n_row);
 
-        for (unsigned int j = 0; j < data_n_rows; j++) {
+        for (int j = 0; j < data_n_rows; j++) {
 
             final_matrix->get_row(j, tmp.begin());
             dat_final.row(0) = tmp;
 
-            for(unsigned int i =0; i<centrod_n_row;i++){
+            for(int i =0; i<centrod_n_row;i++){
 
                 tmp_vec(i)= Rcpp::sum(Rcpp::pow(dat_final.row(0) - CENTROIDS.row(i),2));
 
@@ -208,7 +208,7 @@ SEXP subset_matrix(const T1& data, const T2& init_fraction_value){
   Rcpp::NumericMatrix submat(samp_init.n_rows, nc);
   Rcpp::NumericVector tmp(nc);
 
-  for(int i=0; i<samp_init.n_rows; i++){
+  for(unsigned int i=0; i<samp_init.n_rows; i++){
     data->get_row(samp_init[i], tmp.begin());
     submat.row(i) = tmp;
   }
@@ -234,7 +234,7 @@ SEXP subset_matrix_random(const T1& data, int cluster){
   Rcpp::NumericMatrix submat(samp_init.n_rows, nc);
   Rcpp::NumericVector tmp(nc);
 
-  for(int i=0; i<samp_init.n_rows; i++){
+  for(unsigned int i=0; i<samp_init.n_rows; i++){
     data->get_row(samp_init[i], tmp.begin());
     submat.row(i) = tmp;
   }

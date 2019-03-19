@@ -16,7 +16,7 @@ test_that("all mbkmeans methods give same result", {
     set.seed(1)
     m_m <- mbkmeans(assay(sce), clusters=3)
     set.seed(1)
-    mb <- mini_batch(t(assay(sce)), clusters=3, batch_size = ceiling(ncol(sce)*0.05),
+    mb <- mini_batch(t(assay(sce)), clusters=3, batch_size = ncol(sce),
                      max_iters = 100, init_fraction = 1)
 
     expect_equal(m_se, m_sce)

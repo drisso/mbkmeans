@@ -18,9 +18,9 @@ mbkmeans(x, ...)
 
 \S4method{mbkmeans}{LinearEmbeddingMatrix}(x, ...)
 
-\S4method{mbkmeans}{ANY}(x, clusters, batch_size = ceiling(ncol(x) *
-  0.05), max_iters = 100, num_init = 1,
-  init_fraction = ifelse(ncol(x) > 1000, 0.25, 1),
+\S4method{mbkmeans}{ANY}(x, clusters, batch_size = ifelse(ncol(x) > 100,
+  ceiling(ncol(x) * 0.05), ncol(x)), max_iters = 100, num_init = 1,
+  init_fraction = ifelse(ncol(x) > 100, 0.25, 1),
   initializer = "kmeans++", calc_wcss = FALSE, early_stop_iter = 10,
   verbose = FALSE, CENTROIDS = NULL, tol = 1e-04)
 }
@@ -40,8 +40,9 @@ to mini-batch k-means. Set to NA to use the full matrix.}
 
 \item{clusters}{the number of clusters}
 
-\item{batch_size}{the size of the mini batches, by default 5 percent of
-observations.}
+\item{batch_size}{the size of the mini batches. By default, it equals the
+number of observations if there are less than 100 cells and 5 percent of
+observations otherwise.}
 
 \item{max_iters}{the maximum number of clustering iterations}
 
@@ -51,7 +52,7 @@ centroid seeds}
 \item{init_fraction}{percentage of data to use for the initialization
 centroids (applies if initializer is \emph{kmeans++} ). Should be a float
 number between 0.0 and 1.0. By default, it uses all the data if there are
-less than 1000 cells and 25 percent of the data otherwise.}
+less than 100 cells and 25 percent of the data otherwise.}
 
 \item{initializer}{the method of initialization. One of \emph{kmeans++} and
 \emph{random}. See details for more information}

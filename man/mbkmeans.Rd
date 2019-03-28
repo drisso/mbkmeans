@@ -84,7 +84,7 @@ a list with the following attributes: centroids, WCSS_per_cluster,
 \description{
 This is an implementation of the mini-batch k-means algorithm of
   Sculley (2010) for large single cell sequencing data with the
-  dimensionality reduction results as input in in the reducedDim() slot.
+  dimensionality reduction results as input in the reducedDim() slot.
 }
 \details{
 The implementation is largely based on the

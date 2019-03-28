@@ -51,6 +51,7 @@ setMethod(
 #' @importClassesFrom SingleCellExperiment SingleCellExperiment
 #' @importFrom SummarizedExperiment assays
 #' @importFrom SingleCellExperiment reducedDim reducedDimNames
+#' @importFrom Matrix t
 #' @param reduceMethod Name of dimensionality reduction results to use as input
 #'   to mini-batch k-means. Set to NA to use the full matrix.
 #' @param whichAssay The assay to use as input to mini-batch k-means. If x is a

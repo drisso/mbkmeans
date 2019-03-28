@@ -17,17 +17,17 @@ Description:
 Depends:
     R (>= 3.6)
 Imports:
-	methods,
-	DelayedArray,
-	Rcpp,
+	  methods,
+	  DelayedArray,
+	  Rcpp,
     SingleCellExperiment,
     SummarizedExperiment,
     ClusterR,
-    benchmarkme
+    benchmarkme,
+    Matrix
 Suggests:
     beachmat,
     HDF5Array,
-    Matrix,
     Rhdf5lib,
     BiocStyle,
     TENxPBMCData,

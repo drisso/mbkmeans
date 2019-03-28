@@ -1,7 +1,7 @@
 ---
 title: "An introduction to mbkmeans"
 author: "Yuwei Ni and Davide Risso"
-date: "Last modified: November 08, 2018; Compiled: `r format(Sys.time(), '%B %d, %Y')`"
+date: "Last modified: March 28, 2019; Compiled: `r format(Sys.time(), '%B %d, %Y')`"
 bibliography: biblio.bib
 output:
   BiocStyle::html_document:
@@ -20,7 +20,9 @@ vignette: >
 To install the package, please use the following.
 
 ```{r, eval=FALSE}
-devtools::install_github("drisso/mbkmeans")
+if (!requireNamespace("BiocManager"))
+    install.packages("BiocManager")
+BiocManager::install("mbkmeans")
 ```
 
 # Introduction
@@ -220,3 +222,5 @@ res_full <- mbkmeans(sce1000, clusters = 5,
 res_classic <- kmeans(t(logcounts(sce1000)), centers = 5)
 table(res_full$Clusters, res_classic$cluster)
 ```
+
+# References

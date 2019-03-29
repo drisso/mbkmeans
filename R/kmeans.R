@@ -164,8 +164,7 @@ setMethod(
 
         if(!is(x, "matrix") & !is(x, "Matrix") & !is(x, "HDF5Matrix") &
             !is(x, "DelayedMatrix")) {
-
-            stop("x is not of a supported type")
+            stop("x is of type ", class(x), ", currently not supported")
 
         } else {
 

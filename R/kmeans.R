@@ -9,7 +9,7 @@ NULL
 #'
 #' @description This is an implementation of the mini-batch k-means algorithm of
 #'   Sculley (2010) for large single cell sequencing data with the
-#'   dimensionality reduction results as input in in the reducedDim() slot.
+#'   dimensionality reduction results as input in the reducedDim() slot.
 #'
 #' @details The implementation is largely based on the
 #'   \code{\link[ClusterR]{MiniBatchKmeans}} function of the \code{ClusterR}
@@ -51,6 +51,7 @@ setMethod(
 #' @importClassesFrom SingleCellExperiment SingleCellExperiment
 #' @importFrom SummarizedExperiment assays
 #' @importFrom SingleCellExperiment reducedDim reducedDimNames
+#' @importFrom Matrix t
 #' @param reduceMethod Name of dimensionality reduction results to use as input
 #'   to mini-batch k-means. Set to NA to use the full matrix.
 #' @param whichAssay The assay to use as input to mini-batch k-means. If x is a
@@ -161,13 +162,11 @@ setMethod(
                         CENTROIDS = NULL, tol = 1e-4)
     {
 
-        if(!is(x, "matrix") & !is(x, "Matrix") & !is(x, "HDF5Matrix") &
+        if(!is(x, "matrix") && !is(x, "Matrix") && !is(x, "HDF5Matrix") &&
             !is(x, "DelayedMatrix")) {
-
-            stop("x is not of a supported type")
+            stop("x is of type ", class(x), ", currently not supported")
 
         } else {
-
             fit <- mini_batch(data = t(x), clusters = clusters,
                             batch_size = batch_size, max_iters = max_iters,
                             num_init = num_init,

@@ -57,3 +57,31 @@ test_that("clustering is accurate", {
     expect_equal(mb$Clusters, km$cluster)
 
 })
+
+test_that("all mini_batch methods give same result", {
+  library(Matrix)
+  library(HDF5Array)
+
+  set.seed(123)
+  m0 <- matrix(rnorm(100), ncol=10)
+  m1 <- as(m0, "sparseMatrix")
+  M2 <- as(m0, "HDF5Matrix")          # HDF5Matrix instance
+  M3 <- M2 + 1 - 1  # DelayedMatrix instance
+  
+  set.seed(123)
+  res0 <- mini_batch(m0, clusters=3, batch_size=10, max_iters = 10)
+  
+  set.seed(123)
+  res1 <- mini_batch(m1, clusters=3, batch_size=10, max_iters = 10)
+  
+  set.seed(123)
+  res2 <- mini_batch(M2, clusters=3, batch_size=10, max_iters = 10)
+
+  set.seed(123)
+  res3 <- mini_batch(M3, clusters=3, batch_size=10, max_iters = 10)
+
+  expect_equal(res0, res1)
+  expect_equal(res0, res2)
+  expect_equal(res0, res3)
+  
+})

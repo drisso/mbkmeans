@@ -1,10 +1,10 @@
 Package: mbkmeans
 Type: Package
 Title: Mini-batch K-means Clustering for Single-Cell RNA-seq
-Version: 0.99.1
+Version: 0.99.5
 Authors@R:
     c(person("Yuwei", "Ni", role = c("aut", "cph"),
-             email = "risso.davide@gmail.com"),
+             email = "yuweini45@gmail.com"),
       person("Davide", "Risso", role = c("aut", "cre", "cph"),
              email = "risso.davide@gmail.com"),
       person("Stephanie", "Hicks", role = c("aut", "cph"),
@@ -17,17 +17,17 @@ Description:
 Depends:
     R (>= 3.5)
 Imports:
-	methods,
-	DelayedArray,
-	Rcpp,
+	  methods,
+	  DelayedArray,
+	  Rcpp,
     SingleCellExperiment,
     SummarizedExperiment,
     ClusterR,
-    benchmarkme
+    benchmarkme,
+    Matrix
 Suggests:
     beachmat,
     HDF5Array,
-    Matrix,
     Rhdf5lib,
     testthat
 License: MIT + file LICENSE

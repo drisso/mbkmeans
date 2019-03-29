@@ -66,7 +66,7 @@ test_that("all mini_batch methods give same result", {
   m0 <- matrix(rnorm(100), ncol=10)
   m1 <- as(m0, "sparseMatrix")
   M2 <- as(m0, "HDF5Matrix")          # HDF5Matrix instance
-  M3 <- rbind(M2[1:5, ], M2[6:10, ])  # DelayedMatrix instance
+  M3 <- M2 + 1 - 1  # DelayedMatrix instance
   
   set.seed(123)
   res0 <- mini_batch(m0, clusters=3, batch_size=10, max_iters = 10)

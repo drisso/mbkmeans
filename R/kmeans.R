@@ -162,12 +162,11 @@ setMethod(
                         CENTROIDS = NULL, tol = 1e-4)
     {
 
-        if(!is(x, "matrix") & !is(x, "Matrix") & !is(x, "HDF5Matrix") &
+        if(!is(x, "matrix") && !is(x, "Matrix") && !is(x, "HDF5Matrix") &&
             !is(x, "DelayedMatrix")) {
             stop("x is of type ", class(x), ", currently not supported")
 
         } else {
-
             fit <- mini_batch(data = t(x), clusters = clusters,
                             batch_size = batch_size, max_iters = max_iters,
                             num_init = num_init,

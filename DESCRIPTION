@@ -1,7 +1,7 @@
 Package: mbkmeans
 Type: Package
 Title: Mini-batch K-means Clustering for Single-Cell RNA-seq
-Version: 0.99.5
+Version: 0.99.6
 Authors@R:
     c(person("Yuwei", "Ni", role = c("aut", "cph"),
              email = "yuweini45@gmail.com"),

@@ -206,12 +206,12 @@ SEXP subset_matrix(const T1& data, const T2& init_fraction_value){
   arma::uvec samp_init = arma::sort(init);
 
   Rcpp::NumericMatrix submat(samp_init.n_rows, nc);
-  Rcpp::NumericVector tmp(nc);
+  Rcpp::IntegerVector idx(samp_init.n_rows);
 
   for(unsigned int i=0; i<samp_init.n_rows; i++){
-    data->get_row(samp_init[i], tmp.begin());
-    submat.row(i) = tmp;
+    idx[i] = samp_init[i];
   }
+  data->get_rows(idx.begin(), samp_init.n_rows, submat.begin());
 
   return submat;
 
@@ -232,12 +232,12 @@ SEXP subset_matrix_random(const T1& data, int cluster){
   arma::uvec samp_init = arma::sort(init);
 
   Rcpp::NumericMatrix submat(samp_init.n_rows, nc);
-  Rcpp::NumericVector tmp(nc);
+  Rcpp::IntegerVector idx(samp_init.n_rows);
 
   for(unsigned int i=0; i<samp_init.n_rows; i++){
-    data->get_row(samp_init[i], tmp.begin());
-    submat.row(i) = tmp;
+    idx[i] = samp_init[i];
   }
+  data->get_rows(idx.begin(), samp_init.n_rows, submat.begin());
 
   return submat;
 

@@ -109,7 +109,7 @@ idx <- sample(seq_len(NCOL(tenx_pbmc4k)), 100)
 sce <- tenx_pbmc4k[, idx]
 
 #normalization
-sce <- normalize(sce)
+sce <- logNormCounts(sce)
 
 vars <- rowVars(logcounts(sce))
 names(vars) <- rownames(sce)

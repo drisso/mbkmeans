@@ -73,8 +73,10 @@ compute_wcss <- function(clusters, cent, data) {
 #'  number between 0.0 and 1.0.
 #'@param initializer the method of initialization. One of \emph{kmeans++} and
 #'  \emph{random}. See details for more information.
+#'@param compute_labels logical indicating whether to compute the final cluster
+#'  labels.
 #'@param calc_wcss logical indicating whether the within-cluster sum of squares
-#'  should be computed and returned.
+#'  should be computed and returned (ignored if `compute_labels = FALSE`).
 #'@param early_stop_iter continue that many iterations after calculation of the
 #'  best within-cluster-sum-of-squared-error.
 #'@param verbose logical indicating whether progress is printed on screen.
@@ -87,12 +89,14 @@ compute_wcss <- function(clusters, cent, data) {
 #'
 #'centroids: the final centroids;
 #'
-#'WCSS_per_cluster: within-cluster sum of squares;
+#'WCSS_per_cluster (optional): the final per-cluster WCSS.
 #'
 #'best_initialization: which initialization value led to the best WCSS
 #'solution;
 #'
-#'iters_per_initialization: number of iterations per each initialization.
+#'iters_per_initialization: number of iterations per each initialization;
+#'
+#'Clusters (optional): the final cluster labels.
 #'
 #'@details This function performs k-means clustering using mini batches. It was
 #'inspired by the implementation in https://github.com/mlampros/ClusterR.
@@ -121,7 +125,7 @@ compute_wcss <- function(clusters, cent, data) {
 #'mini_batch(data, 2, 10, 10)
 #'
 #' @export
-mini_batch <- function(data, clusters, batch_size, max_iters, num_init = 1L, init_fraction = 1.0, initializer = "kmeans++", calc_wcss = FALSE, early_stop_iter = 10L, verbose = FALSE, CENTROIDS = NULL, tol = 1e-4) {
-    .Call(`_mbkmeans_mini_batch`, data, clusters, batch_size, max_iters, num_init, init_fraction, initializer, calc_wcss, early_stop_iter, verbose, CENTROIDS, tol)
+mini_batch <- function(data, clusters, batch_size, max_iters, num_init = 1L, init_fraction = 1.0, initializer = "kmeans++", compute_labels = TRUE, calc_wcss = FALSE, early_stop_iter = 10L, verbose = FALSE, CENTROIDS = NULL, tol = 1e-4) {
+    .Call(`_mbkmeans_mini_batch`, data, clusters, batch_size, max_iters, num_init, init_fraction, initializer, compute_labels, calc_wcss, early_stop_iter, verbose, CENTROIDS, tol)
 }
 

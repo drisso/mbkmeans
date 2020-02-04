@@ -4,10 +4,21 @@
 \alias{mini_batch}
 \title{Mini_batch}
 \usage{
-mini_batch(data, clusters, batch_size, max_iters, num_init = 1L,
-  init_fraction = 1, initializer = "kmeans++", calc_wcss = FALSE,
-  early_stop_iter = 10L, verbose = FALSE, CENTROIDS = NULL,
-  tol = 1e-04)
+mini_batch(
+  data,
+  clusters,
+  batch_size,
+  max_iters,
+  num_init = 1L,
+  init_fraction = 1,
+  initializer = "kmeans++",
+  compute_labels = TRUE,
+  calc_wcss = FALSE,
+  early_stop_iter = 10L,
+  verbose = FALSE,
+  CENTROIDS = NULL,
+  tol = 1e-04
+)
 }
 \arguments{
 \item{data}{numeric or integer matrix-like object.}
@@ -28,8 +39,11 @@ number between 0.0 and 1.0.}
 \item{initializer}{the method of initialization. One of \emph{kmeans++} and
 \emph{random}. See details for more information.}
 
+\item{compute_labels}{logical indicating whether to compute the final cluster
+labels.}
+
 \item{calc_wcss}{logical indicating whether the within-cluster sum of squares
-should be computed and returned.}
+should be computed and returned (ignored if `compute_labels = FALSE`).}
 
 \item{early_stop_iter}{continue that many iterations after calculation of the
 best within-cluster-sum-of-squared-error.}
@@ -47,12 +61,14 @@ a list with the following attributes:
 
 centroids: the final centroids;
 
-WCSS_per_cluster: within-cluster sum of squares;
+WCSS_per_cluster (optional): the final per-cluster WCSS.
 
 best_initialization: which initialization value led to the best WCSS
 solution;
 
-iters_per_initialization: number of iterations per each initialization.
+iters_per_initialization: number of iterations per each initialization;
+
+Clusters (optional): the final cluster labels.
 }
 \description{
 Mini-batch-k-means for matrix-like objects

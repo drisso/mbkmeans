@@ -338,8 +338,10 @@ Rcpp::NumericVector compute_wcss(Rcpp::NumericVector clusters, Rcpp::NumericMatr
 //'  number between 0.0 and 1.0.
 //'@param initializer the method of initialization. One of \emph{kmeans++} and
 //'  \emph{random}. See details for more information.
+//'@param compute_labels logical indicating whether to compute the final cluster
+//'  labels.
 //'@param calc_wcss logical indicating whether the within-cluster sum of squares
-//'  should be computed and returned.
+//'  should be computed and returned (ignored if `compute_labels = FALSE`).
 //'@param early_stop_iter continue that many iterations after calculation of the
 //'  best within-cluster-sum-of-squared-error.
 //'@param verbose logical indicating whether progress is printed on screen.
@@ -352,12 +354,14 @@ Rcpp::NumericVector compute_wcss(Rcpp::NumericVector clusters, Rcpp::NumericMatr
 //'
 //'centroids: the final centroids;
 //'
-//'WCSS_per_cluster: within-cluster sum of squares;
+//'WCSS_per_cluster (optional): the final per-cluster WCSS.
 //'
 //'best_initialization: which initialization value led to the best WCSS
 //'solution;
 //'
-//'iters_per_initialization: number of iterations per each initialization.
+//'iters_per_initialization: number of iterations per each initialization;
+//'
+//'Clusters (optional): the final cluster labels.
 //'
 //'@details This function performs k-means clustering using mini batches. It was
 //'inspired by the implementation in https://github.com/mlampros/ClusterR.
@@ -390,6 +394,7 @@ Rcpp::NumericVector compute_wcss(Rcpp::NumericVector clusters, Rcpp::NumericMatr
 Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters,
                     int num_init = 1, double init_fraction = 1.0,
                     std::string initializer = "kmeans++",
+                    bool compute_labels = true,
                     bool calc_wcss = false, int early_stop_iter = 10,
                     bool verbose = false,
                     Rcpp::Nullable<Rcpp::NumericMatrix> CENTROIDS = R_NilValue,
@@ -655,13 +660,18 @@ Rcpp::List mini_batch(SEXP data, int clusters, int batch_size, int max_iters,
 
   }
 
-
-  Rcpp::NumericVector clusterfinal = predict_mini_batch(data, Rcpp::wrap(centers_out));
+  Rcpp::NumericVector clusterfinal;
   Rcpp::NumericVector wcss_final;
+  
+  if(compute_labels) {
 
-  if(calc_wcss){
-      wcss_final = compute_wcss(clusterfinal,Rcpp::wrap(centers_out),data);
+    clusterfinal = predict_mini_batch(data, Rcpp::wrap(centers_out));
+    if(calc_wcss){
+        wcss_final = compute_wcss(clusterfinal, Rcpp::wrap(centers_out), data);
+    }
+    
   }
+
 
       return Rcpp::List::create(Rcpp::Named("centroids") = centers_out,
                                 Rcpp::Named("WCSS_per_cluster") = wcss_final,

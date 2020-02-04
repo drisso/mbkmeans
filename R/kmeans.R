@@ -122,8 +122,10 @@ setMethod(
 #'  \emph{random}. See details for more information
 #'@param early_stop_iter continue that many iterations after calculation of the
 #'  best within-cluster-sum-of-squared-error
-#'@param calc_wcss either TRUE or FALSE, indicating whether the result of WCSS
-#'  is shown. FALSE is default
+#'@param compute_labels logcical indicating whether to compute the final cluster
+#'  labels.
+#'@param calc_wcss logical indicating whether the per-cluster WCSS
+#'  is computed. Ignored if `compute_labels = FALSE`.
 #'@param verbose either TRUE or FALSE, indicating whether progress is printed
 #'  during clustering
 #'@param CENTROIDS a matrix of initial cluster centroids. The rows of the
@@ -156,7 +158,7 @@ setMethod(
                                             ceiling(ncol(x)*.05), ncol(x)),
                         max_iters =100, num_init = 1,
                         init_fraction = ifelse(ncol(x)>100, .25, 1),
-                        initializer = "kmeans++",
+                        initializer = "kmeans++", compute_labels = TRUE,
                         calc_wcss = FALSE, early_stop_iter = 10,
                         verbose = FALSE,
                         CENTROIDS = NULL, tol = 1e-4)
@@ -171,7 +173,9 @@ setMethod(
                             batch_size = batch_size, max_iters = max_iters,
                             num_init = num_init,
                             init_fraction = init_fraction,
-                            initializer = initializer, calc_wcss = calc_wcss,
+                            initializer = initializer, 
+                            compute_labels = compute_labels,
+                            calc_wcss = calc_wcss,
                             early_stop_iter = early_stop_iter,
                             verbose = verbose,
                             CENTROIDS = CENTROIDS, tol = tol)

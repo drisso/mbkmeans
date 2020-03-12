@@ -134,6 +134,9 @@ setMethod(
 #'@param tol a float number. If, in case of an iteration (iteration > 1 and
 #'  iteration < max_iters) 'tol' is greater than the squared norm of the
 #'  centroids, then kmeans has converged
+#'@param BPPARAM See the `BiocParallel` package. Only the label assignment is
+#'  done in parallel.
+#'@param ... passed to `blockApply`.
 #'@return a list with the following attributes: centroids, WCSS_per_cluster,
 #'  best_initialization, iters_per_initialization
 #'@details This function performs k-means clustering using mini batches.
@@ -161,27 +164,38 @@ setMethod(
                         initializer = "kmeans++", compute_labels = TRUE,
                         calc_wcss = FALSE, early_stop_iter = 10,
                         verbose = FALSE,
-                        CENTROIDS = NULL, tol = 1e-4)
+                        CENTROIDS = NULL, tol = 1e-4,
+                        BPPARAM = BiocParallel::SerialParam(),
+                        ...)
     {
 
         if(!is(x, "matrix") && !is(x, "Matrix") && !is(x, "HDF5Matrix") &&
-            !is(x, "DelayedMatrix")) {
+           !is(x, "DelayedMatrix")) {
             stop("x is of type ", class(x), ", currently not supported")
 
         } else {
             fit <- mini_batch(data = t(x), clusters = clusters,
-                            batch_size = batch_size, max_iters = max_iters,
-                            num_init = num_init,
-                            init_fraction = init_fraction,
-                            initializer = initializer, 
-                            compute_labels = compute_labels,
-                            calc_wcss = calc_wcss,
-                            early_stop_iter = early_stop_iter,
-                            verbose = verbose,
-                            CENTROIDS = CENTROIDS, tol = tol)
+                              batch_size = batch_size, max_iters = max_iters,
+                              num_init = num_init,
+                              init_fraction = init_fraction,
+                              initializer = initializer,
+                              compute_labels = FALSE,
+                              calc_wcss = FALSE,
+                              early_stop_iter = early_stop_iter,
+                              verbose = verbose,
+                              CENTROIDS = CENTROIDS, tol = tol)
+            if(compute_labels) {
+                fit$Clusters <- predict_mini_batch_r(x, fit$centroids,
+                                                     BPPARAM = BPPARAM, ...)
 
+                if(calc_wcss) {
+                    fit$WCSS_per_cluster <- compute_wcss(fit$Clusters,
+                                                         fit$centroids,
+                                                         t(x))
+                }
+            }
         }
 
         return(fit)
-})
+    })
 

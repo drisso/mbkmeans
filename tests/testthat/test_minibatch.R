@@ -29,6 +29,17 @@ test_that("mini_batch gives the same results on the iris data", {
     expect_true(all(mb$Clusters - irisres$Clusters <1e4))
     expect_equal(mb$best_initialization, irisres$best_initialization)
     expect_equal(mb$iters_per_initialization, irisres$iters_per_initialization)
+
+    # use mbkmeans
+    set.seed(1)
+    mbk <- mbkmeans(t(irismat), clusters=3, batch_size = 10,
+                    max_iters = 10, init_fraction = 0.25)
+
+    expect_true(all(mbk$centroids - irisres$centroids <1e4))
+    expect_true(all(mbk$Clusters - irisres$Clusters <1e4))
+    expect_equal(mbk$best_initialization, irisres$best_initialization)
+    expect_equal(mbk$iters_per_initialization, irisres$iters_per_initialization)
+
 })
 
 test_that("WCSS calculation is correct", {
@@ -67,13 +78,13 @@ test_that("all mini_batch methods give same result", {
   m1 <- as(m0, "sparseMatrix")
   M2 <- as(m0, "HDF5Matrix")          # HDF5Matrix instance
   M3 <- M2 + 1 - 1  # DelayedMatrix instance
-  
+
   set.seed(123)
   res0 <- mini_batch(m0, clusters=3, batch_size=10, max_iters = 10)
-  
+
   set.seed(123)
   res1 <- mini_batch(m1, clusters=3, batch_size=10, max_iters = 10)
-  
+
   set.seed(123)
   res2 <- mini_batch(M2, clusters=3, batch_size=10, max_iters = 10)
 
@@ -83,5 +94,5 @@ test_that("all mini_batch methods give same result", {
   expect_equal(res0, res1)
   expect_equal(res0, res2)
   expect_equal(res0, res3)
-  
+
 })

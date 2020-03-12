@@ -29,7 +29,9 @@ mbkmeans(x, ...)
   early_stop_iter = 10,
   verbose = FALSE,
   CENTROIDS = NULL,
-  tol = 1e-04
+  tol = 1e-04,
+  BPPARAM = BiocParallel::SerialParam(),
+  ...
 )
 }
 \arguments{
@@ -38,7 +40,7 @@ matrix-like object (e.g., matrix, Matrix, DelayedMatrix, HDF5Matrix) with
 genes in the rows and samples in the columns. Specialized methods are
 defined for SummarizedExperiment and SingleCellExperiment.}
 
-\item{...}{Arguments to pass to the matrix method.}
+\item{...}{passed to `blockApply`.}
 
 \item{whichAssay}{The assay to use as input to mini-batch k-means. If x is a
 SingleCellExperiment, this is ignored unless \code{reduceMethod = NA}.}
@@ -84,6 +86,9 @@ should be equal to the columns of the data}
 \item{tol}{a float number. If, in case of an iteration (iteration > 1 and
 iteration < max_iters) 'tol' is greater than the squared norm of the
 centroids, then kmeans has converged}
+
+\item{BPPARAM}{See the `BiocParallel` package. Only the label assignment is
+done in parallel.}
 }
 \value{
 A list with the following attributes: centroids, WCSS_per_cluster,

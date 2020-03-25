@@ -19,10 +19,10 @@ mbkmeans(x, ...)
 \S4method{mbkmeans}{ANY}(
   x,
   clusters,
-  batch_size = ifelse(ncol(x) > 100, ceiling(ncol(x) * 0.05), ncol(x)),
+  batch_size = min(500, NCOL(x)),
   max_iters = 100,
   num_init = 1,
-  init_fraction = ifelse(ncol(x) > 100, 0.25, 1),
+  init_fraction = batch_size/NCOL(x),
   initializer = "kmeans++",
   compute_labels = TRUE,
   calc_wcss = FALSE,
@@ -51,18 +51,16 @@ to mini-batch k-means. Set to NA to use the full matrix.}
 \item{clusters}{the number of clusters}
 
 \item{batch_size}{the size of the mini batches. By default, it equals the
-number of observations if there are less than 100 cells and 5 percent of
-observations otherwise.}
+minimum between the number of observations and 500.}
 
 \item{max_iters}{the maximum number of clustering iterations}
 
 \item{num_init}{number of times the algorithm will be run with different
 centroid seeds}
 
-\item{init_fraction}{percentage of data to use for the initialization
+\item{init_fraction}{proportion of data to use for the initialization
 centroids (applies if initializer is \emph{kmeans++} ). Should be a float
-number between 0.0 and 1.0. By default, it uses all the data if there are
-less than 100 cells and 25 percent of the data otherwise.}
+number between 0.0 and 1.0. By default, it uses the relative batch size.}
 
 \item{initializer}{the method of initialization. One of \emph{kmeans++} and
 \emph{random}. See details for more information}

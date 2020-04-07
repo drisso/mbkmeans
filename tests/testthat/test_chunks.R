@@ -1,6 +1,7 @@
 context("Test chunk dims.")
 
 test_that("mini_batch gives the same results on different chunks", {
+    library(SummarizedExperiment)
     data(iris)
     irismat <- as.matrix(iris[,1:4])
 

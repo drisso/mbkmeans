@@ -1,0 +1,14 @@
+bibentry("Article",
+         title = "mbkmeans: fast clustering for single cell data using mini-batch k-means",
+         author = c(person("Stephanie", "Hicks"),
+                    person("Ruoxi", "Liu"),
+                    person("Yuwei", "Ni"),
+                    person("Elizabeth", "Purdom"),
+                    person("Davide", "Risso")),
+         year = 2020,
+         journal = "bioRxiv",
+         url = "https://doi.org/10.1101/2020.05.27.119438",
+         textVersion =
+         paste("S. Hicks, R. Liu, Y. Ni, E. Purdom and D. Risso","(2020).",
+               "mbkmeans: fast clustering for single cell data using mini-batch k-means. bioRxiv. https://doi.org/10.1101/2020.05.27.119438")
+               )

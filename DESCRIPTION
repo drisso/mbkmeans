@@ -18,10 +18,12 @@ Depends:
     R (>= 3.6)
 Imports:
     methods,
-	DelayedArray,
-	Rcpp,
+	  DelayedArray,
+	  Rcpp,
+    S4Vectors,
     SingleCellExperiment,
     SummarizedExperiment,
+    bluster,
     ClusterR,
     benchmarkme,
     Matrix,

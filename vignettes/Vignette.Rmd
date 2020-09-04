@@ -1,7 +1,7 @@
 ---
 title: "An introduction to mbkmeans"
-author: "Yuwei Ni and Davide Risso"
-date: "Last modified: March 28, 2019; Compiled: `r format(Sys.time(), '%B %d, %Y')`"
+author: "Yuwei Ni and Davide Risso and Stephanie HIcks"
+date: "Last modified: September 3, 2020; Compiled: `r format(Sys.time(), '%B %d, %Y')`"
 bibliography: biblio.bib
 output:
   BiocStyle::html_document:
@@ -222,5 +222,36 @@ res_full <- mbkmeans(sce1000, clusters = 5,
 res_classic <- kmeans(t(logcounts(sce1000)), centers = 5)
 table(res_full$Clusters, res_classic$cluster)
 ```
+
+# Use with bluster
+
+The `r Biocpkg("bluster")` package provides a flexible and extensible framework for clustering in Bioconductor packages/workflows. 
+The `clusterRows()` function controls dispatch to different clustering algorithms. 
+In this case, we will use the mini-batch _k_-means algorithm to cluster cells into cell populations based on their principal component analysis (PCA) coordinates.
+
+```{r}
+sce1000 <- runPCA(sce1000, ncomponents=20)
+mat <- reducedDim(sce1000, "PCA")
+dim(mat)
+```
+
+In the following three scenarios, we pass the number of cluster centers as a number using the `centers=5` argument. 
+In addition, we can also pass other `mbkmeans` arguments (e.g. `batch_size=10`). 
+In the first two cases, we only return the cluster labels. 
+However, in the third scenario, we ask for the full `mbkmeans` output.  
+
+```{r}
+clusterRows(mat, MbkmeansParam(centers=5))
+```
+
+```{r}
+clusterRows(mat, MbkmeansParam(centers=5, batch_size=10))
+```
+
+```{r}
+clusterRows(mat, MbkmeansParam(centers=5, batch_size=10), full = TRUE)
+```
+
+**Note**: At the moment, only in-memory data are supported when working with `bluster`. 
 
 # References

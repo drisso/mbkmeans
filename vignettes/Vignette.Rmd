@@ -252,6 +252,15 @@ clusterRows(mat, MbkmeansParam(centers=5, batch_size=10))
 clusterRows(mat, MbkmeansParam(centers=5, batch_size=10), full = TRUE)
 ```
 
-**Note**: At the moment, only in-memory data are supported when working with `bluster`. 
+While many of the times clustering will be performed on in-memory data (for example after PCA), the `clusterRows` function also accepts any matrix-like object (in-memory or on-disk data representation) that `mbkmeans` accepts. 
+
+For example, we can cluster using `mbkmeans` on the `logcounts` assay in the `sce1000` object (similar to above), which is a `DelayedMatrix` object from the `r Biocpkg("DelayedArray")` package.
+
+**Note**: We transpose the matrix as the `clusterRows` function expects observations along the rows and variables along the columns. 
+
+```{r}
+logcounts(sce1000)
+clusterRows(t(logcounts(sce1000)), MbkmeansParam(centers=4))
+```
 
 # References

@@ -64,7 +64,7 @@ setMethod("clusterRows", c("ANY", "MbkmeansParam"), function(x, BLUSPARAM, full=
     centers <- centers(nrow(x))
   }
   
-  args <- c(list(x=as.matrix(t(x)), clusters=centers), BLUSPARAM@extra.args)
+  args <- c(list(x=t(x), clusters=centers), BLUSPARAM@extra.args)
   stats <- do.call(mbkmeans, args)
   vec_clusters <- factor(stats$Clusters)
   

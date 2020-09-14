@@ -1,6 +1,6 @@
 ---
 title: "An introduction to mbkmeans"
-author: "Yuwei Ni and Davide Risso and Stephanie HIcks"
+author: "Yuwei Ni and Davide Risso and Stephanie Hicks"
 date: "Last modified: September 3, 2020; Compiled: `r format(Sys.time(), '%B %d, %Y')`"
 bibliography: biblio.bib
 output:

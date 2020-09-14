@@ -14,7 +14,9 @@ MbkmeansParam(centers, ...)
 }
 \arguments{
 \item{centers}{An integer scalar specifying the number of centers.
-Alternatively, a function that takes the number of observations and returns the number of centers.}
+Alternatively, a function that takes the number of observations and returns the number of centers. 
+Note, the \code{\link{mbkmeans}} function uses the argument \code{clusters} argument to represent this argument. 
+However, we use \code{centers} to match}
 
 \item{...}{Further arguments to pass to \code{\link{mbkmeans}}.}
 
@@ -32,9 +34,13 @@ If \code{full=TRUE}, a list is returned with \code{clusters} (the factor, as abo
 the latter will contain the direct output of \code{\link{mbkmeans}}.
 }
 \description{
-Run the mini-batch k-means \code{\link{mbkmeans}} function with the specified number of centers within \code{\link{clusterRows}}.
+Run the mini-batch k-means \code{\link{mbkmeans}} function with the specified number of centers 
+within \code{\link{clusterRows}} from the \code{\link{bluster}} Bioconductor package.
 }
 \details{
+The\code{\link{clusterRows}} function from the \code{\link{bluster}} Bioconductor package is 
+a generic that controls dispatch to different clustering algorithms. 
+Here we add the option to use the \code{\link{mbkmeans}} clustering algorithm with \code{\link{clusterRows}}. 
 This class usually requires the user to specify the number of clusters beforehand.
 However, we can also allow the number of clusters to vary as a function of the number of observations.
 The latter is occasionally useful, e.g., to allow the clustering to automatically become more granular for large datasets.
@@ -43,9 +49,9 @@ To modify an existing MbkmeansParam object \code{x},
 users can simply call \code{x[[i]]} or \code{x[[i]] <- value} where \code{i} is any argument used in the constructor.
 }
 \examples{
-clusterRows(tenx_pbmc4k, MbkmeansParam(centers=2))
-clusterRows(iris[,1:4], MbkmeansParam(centers=5, batch_size=10))
-clusterRows(iris[,1:4], MbkmeansParam(centers=2, batch_size=10, 
+clusterRows(iris[,1:4], MbkmeansParam(centers=3))
+clusterRows(iris[,1:4], MbkmeansParam(centers=3, batch_size=10))
+clusterRows(iris[,1:4], MbkmeansParam(centers=3, batch_size=10, 
             compute_labels=TRUE, calc_wcss=TRUE))
 }
 \seealso{

@@ -29,10 +29,10 @@ By simply changing \code{BLUSPARAM}, we can tune the clustering procedure in ana
 \examples{
 m <- matrix(runif(10000), ncol=10)
 
-clusterRows(m, MbkmeansParam(10L))
+clusterRows(m, MbkmeansParam(2))
 }
 \seealso{
-\linkS4class{Mbkmeans} for some examples of values for \code{BLUSPARAM}.
+\linkS4class{MbkmeansParam} for some examples of values for \code{BLUSPARAM}.
 }
 \author{
 Aaron Lun, Stephanie Hicks

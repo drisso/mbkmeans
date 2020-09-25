@@ -74,12 +74,6 @@ this document shows the typical use case through the
 
 ```{r options, include=FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(cache=FALSE, error=FALSE, message=FALSE, warning=FALSE)
-library(TENxPBMCData)
-library(scater)
-library(SingleCellExperiment)
-library(mbkmeans)
-library(DelayedMatrixStats)
-library(ClusterR)
 ```
 
 To illustrate a typical use case, we use the 
@@ -88,6 +82,16 @@ To illustrate a typical use case, we use the
 This dataset contains a set of about 4,000 cells from
 peripheral blood from a healthy donor and is expected 
 to contain many types or clusters of cell.
+
+First, we load the needed packages.
+
+```{r packages, message=FALSE, warning=FALSE}
+library(TENxPBMCData)
+library(scater)
+library(SingleCellExperiment)
+library(mbkmeans)
+library(DelayedMatrixStats)
+```
 
 Note that in this vignette, we do not aim at identifying 
 biologically meaningful clusters here (that would 

@@ -50,3 +50,44 @@ test_that("all mbkmeans methods give same result", {
     
 })
 
+test_that("Length of cluster labels is the same as number of obs" {
+    library(HDF5Array)
+    m0 <- matrix(rnorm(2.3e7), ncol=1000)
+    M2 <- as(m0, "HDF5Matrix")
+    
+    res_1kcell <- mbkmeans(x=M2,
+                           clusters=k, 
+                           batch_size = batch, 
+                           num_init=1, 
+                           max_iters=100,
+                           verbose=FALSE,
+                           compute_labels=TRUE)
+    
+    expect_equal(length(res_1kcell$Clusters), 1e3)
+    
+    fit <- mini_batch(data = t(M2), clusters = k,
+                      batch_size = batch, max_iters = 100,
+                      num_init = 1,
+                      init_fraction = batch/NCOL(sce),
+                      initializer = "kmeans++",
+                      compute_labels = FALSE,
+                      calc_wcss = FALSE,
+                      early_stop_iter = 10,
+                      verbose = FALSE,
+                      CENTROIDS = NULL, tol = 1e-4)
+    
+    # the following creates 2k labels instead of 1k
+    pred_r_1k <- predict_mini_batch_r(data = counts(sce[,1:1e3]),
+                                      centroids = fit$centroids)
+    
+    expect_equal(length(pred_r_1k), 1e3)
+    
+    # the following works fine
+    pred_c_1k <- predict_mini_batch(data = t(counts(sce[,1:1e3])),
+                                      CENTROIDS = fit$centroids)
+    
+    expect_equal(length(pred_c_1k), 1e3)
+    
+    expect_equal(pred_r_1k, pred_c_1k)
+    
+})

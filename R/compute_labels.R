@@ -24,6 +24,7 @@ predict_mini_batch_r <- function(data, centroids,
                                  BPPARAM=BiocParallel::SerialParam(),
                                  ...) {
     unlist(blockApply(data, all_labels, centroids = centroids,
+                      grid = colGrid(data),
                       BPPARAM = BPPARAM, ...))
 }
 

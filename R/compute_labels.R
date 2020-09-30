@@ -10,7 +10,7 @@
 #'
 #' @return a vector of cluster labels for each observation.
 #'
-#' @importFrom DelayedArray blockApply colSums
+#' @importFrom DelayedArray blockApply colSums colAutoGrid
 #' @importFrom BiocParallel SerialParam
 #' @export
 #'
@@ -24,7 +24,7 @@ predict_mini_batch_r <- function(data, centroids,
                                  BPPARAM=BiocParallel::SerialParam(),
                                  ...) {
     unlist(blockApply(data, all_labels, centroids = centroids,
-                      grid = colGrid(data),
+                      grid = colAutoGrid(data),
                       BPPARAM = BPPARAM, ...))
 }
 

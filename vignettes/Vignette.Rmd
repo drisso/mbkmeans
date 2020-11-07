@@ -1,7 +1,7 @@
 ---
 title: "An introduction to mbkmeans"
-author: "Yuwei Ni and Davide Risso and Stephanie Hicks"
-date: "Last modified: September 3, 2020; Compiled: `r format(Sys.time(), '%B %d, %Y')`"
+author: "Yuwei Ni, Davide Risso, Stephanie Hicks, and Elizabeth Purdom"
+date: "Last modified: November 7, 2020; Compiled: `r format(Sys.time(), '%B %d, %Y')`"
 bibliography: biblio.bib
 output:
   BiocStyle::html_document:
@@ -66,7 +66,7 @@ functions that assume observations in rows.
 
 We provide a lower-level `mini_batch()` function that 
 expects observations in rows and is expected to be a direct
-a replacement of `ClusterR::MiniBatchKmeans()` for on-disk 
+replacement of `ClusterR::MiniBatchKmeans()` for on-disk 
 data representations such as `HDF5` files. The rest of 
 this document shows the typical use case through the 
 `mbkmeans()` interface; users interested in the
@@ -98,9 +98,9 @@ library(DelayedMatrixStats)
 ```
 
 Note that in this vignette, we do not aim at identifying 
-biologically meaningful clusters here (that would 
+biologically meaningful clusters (that would 
 entail a more sophisticated normalization of data and 
-dimensionality reduction), but insted we only aim to show
+dimensionality reduction), but instead we only aim to show
 how to run mini-batch _k_-means on a HDF5-backed
 matrix.
 
@@ -169,7 +169,7 @@ for more details.
 ## Choice of arguments
 
 There are additional arguements in `mbkmeans()` 
-function that make the function more flexible 
+that make the function more flexible 
 and suitable for more situations. 
 
 ### Batch size
@@ -177,9 +177,8 @@ and suitable for more situations.
 The size of the mini batches is set through the 
 `batch_size` argument. This argument gives the size of the samples of data brought into memory at any one time, and thus constrains the memory usage of the alogrithm. 
 
-The default value uses the 
-`blocksize()` function. The `blocksize()` function 
-considers both the number of columns in the dataset
+The `blocksize()` function can be used to set the batch size to the maximum allowed by the available memory.
+It considers both the number of columns in the dataset
 and the amount of RAM on the current matchine to 
 calculate as large of a batch size as reasonable for 
 the RAM available to the session. The calculation uses 
@@ -223,10 +222,34 @@ table(res$Clusters, res_random$Clusters)
 
 Note that large values of `init_fraction` will result in that proportion of the data being held in memory and used in the initialization of the `kmeans++` algorithm. Therefore, large values of `init_fraction` will require a great deal of memory -- potentially more than that used by the actual clustering algorithm. Indeed keeping the fraction used constant for larger and larger datasets will result in commiserate numbers of cells being used in the initialization and increasing the memory usage (similar to the issues discussed above for batch size). Therefore, we recommend that users keep the default and make changes to the `batch_size` parameter as desired, ensuring consistent memory usage across both the initialization stage and the actual clustering stage of the algorithm. As mentioned in the discussion above on `batch_size`, for this reason we would recommend `batch_size` on the larger range suggested as reasonable in [@Hicks2020] so as to improve the initialization.
 
+## Running with multiple values of $k$
+
+The main parameter to set in $k$-means and its variants is the number of clusters $k$. `mbkmeans` is quick enough to rerun the clustering algorithm with different number of clusters even in very large datasets.
+
+Here, we apply `mbkmeans` with $k$ from 4 to 15 and select the number of clusters using the elbow method (i.e., the value that corresponds to the point of inflection on the curve).
+
+To speed up the computations, we will cluster on the top 20 PCs.
+
+```{r}
+sce1000 <- runPCA(sce1000, ncomponents=20)
+
+ks <- seq(5, 15)
+res <- lapply(ks, function(k) {
+    mbkmeans(sce1000, clusters = k,
+             reduceMethod = "PCA",
+             calc_wcss = TRUE, num_init=10)
+})
+
+wcss <- sapply(res, function(x) sum(x$WCSS_per_cluster))
+plot(ks, wcss, type = "b")
+```
+
+From the plot, it seems that `k=9` could be a reasonable value.
+
 # Comparison with _k_-means
 
-Note that if we set `init_fraction=1`, 
-`initializer = "random"`, and `batch_size=ncol(x)`, 
+Note that if we set `init_fraction = 1`, 
+`initializer = "random"`, and `batch_size = ncol(x)`, 
 we recover the classic _k_-means algorithm.
 
 ```{r}
@@ -235,13 +258,12 @@ res_full <- mbkmeans(sce1000, clusters = 5,
                      whichAssay = "logcounts",
                      initializer = "random",
                      batch_size = ncol(sce1000))
-res_classic <- kmeans(t(logcounts(sce1000)), centers = 5)
+res_classic <- kmeans(t(logcounts(sce1000)), 
+                      centers = 5)
 table(res_full$Clusters, res_classic$cluster)
 ```
 
-
-
-Note however, if the algorithm uses batches smaller than the full dataset (`batch_size<ncol(x)`), then `mbkmeans` will not converge to the same result as `kmeans` even with the same initialization. This is due to the fact that `kmeans` and `mbkmeans` have different search paths for an optimum and the problem is non-convex. 
+Note however, that since the two algorithms start from different random initializations, they will not always converge to the same solution. Furthremore, if the algorithm uses batches smaller than the full dataset (`batch_size<ncol(x)`), then `mbkmeans` will not converge to the same result as `kmeans` even with the same initialization. This is due to the fact that `kmeans` and `mbkmeans` have different search paths for an optimum and the problem is non-convex. 
 
 For a comparison of memory usage, speed, and accuracy of `mbkmeans` with `kmeans` for the non-trivial case where the algorithm uses batches, see [@Hicks2020], where it is demonstrated that `mbkmeans` provides significant speed improvements and uses less memory than `kmeans`, without loss of accuracy. 
 
@@ -252,7 +274,6 @@ The `clusterRows()` function controls dispatch to different clustering algorithm
 In this case, we will use the mini-batch _k_-means algorithm to cluster cells into cell populations based on their principal component analysis (PCA) coordinates.
 
 ```{r}
-sce1000 <- runPCA(sce1000, ncomponents=20)
 mat <- reducedDim(sce1000, "PCA")
 dim(mat)
 ```
@@ -284,5 +305,10 @@ For example, we can cluster using `mbkmeans` on the `logcounts` assay in the `sc
 logcounts(sce1000)
 clusterRows(t(logcounts(sce1000)), MbkmeansParam(centers=4))
 ```
+
+# Working with on-disk data in Bioconductor
+
+This vignette is focused on the use of the `mbkmeans` package.
+For the users interested in learning more about working with `HDF5` files and on-disk data in Bioconductor, we recommend the excellent [DelayedArray workshop](https://petehaitch.github.io/BioC2020_DelayedArray_workshop/articles/Effectively_using_the_DelayedArray_framework_for_users.html), presented by Peter Hickey at [Bioc2020](https://bioc2020.bioconductor.org/).
 
 # References

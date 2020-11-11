@@ -226,7 +226,7 @@ Note that large values of `init_fraction` will result in that proportion of the 
 
 The main parameter to set in $k$-means and its variants is the number of clusters $k$. `mbkmeans` is quick enough to rerun the clustering algorithm with different number of clusters even in very large datasets.
 
-Here, we apply `mbkmeans` with $k$ from 4 to 15 and select the number of clusters using the elbow method (i.e., the value that corresponds to the point of inflection on the curve).
+Here, we apply `mbkmeans` with $k$ from 5 to 15 and select the number of clusters using the elbow method (i.e., the value that corresponds to the point of inflection on the curve). We note that this is just a rule of thumb for selecting the number of clusters, and many different methods exist to decide the appropriate value of $k$.
 
 To speed up the computations, we will cluster on the top 20 PCs.
 

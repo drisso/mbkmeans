@@ -48,29 +48,15 @@ NULL
 #' @export
 #' @rdname MbkmeansParam-class
 MbkmeansParam <- function(centers, ...) {
-  if (!is.function(centers)) {
-    centers <- as.integer(centers)
-  }
-  new("MbkmeansParam", centers=centers, extra.args=list(...))
+  .Deprecated("bluster::MbkmeansParam")
+  bluster::MbkmeansParam(centers, ...)
 }
 
-setMethod(".extras", "MbkmeansParam", function(x) "extra.args")
+# setMethod(".extras", "MbkmeansParam", function(x) "extra.args")
 
 #' @export
 #' @rdname MbkmeansParam-class
 setMethod("clusterRows", c("ANY", "MbkmeansParam"), function(x, BLUSPARAM, full=FALSE) {
-  centers <- BLUSPARAM@centers
-  if (is.function(centers)) {
-    centers <- centers(nrow(x))
-  }
-  
-  args <- c(list(x=t(x), clusters=centers), BLUSPARAM@extra.args)
-  stats <- do.call(mbkmeans, args)
-  vec_clusters <- factor(stats$Clusters)
-  
-  if (full) {
-    list(clusters=vec_clusters, objects=stats)
-  } else {
-    vec_clusters
-  }
+  .Deprecated("bluster::clusterRows")
+  bluster::clusterRows(x, BLUSPARAM, full=full)
 })

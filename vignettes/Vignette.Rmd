@@ -284,6 +284,7 @@ In the first two cases, we only return the cluster labels.
 However, in the third scenario, we ask for the full `mbkmeans` output.  
 
 ```{r}
+library(bluster)
 clusterRows(mat, MbkmeansParam(centers=5))
 ```
 

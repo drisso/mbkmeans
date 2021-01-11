@@ -2,13 +2,11 @@
 
 export(MbkmeansParam)
 export(blocksize)
-export(clusterRows)
 export(compute_wcss)
 export(mini_batch)
 export(predict_mini_batch)
 export(predict_mini_batch_r)
 exportClasses(MbkmeansParam)
-exportMethods(clusterRows)
 exportMethods(mbkmeans)
 import(ClusterR)
 import(methods)

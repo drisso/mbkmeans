@@ -3,37 +3,10 @@
 \name{clusterRows}
 \alias{clusterRows}
 \title{Cluster rows of a matrix}
-\usage{
-clusterRows(x, BLUSPARAM, full = FALSE)
-}
-\arguments{
-\item{x}{A numeric matrix-like object where rows represent observations and columns represent variables.}
-
-\item{BLUSPARAM}{A \linkS4class{BlusterParam} object specifying the algorithm to use.}
-
-\item{full}{Logical scalar indicating whether the full clustering statistics should be returned for each method.}
-}
-\value{
-By default, a factor of length equal to \code{nrow(x)} containing cluster assignments for each row of \code{x}.
-
-If \code{full=TRUE}, a list is returned containing \code{clusters}, a factor as described above;
-and \code{objects}, an arbitrary object containing algorithm-specific statistics or intermediate objects.
-}
 \description{
 Cluster rows of a matrix-like object with a variety of algorithms.
 }
 \details{
-This generic allows users to write agile code that can use a variety of clustering algorithms.
-By simply changing \code{BLUSPARAM}, we can tune the clustering procedure in analysis workflows and package functions.
-}
-\examples{
-m <- matrix(runif(10000), ncol=10)
-
-clusterRows(m, MbkmeansParam(2))
-}
-\seealso{
-\linkS4class{MbkmeansParam} for some examples of values for \code{BLUSPARAM}.
-}
-\author{
-Aaron Lun, Stephanie Hicks
+This function is deprecated. Please use the \code{clusterRows} function in
+the \code{\link{bluster}} Bioconductor package.
 }

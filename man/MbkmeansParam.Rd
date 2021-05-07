@@ -22,5 +22,6 @@ number of centers within \code{\link[bluster]{clusterRows}} from the
 \code{bluster} Bioconductor package.
 }
 \details{
-
+This function is deprecated. Please use the \code{\link[bluster]{MbkmeansParam}} function in
+the \code{bluster} Bioconductor package.
 }

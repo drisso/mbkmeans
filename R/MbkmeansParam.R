@@ -4,7 +4,7 @@
 #' number of centers within \code{\link[bluster]{clusterRows}} from the
 #' \code{bluster} Bioconductor package.
 #'
-#' This function is deprecated. Please use the \code{\link[bluster]{MbkmeansParam} function in
+#' This function is deprecated. Please use the \code{\link[bluster]{MbkmeansParam}} function in
 #' the \code{bluster} Bioconductor package.
 #' 
 #' @param centers An integer scalar specifying the number of centers.

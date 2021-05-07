@@ -18,10 +18,10 @@ However, we use \code{centers} to match}
 }
 \description{
 Run the mini-batch k-means \code{\link{mbkmeans}} function with the specified
-number of centers within \code{\link[bluster]{clusterRows}} from the
+number of centers within \code{clusterRows} from the
 \code{bluster} Bioconductor package.
 }
 \details{
-This function is deprecated. Please use the \code{\link[bluster]{MbkmeansParam}} function in
+This function is deprecated. Please use the \code{MbkmeansParam} function in
 the \code{bluster} Bioconductor package.
 }

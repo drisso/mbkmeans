@@ -1,10 +1,10 @@
 #' Mini-batch k-means clustering
 #'
 #' Run the mini-batch k-means \code{\link{mbkmeans}} function with the specified
-#' number of centers within \code{\link[bluster]{clusterRows}} from the
+#' number of centers within \code{clusterRows} from the
 #' \code{bluster} Bioconductor package.
 #'
-#' This function is deprecated. Please use the \code{\link[bluster]{MbkmeansParam}} function in
+#' This function is deprecated. Please use the \code{MbkmeansParam} function in
 #' the \code{bluster} Bioconductor package.
 #' 
 #' @param centers An integer scalar specifying the number of centers.

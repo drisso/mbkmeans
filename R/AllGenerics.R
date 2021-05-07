@@ -8,7 +8,7 @@ setGeneric(
 #'
 #' Cluster rows of a matrix-like object with a variety of algorithms.
 #'
-#' This function is deprecated. Please use the \code[bluster]{clusterRows} function in
+#' This function is deprecated. Please use the \code{clusterRows} function in
 #' the \code{bluster} Bioconductor package.
 #' @name clusterRows
 NULL

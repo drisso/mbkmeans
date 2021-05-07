@@ -37,7 +37,8 @@ Suggests:
     DelayedMatrixStats,
     bluster,
     knitr,
-    testthat
+    testthat,
+    rmarkdown
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
